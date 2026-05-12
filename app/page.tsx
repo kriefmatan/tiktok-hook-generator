@@ -12,17 +12,23 @@ export default function Home() {
 
     setLoading(true);
 
-    const response = await fetch("/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ topic }),
-    });
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ topic }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    setHooks(data.hooks);
+      setHooks(data.hooks || []);
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    }
+
     setLoading(false);
   };
 
@@ -33,12 +39,12 @@ export default function Home() {
       </h1>
 
       <p className="text-zinc-400 mb-8 text-center max-w-xl">
-        Generate viral TikTok hooks instantly with AI.
+        Hooks that stop people from scrolling.
       </p>
 
       <input
         type="text"
-        placeholder="Enter your topic..."
+        placeholder="What is your video about?"
         value={topic}
         onChange={(e) => setTopic(e.target.value)}
         className="w-full max-w-md p-4 rounded-xl bg-zinc-900 border border-zinc-700 mb-4"
@@ -55,9 +61,16 @@ export default function Home() {
         {hooks.map((hook, index) => (
           <div
             key={index}
-            className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl"
+            className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl flex justify-between items-center gap-4"
           >
-            {hook}
+            <span>{hook}</span>
+
+            <button
+              onClick={() => navigator.clipboard.writeText(hook)}
+              className="bg-white text-black px-3 py-1 rounded-lg text-sm font-medium hover:opacity-80"
+            >
+              Copy
+            </button>
           </div>
         ))}
       </div>
