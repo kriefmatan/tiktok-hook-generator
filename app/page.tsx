@@ -3,65 +3,57 @@
 import { useState } from "react";
 
 export default function Home() {
-  const [ageGroup, setAgeGroup] = useState("");
+  const [age, setAge] = useState("");
   const [practiceLength, setPracticeLength] = useState("");
   const [focus, setFocus] = useState("");
   const [level, setLevel] = useState("");
-  const [plan, setPlan] = useState("");
+  const [drills, setDrills] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
   const generatePractice = async () => {
-    if (!ageGroup || !practiceLength || !focus || !level) return;
-
     setLoading(true);
 
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ageGroup,
-          practiceLength,
-          focus,
-          level,
-        }),
-      });
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        age,
+        practiceLength,
+        focus,
+        level,
+      }),
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      setPlan(data.plan);
-    } catch (error) {
-      console.error(error);
-      alert("Something went wrong");
-    }
-
+    setDrills(data.drills || []);
     setLoading(false);
   };
 
   return (
     <main className="min-h-screen bg-black text-white flex flex-col items-center p-8">
-      <h1 className="text-5xl font-bold mb-4 text-center">
+      <h1 className="text-6xl font-bold mb-4 text-center">
         Basketball Coach AI
       </h1>
 
-      <p className="text-zinc-400 mb-10 text-center max-w-2xl">
+      <p className="text-zinc-400 mb-10 text-center">
         Generate complete basketball practices in seconds.
       </p>
 
-      <div className="w-full max-w-2xl space-y-4">
+      <div className="w-full max-w-xl space-y-4">
         <input
           type="text"
-          placeholder="Age Group (Example: U14)"
-          value={ageGroup}
-          onChange={(e) => setAgeGroup(e.target.value)}
+          placeholder="Age Group (Example: 13)"
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
           className="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700"
         />
 
         <input
           type="text"
-          placeholder="Practice Length (Example: 90 minutes)"
+          placeholder="Practice Length (Example: 90 Minutes)"
           value={practiceLength}
           onChange={(e) => setPracticeLength(e.target.value)}
           className="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700"
@@ -69,7 +61,7 @@ export default function Home() {
 
         <input
           type="text"
-          placeholder="Skill Focus (Example: Defense)"
+          placeholder="Skill Focus (Example: Defense, Rebounding)"
           value={focus}
           onChange={(e) => setFocus(e.target.value)}
           className="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700"
@@ -87,15 +79,36 @@ export default function Home() {
           onClick={generatePractice}
           className="w-full bg-white text-black py-4 rounded-xl font-bold hover:opacity-80 transition"
         >
-          {loading ? "Generating Practice..." : "Generate Practice Plan"}
+          {loading ? "Generating..." : "Generate Practice Plan"}
         </button>
       </div>
 
-      {plan && (
-        <div className="mt-10 w-full max-w-3xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 whitespace-pre-wrap">
-          {plan}
-        </div>
-      )}
+      <div className="w-full max-w-3xl mt-10 space-y-4">
+        {drills.map((drill, index) => (
+          <div
+            key={index}
+            className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6"
+          >
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-2xl font-bold">
+                {drill.title}
+              </h2>
+
+              <span className="text-zinc-400">
+                {drill.duration}
+              </span>
+            </div>
+
+            <p className="text-lg mb-2">
+              {drill.drill}
+            </p>
+
+            <p className="text-sm text-zinc-400">
+              Focus: {drill.focus}
+            </p>
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
