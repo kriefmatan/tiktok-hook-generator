@@ -11,24 +11,36 @@ export async function POST(req: Request) {
     const { ageGroup, practiceLength, focus, level } = body;
 
     const prompt = `
+const prompt = `
 You are an elite basketball coach.
 
-Create a detailed basketball practice plan.
+Create a SHORT and PRACTICAL basketball practice plan.
 
 Age Group: ${ageGroup}
 Practice Length: ${practiceLength}
 Skill Focus: ${focus}
 Team Level: ${level}
 
-The practice plan should include:
-- Warmup
-- Skill Development
-- Team Drills
-- Conditioning
-- Coaching Points
-- Time breakdown for each section
+IMPORTANT:
+- Keep it concise
+- No long explanations
+- No essays
+- Make it easy to scan quickly
+- Use short bullet points
+- Include timing for each section
 
-Make it practical, realistic, and easy for coaches to follow.
+Format example:
+
+Warmup — 10 min
+• Dynamic stretching
+• Ball handling
+
+Defense Drill — 20 min
+• Shell drill
+• Closeout drill
+
+Team Play — 20 min
+• 5v5 transition defense
 `;
 
     const completion = await openai.chat.completions.create({
