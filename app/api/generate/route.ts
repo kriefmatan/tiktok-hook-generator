@@ -11,36 +11,40 @@ export async function POST(req: Request) {
     const { age, practiceLength, focus, level } = body;
 
     const prompt = `
-Create a SHORT basketball practice plan.
+Create a basketball practice plan.
 
 Age: ${age}
-Practice Length: ${practiceLength}
-Skill Focus: ${focus}
-Team Level: ${level}
+Length: ${practiceLength}
+Focus: ${focus}
+Level: ${level}
 
 Return ONLY valid JSON.
 
-Example:
+Example format:
 
 [
   {
     "title": "Warmup",
     "duration": "10 min",
-    "drill": "Dynamic stretching and layups",
-    "focus": "Mobility"
+    "drill": "Dynamic stretching and light jogging with basketballs",
+    "focus": "Mobility and ball handling"
+  },
+  {
+    "title": "Rebounding Fundamentals",
+    "duration": "20 min",
+    "drill": "Box-out positioning drills and jumping for rebounds",
+    "focus": "Rebounding technique"
   }
 ]
 `;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
-      response_format: { type: "json_object" },
-
       messages: [
         {
           role: "system",
           content:
-            "You are an elite basketball coach. Return ONLY JSON.",
+            "You are a basketball coach AI. Return ONLY clean JSON arrays.",
         },
         {
           role: "user",
@@ -49,13 +53,13 @@ Example:
       ],
     });
 
-    const raw = completion.choices[0].message.content || "{}";
+    const raw = completion.choices[0].message.content || "[]";
 
-    const parsed = JSON.parse(raw);
+    console.log(raw);
 
-    return Response.json({
-      drills: parsed.drills || parsed,
-    });
+    const drills = JSON.parse(raw);
+
+    return Response.json({ drills });
   } catch (error) {
     console.error(error);
 
@@ -63,19 +67,14 @@ Example:
       {
         drills: [
           {
-            title: "Warmup",
-            duration: "10 min",
-            drill: "Dynamic stretching and layups",
-            focus: "Mobility",
-          },
-          {
-            title: "Defense Drill",
-            duration: "15 min",
-            drill: "Closeout and rebounding drill",
-            focus: "Defense",
+            title: "Error",
+            duration: "0 min",
+            drill: "Something went wrong",
+            focus: "API Error",
           },
         ],
-      }
+      },
+      { status: 200 }
     );
   }
 }
