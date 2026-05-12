@@ -7,39 +7,48 @@ const openai = new OpenAI({
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const topic = body.topic;
+
+    const { ageGroup, practiceLength, focus, level } = body;
+
+    const prompt = `
+You are an elite basketball coach.
+
+Create a detailed basketball practice plan.
+
+Age Group: ${ageGroup}
+Practice Length: ${practiceLength}
+Skill Focus: ${focus}
+Team Level: ${level}
+
+The practice plan should include:
+- Warmup
+- Skill Development
+- Team Drills
+- Conditioning
+- Coaching Points
+- Time breakdown for each section
+
+Make it practical, realistic, and easy for coaches to follow.
+`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       messages: [
         {
           role: "system",
-          content: "You are a viral TikTok hook generator.",
+          content:
+            "You are a professional basketball coach with years of experience developing players and practices.",
         },
         {
           role: "user",
-          content: `Generate 5 EXTREMELY viral TikTok hooks about ${topic}.
-
-Make them:
-- short
-- emotionally triggering
-- curiosity driven
-- written like top TikTok creators
-- avoid generic wording
-- include strong hooks and pattern interrupts
-
-Return ONLY the hooks.`,
+          content: prompt,
         },
       ],
     });
 
-    const text = completion.choices[0].message.content || "";
+    const plan = completion.choices[0].message.content;
 
-    const hooks = text
-      .split("\n")
-      .filter((line) => line.trim() !== "");
-
-    return Response.json({ hooks });
+    return Response.json({ plan });
   } catch (error) {
     console.error(error);
 

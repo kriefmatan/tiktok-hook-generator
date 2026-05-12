@@ -3,12 +3,15 @@
 import { useState } from "react";
 
 export default function Home() {
-  const [topic, setTopic] = useState("");
-  const [hooks, setHooks] = useState<string[]>([]);
+  const [ageGroup, setAgeGroup] = useState("");
+  const [practiceLength, setPracticeLength] = useState("");
+  const [focus, setFocus] = useState("");
+  const [level, setLevel] = useState("");
+  const [plan, setPlan] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const generateHooks = async () => {
-    if (!topic) return;
+  const generatePractice = async () => {
+    if (!ageGroup || !practiceLength || !focus || !level) return;
 
     setLoading(true);
 
@@ -18,12 +21,17 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ topic }),
+        body: JSON.stringify({
+          ageGroup,
+          practiceLength,
+          focus,
+          level,
+        }),
       });
 
       const data = await response.json();
 
-      setHooks(data.hooks || []);
+      setPlan(data.plan);
     } catch (error) {
       console.error(error);
       alert("Something went wrong");
@@ -33,47 +41,61 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8">
-      <h1 className="text-5xl font-bold mb-6">
-        TikTok Hook Generator
+    <main className="min-h-screen bg-black text-white flex flex-col items-center p-8">
+      <h1 className="text-5xl font-bold mb-4 text-center">
+        Basketball Coach AI
       </h1>
 
-      <p className="text-zinc-400 mb-8 text-center max-w-xl">
-        Hooks that stop people from scrolling.
+      <p className="text-zinc-400 mb-10 text-center max-w-2xl">
+        Generate complete basketball practices in seconds.
       </p>
 
-      <input
-        type="text"
-        placeholder="What is your video about?"
-        value={topic}
-        onChange={(e) => setTopic(e.target.value)}
-        className="w-full max-w-md p-4 rounded-xl bg-zinc-900 border border-zinc-700 mb-4"
-      />
+      <div className="w-full max-w-2xl space-y-4">
+        <input
+          type="text"
+          placeholder="Age Group (Example: U14)"
+          value={ageGroup}
+          onChange={(e) => setAgeGroup(e.target.value)}
+          className="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700"
+        />
 
-      <button
-        onClick={generateHooks}
-        className="bg-white text-black px-6 py-3 rounded-xl font-semibold hover:opacity-80 transition"
-      >
-        {loading ? "Generating..." : "Generate Hooks"}
-      </button>
+        <input
+          type="text"
+          placeholder="Practice Length (Example: 90 minutes)"
+          value={practiceLength}
+          onChange={(e) => setPracticeLength(e.target.value)}
+          className="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700"
+        />
 
-      <div className="mt-10 w-full max-w-2xl space-y-4">
-        {hooks.map((hook, index) => (
-          <div
-            key={index}
-            className="bg-zinc-900 border border-zinc-800 p-4 rounded-xl flex justify-between items-center gap-4"
-          >
-            <span>{hook}</span>
+        <input
+          type="text"
+          placeholder="Skill Focus (Example: Defense)"
+          value={focus}
+          onChange={(e) => setFocus(e.target.value)}
+          className="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700"
+        />
 
-            <button
-              onClick={() => navigator.clipboard.writeText(hook)}
-              className="bg-white text-black px-3 py-1 rounded-lg text-sm font-medium hover:opacity-80"
-            >
-              Copy
-            </button>
-          </div>
-        ))}
+        <input
+          type="text"
+          placeholder="Team Level (Beginner / Intermediate / Advanced)"
+          value={level}
+          onChange={(e) => setLevel(e.target.value)}
+          className="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700"
+        />
+
+        <button
+          onClick={generatePractice}
+          className="w-full bg-white text-black py-4 rounded-xl font-bold hover:opacity-80 transition"
+        >
+          {loading ? "Generating Practice..." : "Generate Practice Plan"}
+        </button>
       </div>
+
+      {plan && (
+        <div className="mt-10 w-full max-w-3xl bg-zinc-900 border border-zinc-800 rounded-2xl p-6 whitespace-pre-wrap">
+          {plan}
+        </div>
+      )}
     </main>
   );
 }
