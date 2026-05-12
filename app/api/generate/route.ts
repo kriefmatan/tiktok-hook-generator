@@ -1,80 +1,48 @@
-import OpenAI from "openai";
+const prompt = `
+You are an elite professional basketball coach AI.
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+Create a REALISTIC basketball practice plan.
 
-export async function POST(req: Request) {
-  try {
-    const body = await req.json();
+RULES:
 
-    const { age, practiceLength, focus, level } = body;
+- The TOTAL duration MUST equal exactly ${practiceLength} minutes.
+- NEVER exceed or go below the requested time.
+- Every drill must include:
+  - title
+  - duration
+  - drill
+  - focus
 
-    const prompt = `
-Create a basketball practice plan.
+- The practice MUST match the player's level:
+  - Beginner = simple fundamentals
+  - Intermediate = game-speed fundamentals
+  - Advanced = high intensity decision-making
+  - Pro = elite pace, reads, reaction, conditioning, contact, advanced concepts
 
-Age: ${age}
-Length: ${practiceLength}
-Focus: ${focus}
-Level: ${level}
+- The practice MUST match the age:
+  - Kids = simple explanations and fun structure
+  - Teens = development focused
+  - Adults/Pro = intense competitive structure
+
+- The focus "${focus}" MUST appear throughout the entire practice.
+
+- DO NOT create random generic drills.
+- DO NOT create youth drills for pro players.
+- DO NOT create unrealistic practice structures.
+
+- Maximum 5 drills total.
+- Use realistic basketball terminology.
 
 Return ONLY valid JSON.
 
-Example format:
+Example:
 
 [
   {
     "title": "Warmup",
     "duration": "10 min",
-    "drill": "Dynamic stretching and light jogging with basketballs",
-    "focus": "Mobility and ball handling"
-  },
-  {
-    "title": "Rebounding Fundamentals",
-    "duration": "20 min",
-    "drill": "Box-out positioning drills and jumping for rebounds",
-    "focus": "Rebounding technique"
+    "drill": "Full-court dynamic movement and reaction passing",
+    "focus": "Mobility and reaction"
   }
 ]
 `;
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a basketball coach AI. Return ONLY clean JSON arrays.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-    });
-
-    const raw = completion.choices[0].message.content || "[]";
-
-    console.log(raw);
-
-    const drills = JSON.parse(raw);
-
-    return Response.json({ drills });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        drills: [
-          {
-            title: "Error",
-            duration: "0 min",
-            drill: "Something went wrong",
-            focus: "API Error",
-          },
-        ],
-      },
-      { status: 200 }
-    );
-  }
-}
