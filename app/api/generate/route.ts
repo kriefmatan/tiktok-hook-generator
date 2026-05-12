@@ -11,14 +11,16 @@ export async function POST(req: Request) {
     const { age, practiceLength, focus, level } = body;
 
     const prompt = `
-Create a basketball practice plan.
+Create a SHORT basketball practice plan.
 
 Age: ${age}
 Practice Length: ${practiceLength}
 Skill Focus: ${focus}
 Team Level: ${level}
 
-Return ONLY valid JSON in this exact format:
+Return ONLY valid JSON.
+
+Example:
 
 [
   {
@@ -26,23 +28,19 @@ Return ONLY valid JSON in this exact format:
     "duration": "10 min",
     "drill": "Dynamic stretching and layups",
     "focus": "Mobility"
-  },
-  {
-    "title": "Defense Drill",
-    "duration": "15 min",
-    "drill": "Closeout and help-side rotations",
-    "focus": "Defense"
   }
 ]
 `;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
+      response_format: { type: "json_object" },
+
       messages: [
         {
           role: "system",
           content:
-            "You are an elite basketball coach. Always return clean JSON only.",
+            "You are an elite basketball coach. Return ONLY JSON.",
         },
         {
           role: "user",
@@ -51,17 +49,33 @@ Return ONLY valid JSON in this exact format:
       ],
     });
 
-    const raw = completion.choices[0].message.content || "[]";
+    const raw = completion.choices[0].message.content || "{}";
 
-    const drills = JSON.parse(raw);
+    const parsed = JSON.parse(raw);
 
-    return Response.json({ drills });
+    return Response.json({
+      drills: parsed.drills || parsed,
+    });
   } catch (error) {
     console.error(error);
 
     return Response.json(
-      { error: "Something went wrong" },
-      { status: 500 }
+      {
+        drills: [
+          {
+            title: "Warmup",
+            duration: "10 min",
+            drill: "Dynamic stretching and layups",
+            focus: "Mobility",
+          },
+          {
+            title: "Defense Drill",
+            duration: "15 min",
+            drill: "Closeout and rebounding drill",
+            focus: "Defense",
+          },
+        ],
+      }
     );
   }
 }
