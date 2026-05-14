@@ -1,6 +1,17 @@
 "use client";
 
+import { useState } from "react";
+
 export default function Home() {
+  const [selectedOffense, setSelectedOffense] = useState("");
+  const [selectedDefense, setSelectedDefense] = useState("");
+  const [selectedProblem, setSelectedProblem] = useState("");
+
+  const buttonStyle = (active: boolean) =>
+    active
+      ? "bg-white text-black p-4 rounded-xl font-bold"
+      : "bg-zinc-900 text-white p-4 rounded-xl";
+
   return (
     <main className="min-h-screen bg-black text-white p-10">
       <div className="max-w-3xl mx-auto">
@@ -20,21 +31,35 @@ export default function Home() {
           </h2>
 
           <div className="grid grid-cols-2 gap-4">
-            <button className="bg-zinc-900 p-4 rounded-xl">
+
+            <button
+              onClick={() => setSelectedOffense("Fast Pace")}
+              className={buttonStyle(selectedOffense === "Fast Pace")}
+            >
               Fast Pace
             </button>
 
-            <button className="bg-zinc-900 p-4 rounded-xl">
+            <button
+              onClick={() => setSelectedOffense("Motion Offense")}
+              className={buttonStyle(selectedOffense === "Motion Offense")}
+            >
               Motion Offense
             </button>
 
-            <button className="bg-zinc-900 p-4 rounded-xl">
+            <button
+              onClick={() => setSelectedOffense("Pick & Roll")}
+              className={buttonStyle(selectedOffense === "Pick & Roll")}
+            >
               Pick & Roll
             </button>
 
-            <button className="bg-zinc-900 p-4 rounded-xl">
+            <button
+              onClick={() => setSelectedOffense("5-Out")}
+              className={buttonStyle(selectedOffense === "5-Out")}
+            >
               5-Out
             </button>
+
           </div>
         </div>
 
@@ -45,21 +70,35 @@ export default function Home() {
           </h2>
 
           <div className="grid grid-cols-2 gap-4">
-            <button className="bg-zinc-900 p-4 rounded-xl">
+
+            <button
+              onClick={() => setSelectedDefense("Pressure Defense")}
+              className={buttonStyle(selectedDefense === "Pressure Defense")}
+            >
               Pressure Defense
             </button>
 
-            <button className="bg-zinc-900 p-4 rounded-xl">
+            <button
+              onClick={() => setSelectedDefense("Switching")}
+              className={buttonStyle(selectedDefense === "Switching")}
+            >
               Switching
             </button>
 
-            <button className="bg-zinc-900 p-4 rounded-xl">
+            <button
+              onClick={() => setSelectedDefense("Zone Defense")}
+              className={buttonStyle(selectedDefense === "Zone Defense")}
+            >
               Zone Defense
             </button>
 
-            <button className="bg-zinc-900 p-4 rounded-xl">
+            <button
+              onClick={() => setSelectedDefense("Aggressive Defense")}
+              className={buttonStyle(selectedDefense === "Aggressive Defense")}
+            >
               Aggressive Defense
             </button>
+
           </div>
         </div>
 
@@ -70,26 +109,59 @@ export default function Home() {
           </h2>
 
           <div className="grid grid-cols-2 gap-4">
-            <button className="bg-zinc-900 p-4 rounded-xl">
+
+            <button
+              onClick={() => setSelectedProblem("Turnovers")}
+              className={buttonStyle(selectedProblem === "Turnovers")}
+            >
               Turnovers
             </button>
 
-            <button className="bg-zinc-900 p-4 rounded-xl">
+            <button
+              onClick={() => setSelectedProblem("Rebounding")}
+              className={buttonStyle(selectedProblem === "Rebounding")}
+            >
               Rebounding
             </button>
 
-            <button className="bg-zinc-900 p-4 rounded-xl">
+            <button
+              onClick={() => setSelectedProblem("Communication")}
+              className={buttonStyle(selectedProblem === "Communication")}
+            >
               Communication
             </button>
 
-            <button className="bg-zinc-900 p-4 rounded-xl">
+            <button
+              onClick={() => setSelectedProblem("Transition Defense")}
+              className={buttonStyle(selectedProblem === "Transition Defense")}
+            >
               Transition Defense
             </button>
+
           </div>
         </div>
 
+        {/* Current Identity */}
+        <div className="bg-zinc-900 p-6 rounded-2xl mb-10">
+          <h2 className="text-2xl font-bold mb-4">
+            Current Team Identity
+          </h2>
+
+          <p className="mb-2">
+            Offensive Style: {selectedOffense || "None"}
+          </p>
+
+          <p className="mb-2">
+            Defensive Style: {selectedDefense || "None"}
+          </p>
+
+          <p>
+            Main Team Problem: {selectedProblem || "None"}
+          </p>
+        </div>
+
         {/* Generate */}
-        <button className="w-full bg-white text-black font-bold py-4 rounded-xl text-xl mt-10">
+        <button className="w-full bg-white text-black font-bold py-4 rounded-xl text-xl">
           Build Team Development Plan
         </button>
 
