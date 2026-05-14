@@ -1,0 +1,13 @@
+import type { CoachLocale } from "../coachLocale";
+import type { SimplePracticeBundle } from "../coachBundle.types";
+import { EN_SIMPLE } from "./en";
+import { ES_SIMPLE } from "./es";
+import { HE_SIMPLE } from "./he";
+
+export const SIMPLE_BUNDLES: Record<CoachLocale, SimplePracticeBundle> = {
+  en: EN_SIMPLE,
+  he: HE_SIMPLE,
+  es: ES_SIMPLE,
+};
+
+export { EN_SIMPLE, ES_SIMPLE, HE_SIMPLE };

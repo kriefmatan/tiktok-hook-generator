@@ -2,13 +2,11 @@ import { buildPracticePlan, type CoachingFields } from "../../lib/practicePlanGe
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { teamDescription, hurtingMost, practiceFocus, ageLevel } = body as Partial<CoachingFields>;
+  const { sessionFocus, wantToImprove } = body as Partial<CoachingFields>;
 
   const fields: CoachingFields = {
-    teamDescription: typeof teamDescription === "string" ? teamDescription : "",
-    hurtingMost: typeof hurtingMost === "string" ? hurtingMost : "",
-    practiceFocus: typeof practiceFocus === "string" ? practiceFocus : "",
-    ageLevel: typeof ageLevel === "string" ? ageLevel : "",
+    sessionFocus: typeof sessionFocus === "string" ? sessionFocus : "",
+    wantToImprove: typeof wantToImprove === "string" ? wantToImprove : "",
   };
 
   const plan = buildPracticePlan(fields);

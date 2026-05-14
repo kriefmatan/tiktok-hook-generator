@@ -1,4 +1,5 @@
 import type { HalfCourtMovement, HalfCourtPass, HalfCourtPlayer } from "@/components/HalfCourtDiagram";
+import type { CoachLocale } from "@/app/lib/locale/coachLocale";
 
 export type PracticeBlockDiagram = {
   players: HalfCourtPlayer[];
@@ -7,22 +8,25 @@ export type PracticeBlockDiagram = {
   caption?: string;
 };
 
-export type PracticeBlock = {
-  duration: string;
+/** One block on the sheet — short, readable on the sideline */
+export type PracticeSheetSection = {
+  name: string;
+  time: string;
+  /** One-line goal — mostly the coach’s own words */
   goal: string;
-  coachingPoints: string[];
-  commonMistakes: string[];
-  drillInstructions: string;
+  coachingPoints: readonly [string, string];
   diagram: PracticeBlockDiagram;
 };
 
 export type PracticePlan = {
-  practiceTitle: string;
-  totalPracticeTime: string;
-  warmup: PracticeBlock;
-  skillDevelopment: PracticeBlock;
-  teamConcept: PracticeBlock;
-  competitiveDrill: PracticeBlock;
-  scrimmage: PracticeBlock;
-  freeThrowsConditioning: PracticeBlock;
+  headerLine: string;
+  totalTime: string;
+  locale: CoachLocale;
+  dir: "ltr" | "rtl";
+  sectionLabels: readonly [string, string, string, string, string];
+  warmup: PracticeSheetSection;
+  drill1: PracticeSheetSection;
+  drill2: PracticeSheetSection;
+  drill3: PracticeSheetSection;
+  gameFiveOnFive: PracticeSheetSection;
 };
