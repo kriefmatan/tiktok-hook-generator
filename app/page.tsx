@@ -1,125 +1,98 @@
 "use client";
 
-import { useState } from "react";
-
-type Drill = {
-  title: string;
-  duration: string;
-  drill: string;
-  focus: string;
-};
-
 export default function Home() {
-  const [age, setAge] = useState("");
-  const [practiceLength, setPracticeLength] = useState("");
-  const [focus, setFocus] = useState("");
-  const [level, setLevel] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [drills, setDrills] = useState<Drill[]>([]);
-
-  const generatePractice = async () => {
-    setLoading(true);
-
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          age,
-          practiceLength,
-          focus,
-          level,
-        }),
-      });
-
-      const data = await response.json();
-
-      setDrills(data.drills || []);
-    } catch (error) {
-      console.error(error);
-    }
-
-    setLoading(false);
-  };
-
   return (
-    <main className="min-h-screen bg-black text-white flex flex-col items-center p-8">
-      <h1 className="text-6xl font-bold mb-4 mt-10">
-        Basketball Coach AI
-      </h1>
+    <main className="min-h-screen bg-black text-white p-10">
+      <div className="max-w-3xl mx-auto">
 
-      <p className="text-zinc-400 mb-10">
-        Generate complete basketball practices in seconds.
-      </p>
+        <h1 className="text-5xl font-bold mb-4">
+          Basketball Team AI
+        </h1>
 
-      <div className="w-full max-w-2xl space-y-4">
-        <input
-          type="text"
-          placeholder="Team Age (Example: 13)"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-          className="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700"
-        />
+        <p className="text-gray-400 mb-10">
+          Build your team's identity and development system.
+        </p>
 
-        <input
-          type="text"
-          placeholder="Practice Length (Example: 90 minutes)"
-          value={practiceLength}
-          onChange={(e) => setPracticeLength(e.target.value)}
-          className="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700"
-        />
+        {/* Offensive Style */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">
+            Offensive Style
+          </h2>
 
-        <input
-          type="text"
-          placeholder="Skill Focus (Example: Defense, Rebounding)"
-          value={focus}
-          onChange={(e) => setFocus(e.target.value)}
-          className="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700"
-        />
+          <div className="grid grid-cols-2 gap-4">
+            <button className="bg-zinc-900 p-4 rounded-xl">
+              Fast Pace
+            </button>
 
-        <input
-          type="text"
-          placeholder="Team Level (Beginner / Intermediate / Advanced)"
-          value={level}
-          onChange={(e) => setLevel(e.target.value)}
-          className="w-full p-4 rounded-xl bg-zinc-900 border border-zinc-700"
-        />
+            <button className="bg-zinc-900 p-4 rounded-xl">
+              Motion Offense
+            </button>
 
-        <button
-          onClick={generatePractice}
-          className="w-full bg-white text-black py-4 rounded-xl font-bold hover:opacity-80 transition"
-        >
-          {loading ? "Generating Practice..." : "Generate Practice Plan"}
-        </button>
-      </div>
+            <button className="bg-zinc-900 p-4 rounded-xl">
+              Pick & Roll
+            </button>
 
-      <div className="mt-12 w-full max-w-3xl space-y-6">
-        {drills.map((drill, index) => (
-          <div
-            key={index}
-            className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6"
-          >
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-3xl font-bold">
-                {drill.title}
-              </h2>
-
-              <span className="text-zinc-400">
-                {drill.duration}
-              </span>
-            </div>
-
-            <p className="text-xl mb-4">
-              {drill.drill}
-            </p>
-
-            <p className="text-zinc-500">
-              Focus: {drill.focus}
-            </p>
+            <button className="bg-zinc-900 p-4 rounded-xl">
+              5-Out
+            </button>
           </div>
-        ))}
+        </div>
+
+        {/* Defensive Style */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">
+            Defensive Style
+          </h2>
+
+          <div className="grid grid-cols-2 gap-4">
+            <button className="bg-zinc-900 p-4 rounded-xl">
+              Pressure Defense
+            </button>
+
+            <button className="bg-zinc-900 p-4 rounded-xl">
+              Switching
+            </button>
+
+            <button className="bg-zinc-900 p-4 rounded-xl">
+              Zone Defense
+            </button>
+
+            <button className="bg-zinc-900 p-4 rounded-xl">
+              Aggressive Defense
+            </button>
+          </div>
+        </div>
+
+        {/* Team Problems */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">
+            Team Problems
+          </h2>
+
+          <div className="grid grid-cols-2 gap-4">
+            <button className="bg-zinc-900 p-4 rounded-xl">
+              Turnovers
+            </button>
+
+            <button className="bg-zinc-900 p-4 rounded-xl">
+              Rebounding
+            </button>
+
+            <button className="bg-zinc-900 p-4 rounded-xl">
+              Communication
+            </button>
+
+            <button className="bg-zinc-900 p-4 rounded-xl">
+              Transition Defense
+            </button>
+          </div>
+        </div>
+
+        {/* Generate */}
+        <button className="w-full bg-white text-black font-bold py-4 rounded-xl text-xl mt-10">
+          Build Team Development Plan
+        </button>
+
       </div>
     </main>
   );
