@@ -32,6 +32,16 @@ type Props = {
   className?: string;
 };
 
+const C_STROKE = "#a1a1aa";
+const C_FILL_KEY = "none";
+const RIM = "#71717a";
+const O_FILL = "#2563eb";
+const O_STROKE = "#ffffff";
+const X_FILL = "#dc2626";
+const X_STROKE = "#ffffff";
+const MOVE_STROKE = "#fafafa";
+const PASS_STROKE = "#a3a3a3";
+
 /**
  * Half court in SVG: viewBox matches normalized coords (0–100 × 0–100).
  * y = 0 is halfcourt; y = 100 is the baseline; hoop near (50, 94).
@@ -43,113 +53,120 @@ export function HalfCourtDiagram({ players, movements, passes, caption, classNam
 
   return (
     <figure className={className}>
-      <div className="overflow-hidden rounded-md border border-zinc-700 bg-zinc-950">
-        <svg
-          viewBox="0 0 100 100"
-          className="block h-auto w-full max-h-[min(320px,55vw)] text-zinc-300"
-          role="img"
-          aria-label={caption ?? "Half court diagram"}
-        >
-          <title>{caption ?? "Half court diagram"}</title>
-          <defs>
-            <marker
-              id={idSolid}
-              markerWidth="6"
-              markerHeight="6"
-              refX="5"
-              refY="3"
-              orient="auto"
-            >
-              <path d="M0,0 L6,3 L0,6 Z" className="fill-zinc-100" />
-            </marker>
-            <marker
-              id={idPass}
-              markerWidth="6"
-              markerHeight="6"
-              refX="5"
-              refY="3"
-              orient="auto"
-            >
-              <path d="M0,0 L6,3 L0,6 Z" className="fill-zinc-400" />
-            </marker>
-          </defs>
+      {/* Explicit aspect box so the SVG always gets height in flex/grid layouts */}
+      <div className="w-full max-w-[min(100%,320px)] overflow-hidden rounded-md border border-zinc-600 bg-[#0c0c0f]">
+        <div className="relative w-full [aspect-ratio:1/1]">
+          <svg
+            viewBox="0 0 100 100"
+            width="100%"
+            height="100%"
+            className="absolute inset-0 block"
+            preserveAspectRatio="xMidYMid meet"
+            role="img"
+            aria-label={caption ?? "Half court diagram"}
+          >
+            <title>{caption ?? "Half court diagram"}</title>
+            <defs>
+              <marker
+                id={idSolid}
+                markerUnits="userSpaceOnUse"
+                markerWidth="5"
+                markerHeight="5"
+                refX="4"
+                refY="2.5"
+                orient="auto"
+              >
+                <path d="M0,0 L5,2.5 L0,5 Z" fill={MOVE_STROKE} />
+              </marker>
+              <marker
+                id={idPass}
+                markerUnits="userSpaceOnUse"
+                markerWidth="5"
+                markerHeight="5"
+                refX="4"
+                refY="2.5"
+                orient="auto"
+              >
+                <path d="M0,0 L5,2.5 L0,5 Z" fill={PASS_STROKE} />
+              </marker>
+            </defs>
 
-          <CourtLines />
+            <CourtLines />
 
-          {passes.map((p, i) => (
-            <line
-              key={`pass-${i}`}
-              x1={p.from.x}
-              y1={p.from.y}
-              x2={p.to.x}
-              y2={p.to.y}
-              className="stroke-zinc-400"
-              strokeWidth={0.55}
-              strokeDasharray="2.2 1.6"
-              fill="none"
-              markerEnd={`url(#${idPass})`}
-            />
-          ))}
+            {passes.map((p, i) => (
+              <line
+                key={`pass-${i}`}
+                x1={p.from.x}
+                y1={p.from.y}
+                x2={p.to.x}
+                y2={p.to.y}
+                stroke={PASS_STROKE}
+                strokeWidth={0.7}
+                strokeDasharray="2.4 1.8"
+                fill="none"
+                markerEnd={`url(#${idPass})`}
+              />
+            ))}
 
-          {movements.map((m, i) => (
-            <line
-              key={`move-${i}`}
-              x1={m.from.x}
-              y1={m.from.y}
-              x2={m.to.x}
-              y2={m.to.y}
-              className="stroke-zinc-100"
-              strokeWidth={0.65}
-              fill="none"
-              markerEnd={`url(#${idSolid})`}
-            />
-          ))}
+            {movements.map((m, i) => (
+              <line
+                key={`move-${i}`}
+                x1={m.from.x}
+                y1={m.from.y}
+                x2={m.to.x}
+                y2={m.to.y}
+                stroke={MOVE_STROKE}
+                strokeWidth={0.85}
+                fill="none"
+                markerEnd={`url(#${idSolid})`}
+              />
+            ))}
 
-          {players.map((pl, i) =>
-            pl.side === "offense" ? (
-              <g key={`pl-${i}`}>
-                <circle
-                  cx={pl.x}
-                  cy={pl.y}
-                  r={2.6}
-                  className="fill-blue-600 stroke-white"
-                  strokeWidth={0.35}
-                />
-                {pl.label ? (
-                  <text
-                    x={pl.x}
-                    y={pl.y + 0.85}
-                    textAnchor="middle"
-                    className="fill-white text-[3.8px] font-semibold"
-                    style={{ fontFamily: "system-ui, sans-serif" }}
-                  >
-                    {pl.label}
-                  </text>
-                ) : null}
-              </g>
-            ) : (
-              <g key={`pl-${i}`} transform={`translate(${pl.x} ${pl.y})`}>
-                <polygon
-                  points="0,-2.6 -2.3,2.1 2.3,2.1"
-                  className="fill-red-600 stroke-white"
-                  strokeWidth={0.35}
-                  strokeLinejoin="round"
-                />
-                {pl.label ? (
-                  <text
-                    x={0}
-                    y={1.1}
-                    textAnchor="middle"
-                    className="fill-white text-[3.8px] font-semibold"
-                    style={{ fontFamily: "system-ui, sans-serif" }}
-                  >
-                    {pl.label}
-                  </text>
-                ) : null}
-              </g>
-            )
-          )}
-        </svg>
+            {players.map((pl, i) =>
+              pl.side === "offense" ? (
+                <g key={`pl-${i}`}>
+                  <circle cx={pl.x} cy={pl.y} r={2.7} fill={O_FILL} stroke={O_STROKE} strokeWidth={0.4} />
+                  {pl.label ? (
+                    <text
+                      x={pl.x}
+                      y={pl.y + 0.9}
+                      textAnchor="middle"
+                      fill="#ffffff"
+                      fontSize={3.6}
+                      fontWeight={600}
+                      fontFamily="system-ui, Segoe UI, sans-serif"
+                    >
+                      {pl.label}
+                    </text>
+                  ) : null}
+                </g>
+              ) : (
+                <g key={`pl-${i}`} transform={`translate(${pl.x} ${pl.y})`}>
+                  <polygon
+                    points="0,-2.7 -2.4,2.2 2.4,2.2"
+                    fill={X_FILL}
+                    stroke={X_STROKE}
+                    strokeWidth={0.4}
+                    strokeLinejoin="round"
+                  />
+                  {pl.label ? (
+                    <text
+                      x={0}
+                      y={1.15}
+                      textAnchor="middle"
+                      fill="#ffffff"
+                      fontSize={3.6}
+                      fontWeight={600}
+                      fontFamily="system-ui, Segoe UI, sans-serif"
+                    >
+                      {pl.label}
+                    </text>
+                  ) : null}
+                </g>
+              )
+            )}
+          </svg>
+        </div>
       </div>
       {caption ? (
         <figcaption className="mt-2 text-xs leading-snug text-zinc-500">{caption}</figcaption>
@@ -160,14 +177,14 @@ export function HalfCourtDiagram({ players, movements, passes, caption, classNam
 
 function CourtLines() {
   return (
-    <g className="stroke-zinc-500" fill="none" strokeWidth={0.45}>
+    <g stroke={C_STROKE} fill={C_FILL_KEY} strokeWidth={0.5}>
       <rect x={0.5} y={0.5} width={99} height={99} rx={0.5} />
-      <line x1={46} y1={93} x2={54} y2={93} strokeWidth={0.35} />
-      <circle cx={50} cy={94} r={0.9} className="fill-zinc-600 stroke-none" />
+      <line x1={46} y1={93} x2={54} y2={93} strokeWidth={0.4} />
+      <circle cx={50} cy={94} r={0.95} fill={RIM} stroke="none" />
       <rect x={38} y={68} width={24} height={31.5} />
-      <line x1={38} y1={68} x2={62} y2={68} strokeWidth={0.4} />
+      <line x1={38} y1={68} x2={62} y2={68} strokeWidth={0.45} />
       <path d="M 38 68 A 12 12 0 0 1 62 68" />
-      <path d="M 0.5 77 L 17 77 A 33 33 0 0 1 83 77 L 99.5 77" strokeWidth={0.45} />
+      <path d="M 0.5 77 L 17 77 A 33 33 0 0 1 83 77 L 99.5 77" strokeWidth={0.5} />
     </g>
   );
 }
