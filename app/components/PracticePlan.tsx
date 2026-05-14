@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { exampleShellHalfCourt, HalfCourtDiagram } from "@/components/HalfCourtDiagram";
 import type { PracticeBlock, PracticePlan } from "../types/plan";
 
 type Props = {
@@ -48,6 +49,8 @@ function PracticeSection({ title, block }: { title: string; block: PracticeBlock
 }
 
 export function PracticePlanSheet({ plan }: Props) {
+  const diagram = exampleShellHalfCourt();
+
   return (
     <div className="mt-2 max-w-3xl space-y-5 font-sans text-zinc-100">
       <header className="rounded-lg border border-zinc-800 bg-zinc-950 px-5 py-4">
@@ -56,6 +59,20 @@ export function PracticePlanSheet({ plan }: Props) {
           <span className="text-zinc-500">Total practice time:</span> {plan.totalPracticeTime}
         </p>
       </header>
+
+      <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 px-5 py-4">
+        <p className="text-xs font-semibold text-zinc-500">Half court sketch</p>
+        <HalfCourtDiagram
+          className="mt-3 max-w-md"
+          players={diagram.players}
+          movements={diagram.movements}
+          passes={diagram.passes}
+          caption={diagram.caption}
+        />
+        <p className="mt-3 text-[11px] leading-relaxed text-zinc-500">
+          Blue circles = offense · Red triangles = defense · Solid arrow = player movement · Dashed arrow = pass
+        </p>
+      </div>
 
       <div className="space-y-4">
         <PracticeSection title="Warmup" block={plan.warmup} />
