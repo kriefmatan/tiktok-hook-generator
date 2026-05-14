@@ -14,54 +14,86 @@ function block(
 export type OffenseKey = "pick" | "fiveOut" | "motion" | "fast";
 export type DefenseKey = "zone" | "aggressive" | "pressure" | "switch" | "man";
 
+/** What coaches type in the four fields on the home page */
+export type CoachingFields = {
+  teamDescription: string;
+  hurtingMost: string;
+  practiceFocus: string;
+  ageLevel: string;
+};
+
 export type PlanContext = {
-  offenseLabel: string;
-  defenseLabel: string;
   offense: OffenseKey;
   defense: DefenseKey;
   turnovers: boolean;
   rebounding: boolean;
   communication: boolean;
   transition: boolean;
-  /** First problem tag for title emphasis (still use booleans for content) */
-  primaryTag: string;
+  coachTeamDescription: string;
+  coachHurting: string;
+  coachPracticeFocus: string;
+  coachAgeLevel: string;
 };
 
-function offenseKey(raw: string): OffenseKey {
-  if (raw.includes("Pick")) return "pick";
-  if (raw.includes("5-Out")) return "fiveOut";
-  if (raw.includes("Motion")) return "motion";
-  return "fast";
+function haystack(fields: CoachingFields): string {
+  return [fields.teamDescription, fields.hurtingMost, fields.practiceFocus, fields.ageLevel].join(" ").toLowerCase();
 }
 
-function defenseKey(raw: string): DefenseKey {
-  if (raw.includes("Zone")) return "zone";
-  if (raw.includes("Aggressive")) return "aggressive";
-  if (raw.includes("Pressure")) return "pressure";
-  if (raw.includes("Switch")) return "switch";
+function inferOffense(h: string): OffenseKey {
+  if (/\b(pick|pnr|ball[-\s]?screen|screen[-\s]?and[-\s]?roll)\b/.test(h)) return "pick";
+  if (/\b(5[-\s]?out|five[-\s]?out|five\s+out|spread\s+floor|five\s+on\s+the\s+perimeter)\b/.test(h)) return "fiveOut";
+  if (/\b(motion|flex|shuffle|continuity|cut(s|ting)?|off[-\s]?ball)\b/.test(h)) return "motion";
+  if (/\b(fast|tempo|pace|up[-\s]?tempo|run[-\s]?the|push[-\s]?the|transition)\b/.test(h)) return "fast";
+  return "motion";
+}
+
+function inferDefense(h: string): DefenseKey {
+  if (/\b(zone|2[-\s]?3|3[-\s]?2|1[-\s]?3[-\s]?1)\b/.test(h)) return "zone";
+  if (/\b(full[-\s]?court|press|trap|blitz)\b/.test(h)) return "aggressive";
+  if (/\b(switch|switching)\b/.test(h)) return "switch";
+  if (/\b(pressure|deny|on[-\s]?ball)\b/.test(h)) return "pressure";
+  if (/\b(aggressive|hedge|show)\b/.test(h)) return "aggressive";
   return "man";
 }
 
-export function makeContext(offense: string, defense: string, problems: string[]): PlanContext {
-  const offenseLabel = offense.trim() || "Balanced";
-  const defenseLabel = defense.trim() || "Man principles";
-  const p = problems.length ? problems : ["Execution"];
-  const primaryTag = p[0];
+function inferFlags(h: string) {
   return {
-    offenseLabel,
-    defenseLabel,
-    offense: offenseKey(offenseLabel),
-    defense: defenseKey(defenseLabel),
-    turnovers: p.includes("Turnovers"),
-    rebounding: p.includes("Rebounding"),
-    communication: p.includes("Communication"),
-    transition: p.includes("Transition Defense"),
-    primaryTag,
+    turnovers:
+      /\b(turnover|turnovers|handle|sloppy|careless|bad\s+pass|travel|dribbl\w*\s+off|loose\s+ball)\b/.test(h),
+    rebounding: /\b(rebound|rebounding|glass|box\s*out|boards?|second\s*chance|miss\w*\s+hits?)\b/.test(h),
+    communication: /\b(talk|communicat|quiet|silent|call\s+out|no\s+voices?)\b/.test(h),
+    transition: /\b(transition|leak|jog\s*back|conversion|sprint\s*back|get\s*back)\b/.test(h),
   };
 }
 
+export function buildContextFromFields(fields: CoachingFields): PlanContext {
+  const h = haystack(fields);
+  const flags = inferFlags(h);
+  return {
+    offense: inferOffense(h),
+    defense: inferDefense(h),
+    turnovers: flags.turnovers,
+    rebounding: flags.rebounding,
+    communication: flags.communication,
+    transition: flags.transition,
+    coachTeamDescription: fields.teamDescription.trim(),
+    coachHurting: fields.hurtingMost.trim(),
+    coachPracticeFocus: fields.practiceFocus.trim(),
+    coachAgeLevel: fields.ageLevel.trim(),
+  };
+}
+
+function clip(s: string, max: number): string {
+  const t = s.trim();
+  if (!t) return "";
+  return t.length > max ? `${t.slice(0, max - 1)}…` : t;
+}
+
 function title(ctx: PlanContext): string {
-  return `Practice — ${ctx.offenseLabel} vs ${ctx.defenseLabel} | ${ctx.primaryTag}`;
+  const age = ctx.coachAgeLevel ? clip(ctx.coachAgeLevel, 36) : "";
+  const focus = clip(ctx.coachPracticeFocus || ctx.coachHurting || ctx.coachTeamDescription, 72);
+  const tail = focus || "What you told us";
+  return age ? `Practice plan — ${age} · ${tail}` : `Practice plan — ${tail}`;
 }
 
 /* ——— Diagrams (distinct shapes per track) ——— */
@@ -1149,8 +1181,8 @@ function buildFt(ctx: PlanContext): PracticeBlock {
   );
 }
 
-export function buildPracticePlan(offense: string, defense: string, problems: string[]): PracticePlan {
-  const ctx = makeContext(offense, defense, problems);
+export function buildPracticePlan(fields: CoachingFields): PracticePlan {
+  const ctx = buildContextFromFields(fields);
   return {
     practiceTitle: title(ctx),
     totalPracticeTime: "1 hour 40 minutes (100 min)",
