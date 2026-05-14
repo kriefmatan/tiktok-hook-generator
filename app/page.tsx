@@ -6,6 +6,8 @@ export default function Home() {
   const [offense, setOffense] = useState("");
   const [defense, setDefense] = useState("");
   const [problems, setProblems] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState("");
 
   const toggleProblem = (problem: string) => {
     if (problems.includes(problem)) {
@@ -13,6 +15,28 @@ export default function Home() {
     } else {
       setProblems([...problems, problem]);
     }
+  };
+
+  const generatePlan = async () => {
+    setLoading(true);
+
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        offense,
+        defense,
+        problems,
+      }),
+    });
+
+    const data = await response.json();
+
+    setResult(data.plan);
+
+    setLoading(false);
   };
 
   return (
@@ -35,49 +59,19 @@ export default function Home() {
 
           <div className="grid grid-cols-2 gap-4">
 
-            <button
-              onClick={() => setOffense("Fast Pace")}
-              className={`p-4 rounded-xl ${
-                offense === "Fast Pace"
-                  ? "bg-white text-black"
-                  : "bg-zinc-900"
-              }`}
-            >
-              Fast Pace
-            </button>
-
-            <button
-              onClick={() => setOffense("Motion Offense")}
-              className={`p-4 rounded-xl ${
-                offense === "Motion Offense"
-                  ? "bg-white text-black"
-                  : "bg-zinc-900"
-              }`}
-            >
-              Motion Offense
-            </button>
-
-            <button
-              onClick={() => setOffense("Pick & Roll")}
-              className={`p-4 rounded-xl ${
-                offense === "Pick & Roll"
-                  ? "bg-white text-black"
-                  : "bg-zinc-900"
-              }`}
-            >
-              Pick & Roll
-            </button>
-
-            <button
-              onClick={() => setOffense("5-Out")}
-              className={`p-4 rounded-xl ${
-                offense === "5-Out"
-                  ? "bg-white text-black"
-                  : "bg-zinc-900"
-              }`}
-            >
-              5-Out
-            </button>
+            {["Fast Pace", "Motion Offense", "Pick & Roll", "5-Out"].map((style) => (
+              <button
+                key={style}
+                onClick={() => setOffense(style)}
+                className={`p-4 rounded-xl ${
+                  offense === style
+                    ? "bg-white text-black"
+                    : "bg-zinc-900"
+                }`}
+              >
+                {style}
+              </button>
+            ))}
 
           </div>
         </div>
@@ -90,54 +84,29 @@ export default function Home() {
 
           <div className="grid grid-cols-2 gap-4">
 
-            <button
-              onClick={() => setDefense("Pressure Defense")}
-              className={`p-4 rounded-xl ${
-                defense === "Pressure Defense"
-                  ? "bg-white text-black"
-                  : "bg-zinc-900"
-              }`}
-            >
-              Pressure Defense
-            </button>
-
-            <button
-              onClick={() => setDefense("Switching")}
-              className={`p-4 rounded-xl ${
-                defense === "Switching"
-                  ? "bg-white text-black"
-                  : "bg-zinc-900"
-              }`}
-            >
-              Switching
-            </button>
-
-            <button
-              onClick={() => setDefense("Zone Defense")}
-              className={`p-4 rounded-xl ${
-                defense === "Zone Defense"
-                  ? "bg-white text-black"
-                  : "bg-zinc-900"
-              }`}
-            >
-              Zone Defense
-            </button>
-
-            <button
-              onClick={() => setDefense("Aggressive Defense")}
-              className={`p-4 rounded-xl ${
-                defense === "Aggressive Defense"
-                  ? "bg-white text-black"
-                  : "bg-zinc-900"
-              }`}
-            >
-              Aggressive Defense
-            </button>
+            {[
+              "Pressure Defense",
+              "Switching",
+              "Zone Defense",
+              "Aggressive Defense",
+            ].map((style) => (
+              <button
+                key={style}
+                onClick={() => setDefense(style)}
+                className={`p-4 rounded-xl ${
+                  defense === style
+                    ? "bg-white text-black"
+                    : "bg-zinc-900"
+                }`}
+              >
+                {style}
+              </button>
+            ))}
 
           </div>
         </div>
 
-        {/* Team Problems */}
+        {/* Problems */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4">
             Team Problems
@@ -145,57 +114,42 @@ export default function Home() {
 
           <div className="grid grid-cols-2 gap-4">
 
-            <button
-              onClick={() => toggleProblem("Turnovers")}
-              className={`p-4 rounded-xl ${
-                problems.includes("Turnovers")
-                  ? "bg-white text-black"
-                  : "bg-zinc-900"
-              }`}
-            >
-              Turnovers
-            </button>
-
-            <button
-              onClick={() => toggleProblem("Rebounding")}
-              className={`p-4 rounded-xl ${
-                problems.includes("Rebounding")
-                  ? "bg-white text-black"
-                  : "bg-zinc-900"
-              }`}
-            >
-              Rebounding
-            </button>
-
-            <button
-              onClick={() => toggleProblem("Communication")}
-              className={`p-4 rounded-xl ${
-                problems.includes("Communication")
-                  ? "bg-white text-black"
-                  : "bg-zinc-900"
-              }`}
-            >
-              Communication
-            </button>
-
-            <button
-              onClick={() => toggleProblem("Transition Defense")}
-              className={`p-4 rounded-xl ${
-                problems.includes("Transition Defense")
-                  ? "bg-white text-black"
-                  : "bg-zinc-900"
-              }`}
-            >
-              Transition Defense
-            </button>
+            {[
+              "Turnovers",
+              "Rebounding",
+              "Communication",
+              "Transition Defense",
+            ].map((problem) => (
+              <button
+                key={problem}
+                onClick={() => toggleProblem(problem)}
+                className={`p-4 rounded-xl ${
+                  problems.includes(problem)
+                    ? "bg-white text-black"
+                    : "bg-zinc-900"
+                }`}
+              >
+                {problem}
+              </button>
+            ))}
 
           </div>
         </div>
 
         {/* Generate */}
-        <button className="w-full bg-white text-black font-bold py-4 rounded-xl text-xl">
-          Build Team Development Plan
+        <button
+          onClick={generatePlan}
+          className="w-full bg-white text-black font-bold py-4 rounded-xl text-xl"
+        >
+          {loading ? "Building..." : "Build Team Development Plan"}
         </button>
+
+        {/* Result */}
+        {result && (
+          <div className="mt-10 bg-zinc-900 p-6 rounded-xl whitespace-pre-wrap">
+            {result}
+          </div>
+        )}
 
       </div>
     </main>
