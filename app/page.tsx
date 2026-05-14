@@ -3,14 +3,17 @@
 import { useState } from "react";
 
 export default function Home() {
-  const [selectedOffense, setSelectedOffense] = useState("");
-  const [selectedDefense, setSelectedDefense] = useState("");
-  const [selectedProblem, setSelectedProblem] = useState("");
+  const [offense, setOffense] = useState("");
+  const [defense, setDefense] = useState("");
+  const [problems, setProblems] = useState<string[]>([]);
 
-  const buttonStyle = (active: boolean) =>
-    active
-      ? "bg-white text-black p-4 rounded-xl font-bold"
-      : "bg-zinc-900 text-white p-4 rounded-xl";
+  const toggleProblem = (problem: string) => {
+    if (problems.includes(problem)) {
+      setProblems(problems.filter((p) => p !== problem));
+    } else {
+      setProblems([...problems, problem]);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-black text-white p-10">
@@ -33,29 +36,45 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-4">
 
             <button
-              onClick={() => setSelectedOffense("Fast Pace")}
-              className={buttonStyle(selectedOffense === "Fast Pace")}
+              onClick={() => setOffense("Fast Pace")}
+              className={`p-4 rounded-xl ${
+                offense === "Fast Pace"
+                  ? "bg-white text-black"
+                  : "bg-zinc-900"
+              }`}
             >
               Fast Pace
             </button>
 
             <button
-              onClick={() => setSelectedOffense("Motion Offense")}
-              className={buttonStyle(selectedOffense === "Motion Offense")}
+              onClick={() => setOffense("Motion Offense")}
+              className={`p-4 rounded-xl ${
+                offense === "Motion Offense"
+                  ? "bg-white text-black"
+                  : "bg-zinc-900"
+              }`}
             >
               Motion Offense
             </button>
 
             <button
-              onClick={() => setSelectedOffense("Pick & Roll")}
-              className={buttonStyle(selectedOffense === "Pick & Roll")}
+              onClick={() => setOffense("Pick & Roll")}
+              className={`p-4 rounded-xl ${
+                offense === "Pick & Roll"
+                  ? "bg-white text-black"
+                  : "bg-zinc-900"
+              }`}
             >
               Pick & Roll
             </button>
 
             <button
-              onClick={() => setSelectedOffense("5-Out")}
-              className={buttonStyle(selectedOffense === "5-Out")}
+              onClick={() => setOffense("5-Out")}
+              className={`p-4 rounded-xl ${
+                offense === "5-Out"
+                  ? "bg-white text-black"
+                  : "bg-zinc-900"
+              }`}
             >
               5-Out
             </button>
@@ -72,29 +91,45 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-4">
 
             <button
-              onClick={() => setSelectedDefense("Pressure Defense")}
-              className={buttonStyle(selectedDefense === "Pressure Defense")}
+              onClick={() => setDefense("Pressure Defense")}
+              className={`p-4 rounded-xl ${
+                defense === "Pressure Defense"
+                  ? "bg-white text-black"
+                  : "bg-zinc-900"
+              }`}
             >
               Pressure Defense
             </button>
 
             <button
-              onClick={() => setSelectedDefense("Switching")}
-              className={buttonStyle(selectedDefense === "Switching")}
+              onClick={() => setDefense("Switching")}
+              className={`p-4 rounded-xl ${
+                defense === "Switching"
+                  ? "bg-white text-black"
+                  : "bg-zinc-900"
+              }`}
             >
               Switching
             </button>
 
             <button
-              onClick={() => setSelectedDefense("Zone Defense")}
-              className={buttonStyle(selectedDefense === "Zone Defense")}
+              onClick={() => setDefense("Zone Defense")}
+              className={`p-4 rounded-xl ${
+                defense === "Zone Defense"
+                  ? "bg-white text-black"
+                  : "bg-zinc-900"
+              }`}
             >
               Zone Defense
             </button>
 
             <button
-              onClick={() => setSelectedDefense("Aggressive Defense")}
-              className={buttonStyle(selectedDefense === "Aggressive Defense")}
+              onClick={() => setDefense("Aggressive Defense")}
+              className={`p-4 rounded-xl ${
+                defense === "Aggressive Defense"
+                  ? "bg-white text-black"
+                  : "bg-zinc-900"
+              }`}
             >
               Aggressive Defense
             </button>
@@ -111,53 +146,50 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-4">
 
             <button
-              onClick={() => setSelectedProblem("Turnovers")}
-              className={buttonStyle(selectedProblem === "Turnovers")}
+              onClick={() => toggleProblem("Turnovers")}
+              className={`p-4 rounded-xl ${
+                problems.includes("Turnovers")
+                  ? "bg-white text-black"
+                  : "bg-zinc-900"
+              }`}
             >
               Turnovers
             </button>
 
             <button
-              onClick={() => setSelectedProblem("Rebounding")}
-              className={buttonStyle(selectedProblem === "Rebounding")}
+              onClick={() => toggleProblem("Rebounding")}
+              className={`p-4 rounded-xl ${
+                problems.includes("Rebounding")
+                  ? "bg-white text-black"
+                  : "bg-zinc-900"
+              }`}
             >
               Rebounding
             </button>
 
             <button
-              onClick={() => setSelectedProblem("Communication")}
-              className={buttonStyle(selectedProblem === "Communication")}
+              onClick={() => toggleProblem("Communication")}
+              className={`p-4 rounded-xl ${
+                problems.includes("Communication")
+                  ? "bg-white text-black"
+                  : "bg-zinc-900"
+              }`}
             >
               Communication
             </button>
 
             <button
-              onClick={() => setSelectedProblem("Transition Defense")}
-              className={buttonStyle(selectedProblem === "Transition Defense")}
+              onClick={() => toggleProblem("Transition Defense")}
+              className={`p-4 rounded-xl ${
+                problems.includes("Transition Defense")
+                  ? "bg-white text-black"
+                  : "bg-zinc-900"
+              }`}
             >
               Transition Defense
             </button>
 
           </div>
-        </div>
-
-        {/* Current Identity */}
-        <div className="bg-zinc-900 p-6 rounded-2xl mb-10">
-          <h2 className="text-2xl font-bold mb-4">
-            Current Team Identity
-          </h2>
-
-          <p className="mb-2">
-            Offensive Style: {selectedOffense || "None"}
-          </p>
-
-          <p className="mb-2">
-            Defensive Style: {selectedDefense || "None"}
-          </p>
-
-          <p>
-            Main Team Problem: {selectedProblem || "None"}
-          </p>
         </div>
 
         {/* Generate */}
