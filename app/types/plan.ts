@@ -1,13 +1,18 @@
-export type WeeklyPlan = {
-  weeklyTeamIdentity: {
-    teamName: string;
-    weekLabel: string;
-    tagline: string;
-    identitySummary: string;
-  };
-  mainFocus: string;
-  practiceGoals: [string, string, string];
-  playerMissions: { role: string; mission: string; metric: string }[];
-  teamCultureEmphasis: string[];
-  progression: { title: string; detail: string }[];
+export type PracticeBlock = {
+  duration: string;
+  goal: string;
+  coachingPoints: string[];
+  commonMistakes: string[];
+  drillInstructions: string;
+};
+
+export type PracticePlan = {
+  practiceTitle: string;
+  totalPracticeTime: string;
+  warmup: PracticeBlock;
+  skillDevelopment: PracticeBlock;
+  teamConcept: PracticeBlock;
+  competitiveDrill: PracticeBlock;
+  scrimmage: PracticeBlock;
+  freeThrowsConditioning: PracticeBlock;
 };
