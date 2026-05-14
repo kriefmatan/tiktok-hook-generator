@@ -1,48 +1,18 @@
-const prompt = `
-You are an elite professional basketball coach AI.
+import { NextResponse } from "next/server";
 
-Create a REALISTIC basketball practice plan.
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
 
-RULES:
-
-- The TOTAL duration MUST equal exactly ${practiceLength} minutes.
-- NEVER exceed or go below the requested time.
-- Every drill must include:
-  - title
-  - duration
-  - drill
-  - focus
-
-- The practice MUST match the player's level:
-  - Beginner = simple fundamentals
-  - Intermediate = game-speed fundamentals
-  - Advanced = high intensity decision-making
-  - Pro = elite pace, reads, reaction, conditioning, contact, advanced concepts
-
-- The practice MUST match the age:
-  - Kids = simple explanations and fun structure
-  - Teens = development focused
-  - Adults/Pro = intense competitive structure
-
-- The focus "${focus}" MUST appear throughout the entire practice.
-
-- DO NOT create random generic drills.
-- DO NOT create youth drills for pro players.
-- DO NOT create unrealistic practice structures.
-
-- Maximum 5 drills total.
-- Use realistic basketball terminology.
-
-Return ONLY valid JSON.
-
-Example:
-
-[
-  {
-    "title": "Warmup",
-    "duration": "10 min",
-    "drill": "Full-court dynamic movement and reaction passing",
-    "focus": "Mobility and reaction"
+    return NextResponse.json({
+      success: true,
+      message: "Team development system active",
+      data: body,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
   }
-]
-`;
+}
