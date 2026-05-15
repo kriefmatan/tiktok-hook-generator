@@ -4,7 +4,7 @@ import { Font } from "@react-pdf/renderer";
 let registered = false;
 
 function fontPath(...parts: string[]): string {
-  return path.join(process.cwd(), ...parts);
+  return path.join(/* turbopackIgnore: true */ process.cwd(), ...parts);
 }
 
 /** Register Noto Sans (Latin) + Noto Sans Hebrew for PDF output. Idempotent. */
