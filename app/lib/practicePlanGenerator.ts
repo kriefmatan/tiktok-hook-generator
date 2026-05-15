@@ -6,6 +6,14 @@ import { SIMPLE_BUNDLES } from "./locale/bundles";
 import { CHIP_EMPHASIS, CHIP_SESSION_PRIMARY, emphasesFromSelections } from "./input/emphasisFromInput";
 import type { ChipId } from "./locale/uiCatalog";
 import { parseCoachFields, type ParsedCoachThemes } from "./coachTextAnalysis";
+import {
+  emphasisForGoal,
+  goalsFromFields,
+  isMultiGoalSession,
+  primaryAndSecondaryKinds,
+  type CoachGoal,
+} from "./coach/coachGoals";
+import { pickCombinedDrillTitle, pickCombinedSideline } from "./locale/combinedSituations";
 
 const MOTION_PRESET_IDS: readonly PresetId[] = [
   "noDribblePractice",
@@ -135,32 +143,28 @@ function sessionEmphasesForBlocks(
   const motionPreset = presets.some((p) => MOTION_PRESET_IDS.includes(p));
   const motionFromText =
     parsed.offense === "motion" && !parsed.turnovers && !parsed.spacing;
-  if ((motionChip || motionPreset || motionFromText) && merged.includes("motion")) {
-    return ["motion"];
-  }
-
-  if ((chips.includes("pressBreak") || parsed.pressBreaking) && merged.includes("pressBreak")) {
-    return ["pressBreak"];
-  }
-
-  if (chips.includes("oneOnOne") && merged.includes("oneOnOne")) {
-    return ["oneOnOne"];
-  }
-
-  if (chips.includes("fastBreak") && merged.includes("fast")) {
-    return ["fast"];
-  }
-
-  if (chips.includes("transition") && merged.includes("transition")) {
-    return ["transition"];
-  }
-
-  if (chips.includes("shooting") && merged.includes("shoot")) {
-    return ["shoot"];
-  }
-
-  if (chips.includes("rebounding") && merged.includes("rebound")) {
-    return ["rebound"];
+  if (chips.length === 1) {
+    if ((motionChip || motionPreset || motionFromText) && merged.includes("motion")) {
+      return ["motion"];
+    }
+    if ((chips.includes("pressBreak") || parsed.pressBreaking) && merged.includes("pressBreak")) {
+      return ["pressBreak"];
+    }
+    if (chips.includes("oneOnOne") && merged.includes("oneOnOne")) {
+      return ["oneOnOne"];
+    }
+    if (chips.includes("fastBreak") && merged.includes("fast")) {
+      return ["fast"];
+    }
+    if (chips.includes("transition") && merged.includes("transition")) {
+      return ["transition"];
+    }
+    if (chips.includes("shooting") && merged.includes("shoot")) {
+      return ["shoot"];
+    }
+    if (chips.includes("rebounding") && merged.includes("rebound")) {
+      return ["rebound"];
+    }
   }
 
   return merged.length > 0 ? [...merged] : ["generic"];
@@ -175,8 +179,12 @@ const YOUTH_PRESET_IDS: readonly PresetId[] = [
   "noDribblePractice",
 ];
 
-/** Max themes per session — avoids unrelated rotation (practice-planning skill). */
-function capSessionEmphases(emphases: readonly EmphasisKey[]): EmphasisKey[] {
+/** Max themes per session — multi-chip keeps up to 3 explicit goals. */
+function capSessionEmphases(emphases: readonly EmphasisKey[], multiChip: boolean): EmphasisKey[] {
+  if (multiChip) {
+    if (emphases.length <= 3) return [...emphases];
+    return emphases.slice(0, 3);
+  }
   if (emphases.length <= 2) return [...emphases];
   return [emphases[0]!, emphases[1]!];
 }
@@ -272,19 +280,73 @@ function totalTimeLabel(minutes: readonly number[], bundle: SimplePracticeBundle
   return `~${rounded} min`;
 }
 
+function buildCombinedCoachingPoints(
+  goals: readonly CoachGoal[],
+  blockKind: BlockKind,
+  bundle: SimplePracticeBundle,
+): readonly string[] {
+  const sideline = pickCombinedSideline(goals, blockKind, bundle.locale);
+  if (sideline) return uniquePoints([sideline[0], sideline[1]]).slice(0, 4);
+
+  const e0 = emphasisForGoal(goals[0]!);
+  const e1 = emphasisForGoal(goals[1] ?? goals[0]!);
+  const [a0, a1] = bundle.bullets[e0];
+  const [b0, b1] = bundle.bullets[e1];
+  return uniquePoints([a0, b0, b1 ?? a1]).slice(0, 4);
+}
+
 function section(
   bundle: SimplePracticeBundle,
   minutes: number,
   name: string,
   emphasis: EmphasisKey,
   blockKind: BlockKind,
+  secondaryKind?: EmphasisKey,
+  coachingPoints?: readonly string[],
 ): PracticeSheetSection {
   return {
     name,
     time: bundle.formatMinutes(minutes),
     minutes,
     kind: emphasis,
-    coachingPoints: buildCoachingPoints(emphasis, blockKind, bundle),
+    secondaryKind,
+    coachingPoints: coachingPoints ?? buildCoachingPoints(emphasis, blockKind, bundle),
+  };
+}
+
+function buildMultiGoalPlan(
+  fields: CoachingFields,
+  bundle: SimplePracticeBundle,
+  parsed: ParsedCoachThemes,
+  goals: readonly CoachGoal[],
+  h: number,
+): PracticePlan {
+  const { kind, secondaryKind } = primaryAndSecondaryKinds(goals);
+  const minutes = BLOCK_ORDER.map((_, i) => blockMinutes(parsed, i, fields));
+
+  const sections = BLOCK_ORDER.map((blockKind, blockIndex) =>
+    section(
+      bundle,
+      minutes[blockIndex]!,
+      pickCombinedDrillTitle(goals, blockKind, bundle.locale, h, blockIndex * 11),
+      kind,
+      blockKind,
+      secondaryKind,
+      buildCombinedCoachingPoints(goals, blockKind, bundle),
+    ),
+  );
+
+  return {
+    headerLine: headerLine(fields, bundle),
+    totalTime: totalTimeLabel(minutes, bundle),
+    locale: bundle.locale,
+    dir: bundle.dir,
+    sectionLabels: bundle.sectionLabels,
+    warmup: sections[0]!,
+    drill1: sections[1]!,
+    drill2: sections[2]!,
+    drill3: sections[3]!,
+    gameFiveOnFive: sections[4]!,
   };
 }
 
@@ -292,14 +354,24 @@ export function buildPracticePlan(fields: CoachingFields): PracticePlan {
   const bundle = SIMPLE_BUNDLES[fields.locale];
   const parsed = parseCoachFields(fields);
   const h = coachSeed(fields);
+  const chips = fields.chips ?? [];
+  const goals = goalsFromFields(fields, parsed);
+
+  if (isMultiGoalSession(goals)) {
+    return buildMultiGoalPlan(fields, bundle, parsed, goals, h);
+  }
+
   const selectionEmphases = emphasesFromSelections(fields.chips, fields.presets);
   const merged = mergeEmphases(
     collectEmphasesFromText(parsed),
     selectionEmphases,
     parsed,
-    fields.chips ?? [],
+    chips,
   );
-  const emphases = capSessionEmphases(sessionEmphasesForBlocks(merged, fields, parsed));
+  const emphases = capSessionEmphases(
+    sessionEmphasesForBlocks(merged, fields, parsed),
+    chips.length >= 2,
+  );
   const minutes = BLOCK_ORDER.map((_, i) => blockMinutes(parsed, i, fields));
 
   const sections = BLOCK_ORDER.map((kind, blockIndex) => {

@@ -23,16 +23,22 @@ const KIND_LABEL: Record<EmphasisKey, string> = {
 
 type Props = {
   kind: EmphasisKey;
+  secondaryKind?: EmphasisKey;
   className?: string;
 };
 
-export function DrillKindMark({ kind, className = "" }: Props) {
+export function DrillKindMark({ kind, secondaryKind, className = "" }: Props) {
+  const label =
+    secondaryKind && secondaryKind !== kind
+      ? `${KIND_LABEL[kind]}·${KIND_LABEL[secondaryKind]}`
+      : KIND_LABEL[kind];
+
   return (
     <span
-      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-zinc-700/90 bg-zinc-900 font-mono text-[11px] font-bold leading-none tracking-tight text-zinc-400 ${className}`}
+      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-zinc-700/90 bg-zinc-900 px-0.5 font-mono text-[9px] font-bold leading-tight tracking-tight text-zinc-400 sm:text-[10px] ${className}`}
       aria-hidden
     >
-      {KIND_LABEL[kind]}
+      {label}
     </span>
   );
 }

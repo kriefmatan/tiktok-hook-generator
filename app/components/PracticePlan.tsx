@@ -21,7 +21,7 @@ function DrillCard({
   section: PracticeSheetSection;
   index: number;
 }) {
-  const { name, minutes, time, kind, coachingPoints } = section;
+  const { name, minutes, time, kind, secondaryKind, coachingPoints } = section;
 
   return (
     <article
@@ -37,7 +37,7 @@ function DrillCard({
       </div>
 
       <div className="mt-4 flex gap-3.5 sm:gap-4">
-        <DrillKindMark kind={kind} />
+        <DrillKindMark kind={kind} secondaryKind={secondaryKind} />
         <div className="min-w-0 flex-1">
           <h2
             id={`drill-title-${index}`}

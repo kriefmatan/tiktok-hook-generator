@@ -10,6 +10,8 @@ export type PracticeSheetSection = {
   minutes: number;
   /** Theme tag for a simple drill-type mark (no court diagram) */
   kind: EmphasisKey;
+  /** Second theme when drill combines goals (e.g. defense + shooting) */
+  secondaryKind?: EmphasisKey;
   coachingPoints: readonly string[];
 };
 
