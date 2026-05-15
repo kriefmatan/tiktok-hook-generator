@@ -50,6 +50,7 @@ export function registerPdfFonts(): void {
   registered = true;
 }
 
-export function pdfFontFamily(dir: "ltr" | "rtl"): string {
-  return dir === "rtl" ? "CoachSansHebrew" : "CoachSans";
+/** Hebrew locale uses Noto Hebrew; PDF pages stay LTR (react-pdf bidi-safe). */
+export function pdfFontFamilyForLocale(locale: string): string {
+  return locale === "he" ? "CoachSansHebrew" : "CoachSans";
 }

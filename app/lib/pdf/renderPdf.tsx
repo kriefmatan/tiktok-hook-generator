@@ -27,7 +27,6 @@ export async function renderTopicPdfBuffer(topicId: TopicId, locale: AppLocale):
       <TopicPdfDocument
         topicTitle={topicLabel(topicId, locale)}
         locale={locale}
-        dir={plan.dir}
         labels={labels}
         catalog={catalog}
         system={system}

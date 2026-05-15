@@ -1,7 +1,7 @@
 import { Document, Page, Text, View } from "@react-pdf/renderer";
 import type { PracticePlan } from "../../types/plan";
 import type { AppLocale } from "../locale/appLocale";
-import { pdfFontFamily } from "./fonts";
+import { pdfFontFamilyForLocale } from "./fonts";
 import type { PdfLabels } from "./pdfLabels";
 import { PracticePlanPdfSections } from "./PracticePlanPdfSections";
 import { pdfStyles } from "./pdfStyles";
@@ -10,7 +10,6 @@ import type { TopicDrillCatalog, TopicSessionSystem } from "./topicDrillCatalog"
 type Props = {
   topicTitle: string;
   locale: AppLocale;
-  dir: "ltr" | "rtl";
   labels: PdfLabels;
   catalog: TopicDrillCatalog;
   system: TopicSessionSystem;
@@ -21,13 +20,13 @@ const BLOCK_KINDS = ["warmup", "drill1", "drill2", "drill3", "game"] as const;
 
 export function TopicPdfDocument({
   topicTitle,
-  dir,
+  locale,
   labels,
   catalog,
   system,
   plan,
 }: Props) {
-  const fontFamily = pdfFontFamily(dir);
+  const fontFamily = pdfFontFamilyForLocale(locale);
 
   return (
     <Document title={topicTitle}>

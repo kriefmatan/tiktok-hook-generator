@@ -1,6 +1,6 @@
 import { Text, View } from "@react-pdf/renderer";
 import type { PracticePlan, PracticeSheetSection } from "../../types/plan";
-import { pdfFontFamily } from "./fonts";
+import { pdfFontFamilyForLocale } from "./fonts";
 import { pdfStyles } from "./pdfStyles";
 
 type Props = {
@@ -33,7 +33,7 @@ function PlanDrillCard({
 }
 
 export function PracticePlanPdfSections({ plan }: Props) {
-  const fontFamily = pdfFontFamily(plan.dir);
+  const fontFamily = pdfFontFamilyForLocale(plan.locale);
   const sections: PracticeSheetSection[] = [
     plan.warmup,
     plan.drill1,

@@ -1,6 +1,6 @@
 import { Document, Page } from "@react-pdf/renderer";
 import type { PracticePlan } from "../../types/plan";
-import { pdfFontFamily } from "./fonts";
+import { pdfFontFamilyForLocale } from "./fonts";
 import { PracticePlanPdfSections } from "./PracticePlanPdfSections";
 import { pdfStyles } from "./pdfStyles";
 
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export function PracticePlanPdfDocument({ plan }: Props) {
-  const fontFamily = pdfFontFamily(plan.dir);
+  const fontFamily = pdfFontFamilyForLocale(plan.locale);
 
   return (
     <Document title={plan.headerLine}>

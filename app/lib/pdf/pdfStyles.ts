@@ -96,7 +96,6 @@ export const pdfStyles = StyleSheet.create({
   },
   hook: {
     fontSize: 10,
-    fontStyle: "italic",
     color: "#52525b",
     marginBottom: 8,
   },
