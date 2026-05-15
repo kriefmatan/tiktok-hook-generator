@@ -29,8 +29,17 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionFocus, wantToImprove }),
       });
-      const data = await response.json();
-      setPlan(data.plan as PracticePlan);
+
+      const data = (await response.json()) as { plan?: PracticePlan; error?: string };
+
+      if (!response.ok || !data.plan) {
+        console.error("Practice plan request failed:", data.error ?? response.status);
+        return;
+      }
+
+      setPlan(data.plan);
+    } catch (err) {
+      console.error("Practice plan request failed:", err);
     } finally {
       setLoading(false);
     }

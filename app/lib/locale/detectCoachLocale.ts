@@ -1,4 +1,3 @@
-import { franc } from "franc";
 import type { CoachingFields } from "../coachingFields";
 import type { CoachLocale } from "./coachLocale";
 
@@ -17,18 +16,26 @@ function hebrewLetterRatio(text: string): number {
   return he / compact.length;
 }
 
+/** Lightweight Spanish signal — avoids franc (breaks under Next/Turbopack bundling). */
+function looksSpanish(text: string): boolean {
+  if (/[ñ¿¡]/i.test(text)) return true;
+  const low = text.toLowerCase();
+  const hits = [
+    /\b(qué|que|para|con|del|los|las|equipo|entreno|mejorar|defensa|ataque|canasta|partido|jugadores)\b/,
+    /\b(cómo|como|muy|más|mas|también|tambien|está|esta|son|hay)\b/,
+  ].filter((re) => re.test(low)).length;
+  return hits >= 2;
+}
+
 /**
- * Single locale for the whole app output — from coach free text (franc + Hebrew script guard).
+ * Single locale for the whole app output — Hebrew script + simple Spanish heuristics.
  */
 export function detectCoachLocale(fields: CoachingFields): CoachLocale {
   const t = coachInputText(fields);
   if (t.length < 6) return "en";
 
   if (hebrewLetterRatio(t) >= 0.18) return "he";
-
-  const iso3 = franc(t, { minLength: 4 });
-  if (iso3 === "heb") return "he";
-  if (iso3 === "spa" || iso3 === "cat" || iso3 === "glg" || iso3 === "eus" || iso3 === "oci") return "es";
+  if (looksSpanish(t)) return "es";
 
   return "en";
 }
