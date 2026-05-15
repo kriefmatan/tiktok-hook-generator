@@ -1,11 +1,36 @@
+import { goalsFromFields } from "../app/lib/coach/coachGoals";
+import { validateForcedDrill } from "../app/lib/coach/forcedDrillRules";
 import { buildPracticePlan } from "../app/lib/practicePlanGenerator";
+import {
+  allCatalogDrillKeys,
+  catalogDrillTitle,
+} from "../app/lib/locale/combinedSituations";
+import type { CoachGoal } from "../app/lib/coach/coachGoals";
+import type { BlockKind } from "../app/lib/locale/coachBundle.types";
 
-const DEF_WORDS = /הגנה|שומר|סגיר|לחץ|עציר|מלכוד|DEF/i;
-const SHOOT_WORDS = /סל|זריק|סיום|3 על|1 על 1|shoot|finish|score/i;
+const BLOCKS: BlockKind[] = ["warmup", "drill1", "drill2", "drill3", "game"];
 
-function hasBoth(title: string): boolean {
-  return DEF_WORDS.test(title) && SHOOT_WORDS.test(title);
+function goalsFromComboKey(key: string): CoachGoal[] {
+  return key.split("+") as CoachGoal[];
 }
+
+// Catalog: every stored title passes forced-outcome rules
+for (const key of allCatalogDrillKeys("he")) {
+  const goals = goalsFromComboKey(key);
+  for (const block of BLOCKS) {
+    const title = catalogDrillTitle("he", key, block);
+    if (!title || !validateForcedDrill(title, goals)) {
+      console.error("FAIL catalog forced:", key, block, title);
+      process.exit(1);
+    }
+  }
+}
+
+const goals = goalsFromFields({
+  locale: "he",
+  workingOn: "",
+  chips: ["defense", "shooting"],
+});
 
 const p = buildPracticePlan({
   locale: "he",
@@ -14,29 +39,14 @@ const p = buildPracticePlan({
 });
 
 const secs = [p.warmup, p.drill1, p.drill2, p.drill3, p.gameFiveOnFive];
+
+for (const s of secs) {
+  if (!validateForcedDrill(s.name, goals)) {
+    console.error("FAIL plan title not forced:", s.name);
+    process.exit(1);
+  }
+}
+
 const titles = secs.map((s) => s.name);
-const combinedCount = titles.filter(hasBoth).length;
-
-console.log("kinds:", secs.map((s) => `${s.kind}${s.secondaryKind ? "+" + s.secondaryKind : ""}`).join(" | "));
 console.log("titles:", titles);
-
-if (!secs[0]?.secondaryKind && secs[0]?.kind !== "pressure") {
-  console.error("FAIL: expected combined kinds on card");
-  process.exit(1);
-}
-
-if (combinedCount < 3) {
-  console.error("FAIL: expected at least 3/5 titles merging defense+shoot, got", combinedCount);
-  process.exit(1);
-}
-
-const pureDefenseOnly = titles.every(
-  (t) => /ראן אנד|כיסוי מסירה|מלכודת רק בצד/i.test(t) || !SHOOT_WORDS.test(t),
-);
-if (pureDefenseOnly && titles.length >= 3) {
-  console.error("FAIL: session looks like pure defense pool only");
-  process.exit(1);
-}
-
-console.log("OK: multi-goal defense+shooting", combinedCount, "/ 5 combined titles");
-process.exit(0);
+console.log("OK: all catalog + defense+shooting drills have forced outcomes");
