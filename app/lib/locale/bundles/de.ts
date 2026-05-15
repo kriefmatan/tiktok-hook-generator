@@ -16,6 +16,8 @@ const DE_SETUP_HOOKS: Record<EmphasisKey, string> = {
   fiveOut: "Fünf nach außen",
   fast: "Tempo nach vorne",
   switch: "Wechsel ansagen",
+  pressBreak: "Press breaken — erst passen",
+  oneOnOne: "Closeout lesen",
   generic: "Fokus heute",
 };
 
@@ -34,6 +36,8 @@ const DE_BULLETS: SimplePracticeBundle["bullets"] = {
   fiveOut: ["Lücke fahren — Ecke hebt.", "Hinter dem Drive nachfüllen."],
   fast: ["Vorlegen — nicht in Traffic dribbeln.", "Erste drei Schritte zurück bei Miss."],
   switch: ["Vor Kontakt rufen.", "Groß früh wechseln."],
+  pressBreak: ["Erst passen, dann dribbeln.", "Mitte oder Ecke — freien Mann finden."],
+  oneOnOne: ["Hohen Fuß beim Closeout angreifen.", "Mit Kontakt fertigmachen."],
   generic: ["Zurück zu dem, was an der Tafel steht.", "Kurze Stopps — Wiederholungen schlagen Reden."],
 };
 

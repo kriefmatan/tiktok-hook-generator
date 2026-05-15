@@ -15,6 +15,8 @@ export type EmphasisKey =
   | "fiveOut"
   | "fast"
   | "switch"
+  | "pressBreak"
+  | "oneOnOne"
   | "generic";
 
 export type BlockKind = "warmup" | "drill1" | "drill2" | "drill3" | "game";

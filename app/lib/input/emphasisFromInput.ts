@@ -1,17 +1,33 @@
 import type { ChipId, PresetId } from "../locale/uiCatalog";
 import type { EmphasisKey } from "../locale/coachBundle.types";
 
+/** Single-chip sessions lock to this primary theme (see sessionEmphasesForBlocks). */
+export const CHIP_SESSION_PRIMARY: Partial<Record<ChipId, EmphasisKey>> = {
+  ballMovement: "motion",
+  pressBreak: "pressBreak",
+  defense: "pressure",
+  shooting: "shoot",
+  rebounding: "rebound",
+  spacing: "spacing",
+  transition: "transition",
+  fastBreak: "fast",
+  conditioning: "fast",
+  decisionMaking: "decision",
+  oneOnOne: "oneOnOne",
+  finishing: "shoot",
+};
+
 export const CHIP_EMPHASIS: Record<ChipId, readonly EmphasisKey[]> = {
   defense: ["pressure", "switch"],
   shooting: ["shoot"],
-  transition: ["transition", "fast"],
+  transition: ["transition"],
   ballMovement: ["motion"],
   finishing: ["shoot", "decision"],
-  oneOnOne: ["pressure", "decision"],
+  oneOnOne: ["oneOnOne"],
   rebounding: ["rebound"],
   spacing: ["spacing", "fiveOut"],
-  pressBreak: ["pressure", "turnover"],
-  fastBreak: ["fast", "transition"],
+  pressBreak: ["pressBreak"],
+  fastBreak: ["fast"],
   conditioning: ["fast"],
   decisionMaking: ["decision", "communication"],
 };

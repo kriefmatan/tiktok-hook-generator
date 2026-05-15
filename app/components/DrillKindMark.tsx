@@ -16,6 +16,8 @@ const KIND_LABEL: Record<EmphasisKey, string> = {
   fiveOut: "5OUT",
   fast: "RUN",
   switch: "SW",
+  pressBreak: "BRK",
+  oneOnOne: "1v1",
   generic: "—",
 };
 

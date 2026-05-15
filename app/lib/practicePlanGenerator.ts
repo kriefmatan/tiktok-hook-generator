@@ -3,7 +3,8 @@ import type { CoachingFields } from "./coachingFields";
 import type { BlockKind, EmphasisKey, SimplePracticeBundle } from "./locale/coachBundle.types";
 import type { PresetId } from "./locale/uiCatalog";
 import { SIMPLE_BUNDLES } from "./locale/bundles";
-import { emphasesFromSelections } from "./input/emphasisFromInput";
+import { CHIP_EMPHASIS, CHIP_SESSION_PRIMARY, emphasesFromSelections } from "./input/emphasisFromInput";
+import type { ChipId } from "./locale/uiCatalog";
 import { parseCoachFields, type ParsedCoachThemes } from "./coachTextAnalysis";
 
 const MOTION_PRESET_IDS: readonly PresetId[] = [
@@ -37,9 +38,10 @@ function pickFrom<T>(arr: readonly T[], seed: number, salt: number): T {
 
 function collectEmphasesFromText(p: ParsedCoachThemes): EmphasisKey[] {
   const out: EmphasisKey[] = [];
+  if (p.pressBreaking) out.push("pressBreak");
   if (p.rebounding) out.push("rebound");
   if (p.shootingConfidence) out.push("shoot");
-  if (p.turnovers) out.push("turnover");
+  if (p.turnovers && !p.pressBreaking) out.push("turnover");
   if (p.transition && !p.transitionOffense) out.push("transition");
   if (p.communication) out.push("communication");
   if (p.decisionMaking) out.push("decision");
@@ -48,18 +50,23 @@ function collectEmphasesFromText(p: ParsedCoachThemes): EmphasisKey[] {
   if (p.offense === "motion") out.push("motion");
   if (p.offense === "fiveOut") out.push("fiveOut");
   if (p.offense === "fast" || p.transitionOffense) out.push("fast");
-  if (p.defense === "zone") out.push("zone");
-  if (p.defense === "aggressive" || p.defense === "pressure") out.push("pressure");
-  if (p.defense === "switch") out.push("switch");
+  if (!p.pressBreaking) {
+    if (p.defense === "zone") out.push("zone");
+    if (p.defense === "aggressive" || p.defense === "pressure") out.push("pressure");
+    if (p.defense === "switch") out.push("switch");
+  }
   if (p.transitionOffense && !out.includes("fast")) out.push("fast");
   if (out.length === 0) out.push("generic");
   return out;
 }
 
+const DEFENSE_EMPHASIS: readonly EmphasisKey[] = ["pressure", "switch", "zone"];
+
 function mergeEmphases(
   fromText: readonly EmphasisKey[],
   fromSelection: readonly EmphasisKey[],
   parsed: ParsedCoachThemes,
+  chips: readonly ChipId[],
 ): EmphasisKey[] {
   const merged: EmphasisKey[] = [];
   const seen = new Set<EmphasisKey>();
@@ -70,9 +77,30 @@ function mergeEmphases(
     merged.push(key);
   }
 
-  const motionFocus = merged.includes("motion");
-  const spacingChosen = fromSelection.includes("spacing");
+  const pressFocus =
+    chips.includes("pressBreak") || parsed.pressBreaking || merged.includes("pressBreak");
+  const defenseFocus =
+    chips.includes("defense") || merged.some((k) => DEFENSE_EMPHASIS.includes(k));
+  const fastChip = chips.includes("fastBreak");
+  const transitionChip = chips.includes("transition");
+
   let out = merged;
+  if (pressFocus) {
+    out = out.filter((k) => !DEFENSE_EMPHASIS.includes(k));
+    if (!out.includes("pressBreak")) out = ["pressBreak", ...out];
+  }
+  if (defenseFocus && !pressFocus) {
+    out = out.filter((k) => k !== "pressBreak");
+  }
+  if (fastChip && !transitionChip) {
+    out = out.filter((k) => k !== "transition");
+  }
+  if (transitionChip && !fastChip) {
+    out = out.filter((k) => k !== "fast");
+  }
+
+  const motionFocus = out.includes("motion");
+  const spacingChosen = fromSelection.includes("spacing");
   if (motionFocus && !spacingChosen) {
     out = out.filter((k) => k !== "spacing");
   }
@@ -82,7 +110,7 @@ function mergeEmphases(
   return out;
 }
 
-/** Off-ball movement sessions stay on motion drills — no BAL/SPC rotation. */
+/** Single-chip or strong-focus sessions — avoid unrelated theme rotation. */
 function sessionEmphasesForBlocks(
   merged: readonly EmphasisKey[],
   fields: CoachingFields,
@@ -90,17 +118,51 @@ function sessionEmphasesForBlocks(
 ): EmphasisKey[] {
   const chips = fields.chips ?? [];
   const presets = fields.presets ?? [];
+
+  if (chips.length === 1) {
+    const chip = chips[0]!;
+    const keys = CHIP_EMPHASIS[chip];
+    if (keys.length === 1) return [keys[0]!];
+    if (chip === "defense") return ["pressure", "switch"];
+    if (chip === "spacing") return ["spacing", "fiveOut"];
+    if (chip === "finishing") return ["shoot", "decision"];
+    if (chip === "decisionMaking") return ["decision", "communication"];
+    const primary = CHIP_SESSION_PRIMARY[chip];
+    if (primary) return [primary];
+  }
+
   const motionChip = chips.includes("ballMovement");
   const motionPreset = presets.some((p) => MOTION_PRESET_IDS.includes(p));
   const motionFromText =
     parsed.offense === "motion" && !parsed.turnovers && !parsed.spacing;
-
-  const offBallFocus =
-    (motionChip || motionPreset || motionFromText) && merged.includes("motion");
-
-  if (offBallFocus) {
+  if ((motionChip || motionPreset || motionFromText) && merged.includes("motion")) {
     return ["motion"];
   }
+
+  if ((chips.includes("pressBreak") || parsed.pressBreaking) && merged.includes("pressBreak")) {
+    return ["pressBreak"];
+  }
+
+  if (chips.includes("oneOnOne") && merged.includes("oneOnOne")) {
+    return ["oneOnOne"];
+  }
+
+  if (chips.includes("fastBreak") && merged.includes("fast")) {
+    return ["fast"];
+  }
+
+  if (chips.includes("transition") && merged.includes("transition")) {
+    return ["transition"];
+  }
+
+  if (chips.includes("shooting") && merged.includes("shoot")) {
+    return ["shoot"];
+  }
+
+  if (chips.includes("rebounding") && merged.includes("rebound")) {
+    return ["rebound"];
+  }
+
   return merged.length > 0 ? [...merged] : ["generic"];
 }
 
@@ -231,7 +293,12 @@ export function buildPracticePlan(fields: CoachingFields): PracticePlan {
   const parsed = parseCoachFields(fields);
   const h = coachSeed(fields);
   const selectionEmphases = emphasesFromSelections(fields.chips, fields.presets);
-  const merged = mergeEmphases(collectEmphasesFromText(parsed), selectionEmphases, parsed);
+  const merged = mergeEmphases(
+    collectEmphasesFromText(parsed),
+    selectionEmphases,
+    parsed,
+    fields.chips ?? [],
+  );
   const emphases = capSessionEmphases(sessionEmphasesForBlocks(merged, fields, parsed));
   const minutes = BLOCK_ORDER.map((_, i) => blockMinutes(parsed, i, fields));
 

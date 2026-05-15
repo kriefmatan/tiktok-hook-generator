@@ -84,8 +84,22 @@ const EN_DRILL_NAMES: Record<EmphasisKey, BlockDrillNames> = {
     ["1v1 full court — 3 dribbles max", "Trap escape at half — jump stop", "Deny drill — hand in lane"],
     ["3v3 full court — make 3 stops", "Run-and-jump show — no reach", "4v4 press — trap sideline only"],
     ["4v4 — no middle penetration", "Live press — sprint on shot", "Shell with ball pressure"],
-    ["5v5 press to 7", "Competitive — press break scores", "Last 4 min: full court every dead ball"],
+    ["5v5 press to 7", "Competitive — get stops", "Last 4 min: full court every dead ball"],
     ["5v5 — press your rules", "Game: steal = bonus point", "Play aggressive — hands up"]
+  ),
+  pressBreak: drills(
+    ["Pairs — pass over hands, corner exit", "Trap at half — jump stop pivot", "4-across vs shell — no dribble"],
+    ["2v1 vs sideline trap — hit middle", "3v3 vs half trap — reverse to weak side", "4v4 — first pass before dribble"],
+    ["4v4 vs live press — middle drive", "5v4 — score before 8 sec", "Competitive — break press = +1"],
+    ["5v5 vs full press — safety valve", "Inbound vs trap — corner flash", "Live — trap then find middle"],
+    ["5v5 vs your press", "Game: middle touch before shot", "Play what we broke today"]
+  ),
+  oneOnOne: drills(
+    ["1v1 from wing — 2 dribbles max", "1v1 from top — read the closeout", "1v1 — finish with contact"],
+    ["1v1 live — drive or pull-up", "1v1 from corner — baseline or middle", "Competitive — first to 5"],
+    ["3v3 — iso rule one side", "4v4 — one iso per possession", "Shell — help on drive, no dig"],
+    ["5v5 — one iso per trip", "Competitive — best 1v1 wins", "Game: and-one = 2 points"],
+    ["5v5 — your 1v1 rules", "Play through — read the help", "Attack the closeout"]
   ),
   spacing: drills(
     ["Drive-kick — corner stays wide", "Fill behind — one dribble pull-up", "Spacing spots — 12 ft apart"],
@@ -147,6 +161,8 @@ const EN_SETUP_HOOKS: Record<EmphasisKey, string> = {
   fiveOut: "Five out",
   fast: "Push pace",
   switch: "Call the switch",
+  pressBreak: "Break the press — pass first",
+  oneOnOne: "Read the closeout",
   generic: "Today's focus",
 };
 
@@ -228,6 +244,14 @@ export const EN_SIMPLE = {
     switch: [
       "Call it before contact, not after.",
       "Big switches early — don't chase from behind.",
+    ],
+    pressBreak: [
+      "Pass before you dribble vs pressure.",
+      "Middle or corner — find the free man.",
+    ],
+    oneOnOne: [
+      "Attack the top foot on the closeout.",
+      "Finish through contact — no fadeaways.",
     ],
     generic: [
       "Come back to what you wrote on the board.",

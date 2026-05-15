@@ -84,8 +84,22 @@ const ES_DRILL_NAMES: Record<EmphasisKey, BlockDrillNames> = {
     ["1c1 campo completo — 3 botes máximo", "Escape trampa en medio — parada", "Negar pase — mano en línea"],
     ["3c3 campo completo — 3 paradas", "Run-and-jump — sin alcanzar", "4c4 presión — trampa solo en banda"],
     ["4c4 — sin penetración al medio", "Presión viva — sprint al tiro", "Cascarón con presión al balón"],
-    ["5c5 presión a 7", "Competitivo — romper presión = punto", "Últimos 4 min: presión en cada balón muerto"],
+    ["5c5 presión a 7", "Competitivo — paradas", "Últimos 4 min: presión en cada balón muerto"],
     ["5c5 — vuestra presión", "Partido: robo = punto bonus", "Agresivos — manos arriba"]
+  ),
+  pressBreak: drills(
+    ["Parejas — pase por encima, salida por esquina", "Trampa en medio — parada y giro", "4 abiertos — sin bote hasta medio"],
+    ["2c1 vs trampa en banda — tocar medio", "3c3 vs trampa — reversa al lado débil", "4c4 — primer pase antes del bote"],
+    ["4c4 vs presión viva — penetración al medio", "5c4 — canasta antes de 8 seg", "Competitivo — romper = +1"],
+    ["5c5 vs presión plena — válvula de seguridad", "Saque vs trampa — flash a esquina", "Vivo — trampa y encontrar medio"],
+    ["5c5 vs vuestra presión", "Partido: toque en medio antes del tiro", "Correr lo que rompimos hoy"]
+  ),
+  oneOnOne: drills(
+    ["1c1 desde ala — 2 botes máximo", "1c1 desde arriba — leer cierre", "1c1 — finalizar con contacto"],
+    ["1c1 vivo — penetrar o pull-up", "1c1 desde esquina — línea de fondo o medio", "Competitivo — primero a 5"],
+    ["3c3 — regla iso un lado", "4c4 — un iso por posesión", "Cascarón — ayuda en drive, sin dig"],
+    ["5c5 — un iso por viaje", "Competitivo — mejor 1c1 gana", "Partido: and-one = 2 puntos"],
+    ["5c5 — vuestras reglas 1c1", "Leer la ayuda — atacar cierre", "Atacar el pie alto del cierre"]
   ),
   spacing: drills(
     ["Penetrar-pasar — esquina se queda ancha", "Rellenar detrás — 1 bote y tiro", "Puntos de espacio — 3.5 m entre ellos"],
@@ -147,6 +161,8 @@ const ES_SETUP_HOOKS: Record<EmphasisKey, string> = {
   fiveOut: "Cinco abiertos",
   fast: "Subir el ritmo",
   switch: "Hablar en cambios",
+  pressBreak: "Romper presión — pase primero",
+  oneOnOne: "Leer el cierre",
   generic: "Foco de hoy",
 };
 
@@ -228,6 +244,14 @@ export const ES_SIMPLE = {
     switch: [
       "Llamarlo antes del contacto, no después.",
       "Grandes cambian pronto — no perseguir desde atrás.",
+    ],
+    pressBreak: [
+      "Pasar antes de botear vs presión.",
+      "Medio o esquina — encontrar al libre.",
+    ],
+    oneOnOne: [
+      "Atacar el pie alto del cierre.",
+      "Finalizar con contacto — sin fade.",
     ],
     generic: [
       "Volver a lo de la pizarra.",

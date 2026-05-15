@@ -19,6 +19,8 @@ export type ParsedCoachThemes = {
   decisionMaking: boolean;
   shootingConfidence: boolean;
   spacing: boolean;
+  /** Offense vs trap / full-court press — not defensive pressure drills */
+  pressBreaking: boolean;
 };
 
 function joinFields(f: CoachingFields): string {
@@ -169,12 +171,26 @@ function inferOffenseStyle(all: string, low: string): ParsedOffense {
   return "general";
 }
 
+/** Breaking press / trap — offensive, not defensive pressure theme */
+export function hasPressBreak(all: string, low: string): boolean {
+  if (all.includes("שבירת לחץ")) return true;
+  if (all.includes("לשבור לחץ")) return true;
+  if (all.includes("שוברים לחץ")) return true;
+  if (all.includes("מתגברים על לחץ")) return true;
+  if (/\b(press\s*break|breaking\s+press|break\s+the\s+press|romper\s+presi[oó]n|pressbreak)\b/i.test(low))
+    return true;
+  if (all.includes("לחץ") && (all.includes("שביר") || all.includes("שובר"))) return true;
+  return false;
+}
+
 function inferDefenseStyle(all: string, low: string): ParsedDefense {
+  if (hasPressBreak(all, low)) return "man";
   if (all.includes("זון") || all.includes("אזור") || /\b(2[-\s]*3|3[-\s]*2|zone\s+def|zone\s+d)\b/i.test(low)) return "zone";
   if (
     all.includes("פול קורט") ||
     all.includes("לחץ מלא") ||
-    /\b(full[-\s]*court|press|trap|blitz|run\s*and\s*jump)\b/i.test(low)
+    /\b(full[-\s]*court|(?<!press\s)trap|blitz|run\s*and\s*jump)\b/i.test(low) ||
+    (/\bpress\b/i.test(low) && !/\bpress\s*break/i.test(low))
   )
     return "aggressive";
   if (all.includes("החלפות") || all.includes("סוויץ") || /\bswitch(ing)?\b/i.test(low)) return "switch";
@@ -201,6 +217,7 @@ export function parseCoachFields(f: CoachingFields): ParsedCoachThemes {
   const shootingConfidence = hasShootingConfidence(all, low) || hasShootingConfidence(prob, probLow);
   const communication = hasCommunication(all, low) || hasCommunication(prob, probLow);
   const spacing = hasSpacing(all, low) || hasSpacing(prob, probLow);
+  const pressBreaking = hasPressBreak(all, low) || hasPressBreak(prob, probLow);
 
   return {
     offense: inferOffenseStyle(all, low),
@@ -213,5 +230,6 @@ export function parseCoachFields(f: CoachingFields): ParsedCoachThemes {
     decisionMaking,
     shootingConfidence,
     spacing,
+    pressBreaking,
   };
 }
