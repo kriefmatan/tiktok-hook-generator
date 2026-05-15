@@ -1,9 +1,17 @@
 import type { PracticePlan, PracticeSheetSection } from "../types/plan";
 import type { CoachingFields } from "./coachingFields";
 import type { BlockKind, EmphasisKey, SimplePracticeBundle } from "./locale/coachBundle.types";
+import type { PresetId } from "./locale/uiCatalog";
 import { SIMPLE_BUNDLES } from "./locale/bundles";
 import { emphasesFromSelections } from "./input/emphasisFromInput";
 import { parseCoachFields, type ParsedCoachThemes } from "./coachTextAnalysis";
+
+const MOTION_PRESET_IDS: readonly PresetId[] = [
+  "noDribblePractice",
+  "passingMovement",
+  "coordinationFootwork",
+  "readAndReact",
+];
 
 export type { CoachingFields } from "./coachingFields";
 
@@ -51,12 +59,12 @@ function collectEmphasesFromText(p: ParsedCoachThemes): EmphasisKey[] {
 function mergeEmphases(
   fromText: readonly EmphasisKey[],
   fromSelection: readonly EmphasisKey[],
+  parsed: ParsedCoachThemes,
 ): EmphasisKey[] {
-  if (fromSelection.length === 0) return [...fromText];
-
   const merged: EmphasisKey[] = [];
   const seen = new Set<EmphasisKey>();
-  for (const key of [...fromSelection, ...fromText]) {
+  const order = fromSelection.length > 0 ? [...fromSelection, ...fromText] : [...fromText];
+  for (const key of order) {
     if (seen.has(key)) continue;
     seen.add(key);
     merged.push(key);
@@ -64,10 +72,36 @@ function mergeEmphases(
 
   const motionFocus = merged.includes("motion");
   const spacingChosen = fromSelection.includes("spacing");
+  let out = merged;
   if (motionFocus && !spacingChosen) {
-    return merged.filter((k) => k !== "spacing");
+    out = out.filter((k) => k !== "spacing");
   }
-  return merged;
+  if (motionFocus && !parsed.turnovers) {
+    out = out.filter((k) => k !== "turnover");
+  }
+  return out;
+}
+
+/** Off-ball movement sessions stay on motion drills — no BAL/SPC rotation. */
+function sessionEmphasesForBlocks(
+  merged: readonly EmphasisKey[],
+  fields: CoachingFields,
+  parsed: ParsedCoachThemes,
+): EmphasisKey[] {
+  const chips = fields.chips ?? [];
+  const presets = fields.presets ?? [];
+  const motionChip = chips.includes("ballMovement");
+  const motionPreset = presets.some((p) => MOTION_PRESET_IDS.includes(p));
+  const motionFromText =
+    parsed.offense === "motion" && !parsed.turnovers && !parsed.spacing;
+
+  const offBallFocus =
+    (motionChip || motionPreset || motionFromText) && merged.includes("motion");
+
+  if (offBallFocus) {
+    return ["motion"];
+  }
+  return merged.length > 0 ? [...merged] : ["generic"];
 }
 
 const BLOCK_ORDER: readonly BlockKind[] = ["warmup", "drill1", "drill2", "drill3", "game"];
@@ -131,7 +165,8 @@ export function buildPracticePlan(fields: CoachingFields): PracticePlan {
   const parsed = parseCoachFields(fields);
   const h = coachSeed(fields);
   const selectionEmphases = emphasesFromSelections(fields.chips, fields.presets);
-  const emphases = mergeEmphases(collectEmphasesFromText(parsed), selectionEmphases);
+  const merged = mergeEmphases(collectEmphasesFromText(parsed), selectionEmphases, parsed);
+  const emphases = sessionEmphasesForBlocks(merged, fields, parsed);
   const minutes = BLOCK_ORDER.map((_, i) => blockMinutes(parsed, i));
 
   const sections = BLOCK_ORDER.map((kind, blockIndex) => {

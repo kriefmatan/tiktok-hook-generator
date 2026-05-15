@@ -133,7 +133,7 @@ const EN_SETUP_HOOKS: Record<EmphasisKey, string> = {
   transition: "Get back, then run",
   communication: "Talk",
   decision: "Read it",
-  motion: "Move without the ball",
+  motion: "Off-ball — move the defense",
   pressure: "Pressure the ball",
   spacing: "Spread out",
   fiveOut: "Five out",
