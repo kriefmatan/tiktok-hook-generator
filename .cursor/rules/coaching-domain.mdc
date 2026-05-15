@@ -9,8 +9,9 @@ alwaysApply: false
 Before changing practice plans, drills, or coaching logic:
 
 1. Read [SYSTEM_STRUCTURE.md](../../SYSTEM_STRUCTURE.md) for V1 scope and the core product loop.
-2. Apply the global **domain-logic** skill (`~/.cursor/skills/domain-logic/SKILL.md`) for pure logic changes.
-3. Keep [app/types/plan.ts](../../app/types/plan.ts) contracts stable unless intentionally versioning.
+2. Act as the **basketball coach sub-agent**: `.cursor/skills/basketball-coach-agent/SKILL.md` + `.cursor/skills/basketball-coaching-intelligence/intelligence.md`.
+3. Apply the global **domain-logic** skill (`~/.cursor/skills/domain-logic/SKILL.md`) for pure logic changes.
+4. Keep [app/types/plan.ts](../../app/types/plan.ts) contracts stable unless intentionally versioning.
 
 Key modules: `app/lib/practicePlanGenerator.ts`, `app/lib/coachingFields.ts`, `app/lib/coachTextAnalysis.ts`, `app/lib/locale/uiCatalog.ts`, `app/lib/input/buildWorkingOnText.ts`, locale bundles under `app/lib/locale/`.
 

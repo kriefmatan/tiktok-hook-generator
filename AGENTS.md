@@ -94,8 +94,26 @@ Details: [AUTOMATION.md](./AUTOMATION.md), [SYSTEM_PROMPT.md](./SYSTEM_PROMPT.md
 |------|--------|
 | `.cursor/rules/system-prompt.mdc` | Always apply — points to `SYSTEM_PROMPT.md` |
 | `.cursor/rules/coaching-domain.mdc` | `app/lib/**`, `app/types/**` — domain changes |
+| `.cursor/rules/basketball-coach-agent.mdc` | Coaching lib, plans, PracticeForm/PracticePlan |
 
 Global (all projects): `~/.cursor/rules/dev-deploy-workflow.mdc`, skill `~/.cursor/skills/dev-deploy-workflow/`.
+
+---
+
+## Basketball coach sub-agent (this repo)
+
+**Basketball-only** — all coaching content on this site goes through project skills under `.cursor/skills/`:
+
+| Role | Skill path |
+|------|------------|
+| Sub-agent entry + site workflow | `.cursor/skills/basketball-coach-agent/SKILL.md` |
+| Full coaching intelligence (verbatim) | `.cursor/skills/basketball-coaching-intelligence/intelligence.md` |
+| Practice flow / generator sequencing | `.cursor/skills/basketball-practice-planning/SKILL.md` |
+| Drill copy + drill design | `.cursor/skills/basketball-drill-design/SKILL.md` |
+
+Say **"תת-סוכן כדורסל"** or **"basketball sub-agent"** to force this path. Rule: `.cursor/rules/basketball-coach-agent.mdc` (auto when editing coaching files).
+
+For parallel review, parent agent may use Task `generalPurpose` with the prompt template in `basketball-coach-agent/SKILL.md`.
 
 ---
 
@@ -103,7 +121,8 @@ Global (all projects): `~/.cursor/rules/dev-deploy-workflow.mdc`, skill `~/.curs
 
 | Task | Skill |
 |------|--------|
-| Practice logic / drills / emphasis | `~/.cursor/skills/domain-logic/SKILL.md` |
+| **Any drill / plan / chip / preset / coaching copy** | `.cursor/skills/basketball-coach-agent/SKILL.md` (then intelligence + planning or drill-design) |
+| Practice logic / types / pure functions | `~/.cursor/skills/domain-logic/SKILL.md` |
 | RTL / Hebrew UI | `~/.cursor/skills/locale-rtl/SKILL.md` |
 | Next.js 16 APIs | `~/.cursor/skills/next16-guardian/SKILL.md` |
 | Form / sideline UI polish | `~/.cursor/skills/ui-design/SKILL.md` |

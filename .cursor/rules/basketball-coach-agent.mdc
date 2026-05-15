@@ -1,0 +1,16 @@
+---
+description: Basketball coach sub-agent — mandatory for coaching content changes on this site.
+globs: app/lib/**,app/types/**,app/components/PracticePlan.tsx,app/components/PracticeForm.tsx
+alwaysApply: false
+---
+
+# Basketball coach sub-agent
+
+For any change that affects **practice plans, drills, chips, presets, tags, or coaching copy** in this repo:
+
+1. Read `.cursor/skills/basketball-coach-agent/SKILL.md` and act as the basketball-only specialist.
+2. Apply `.cursor/skills/basketball-coaching-intelligence/intelligence.md` to all coaching decisions.
+3. Use `.cursor/skills/basketball-practice-planning/SKILL.md` when touching `practicePlanGenerator` or plan flow.
+4. Use `.cursor/skills/basketball-drill-design/SKILL.md` when touching locale bundles or drill text.
+
+Do not ship coaching changes that fail the intelligence quality gate. UI contract stays in `SYSTEM_PROMPT.md`.
