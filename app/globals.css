@@ -1,13 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0a0a0a;
-  --surface: #1a1a1a;
-  --surface-elevated: #222222;
-  --accent: #ff7b00;
+  --bg: #050505;
+  --surface: #0e0e11;
+  --card: #121317;
+  --card-hover: #181a20;
+  --accent: #ff7a00;
   --accent-hover: #ff8f26;
-  --border: #2a2a2a;
-  --foreground: #ededed;
+  --accent-glow: rgba(255, 122, 0, 0.35);
+  --border: rgba(255, 255, 255, 0.06);
+  --foreground: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-muted: #6b7280;
+  --glass: rgba(18, 19, 23, 0.72);
 }
 
 @theme inline {
@@ -16,14 +21,47 @@
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
   --color-surface: var(--surface);
-  --color-surface-elevated: var(--surface-elevated);
+  --color-card: var(--card);
+  --color-card-hover: var(--card-hover);
   --color-border-subtle: var(--border);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --font-sans: var(--font-assistant), var(--font-inter), system-ui, sans-serif;
+  --radius-card: 1.25rem;
 }
 
 body {
   background: var(--bg);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* subtle court lines texture */
+.court-texture {
+  background-image:
+    linear-gradient(rgba(255, 122, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 122, 0, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.glass-panel {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+.chip-glow {
+  box-shadow: 0 0 0 1px var(--accent), 0 0 20px var(--accent-glow);
+}
+
+.card-glow:hover {
+  box-shadow:
+    0 0 0 1px rgba(255, 122, 0, 0.25),
+    0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.input-glow:focus-within {
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 0 24px var(--accent-glow);
 }

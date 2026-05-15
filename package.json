@@ -10,7 +10,9 @@
     "deploy": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/deploy.ps1"
   },
   "dependencies": {
+    "framer-motion": "^12.38.0",
     "franc": "^6.2.0",
+    "lucide-react": "^1.16.0",
     "next": "16.2.6",
     "openai": "^6.37.0",
     "react": "19.2.4",

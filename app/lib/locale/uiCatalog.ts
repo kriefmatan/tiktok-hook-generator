@@ -1,5 +1,6 @@
 import type { AppLocale } from "./appLocale";
 import { localeText } from "./localeText";
+import { UI_INSIGHTS } from "./uiInsightsShared";
 import { UI_DE, UI_ES } from "./uiStringsEsDe";
 
 export type ChipId =
@@ -90,12 +91,13 @@ type PresetDef = {
   searchTerms: Partial<Record<AppLocale, string>> & { en: string };
 };
 
+export type NavItemId = "practice" | "plays" | "players" | "stats" | "season" | "settings";
+
 export type UiStrings = {
   brandName: string;
   title: string;
   subtitle: string;
   languageLabel: string;
-  /** Single primary question — the only prompt on the page */
   mainPrompt: string;
   inputPlaceholder: string;
   chipsLabel: string;
@@ -108,6 +110,17 @@ export type UiStrings = {
   buildButtonLong: string;
   building: string;
   errorFailed: string;
+  nav: Record<NavItemId, string>;
+  coachName: string;
+  coachRole: string;
+  tipTitle: string;
+  tipQuote: string;
+  recentTitle: string;
+  recentItems: readonly string[];
+  templatesTitle: string;
+  viewAll: string;
+  darkModeLabel: string;
+  comingSoon: string;
 };
 
 const PRESET_DEFS: readonly PresetDef[] = [
@@ -369,7 +382,7 @@ export const UI: Record<AppLocale, UiStrings> = {
     languageLabel: "Language",
     mainPrompt: "What are you working on today?",
     inputPlaceholder: "Defense drills, shooting, offensive sets…",
-    chipsLabel: "Quick focus",
+    chipsLabel: "Quick topics",
     presetsLabel: "Presets",
     moreLabel: "More",
     presetGroups: {
@@ -408,9 +421,27 @@ export const UI: Record<AppLocale, UiStrings> = {
       paceControl: "Pace control",
     },
     buildButton: "Build",
-    buildButtonLong: "Build a personalized practice",
+    buildButtonLong: "Build practice",
     building: "Building…",
     errorFailed: "Couldn't build the plan. Try again.",
+    nav: {
+      practice: "Practice",
+      plays: "Plays",
+      players: "Players",
+      stats: "Stats",
+      season: "Season plan",
+      settings: "Settings",
+    },
+    coachName: "Head Coach",
+    coachRole: "Varsity",
+    tipTitle: "Tip of the day",
+    tipQuote: "Small details win close games — closeouts, talk, spacing.",
+    recentTitle: "Recent activity",
+    recentItems: ["Defense practice · 2h ago", "Shooting session · Yesterday", "Game prep · Mon"],
+    templatesTitle: "Saved templates",
+    viewAll: "View all",
+    darkModeLabel: "Dark mode",
+    comingSoon: "Soon",
   },
   he: {
     brandName: "AI BASKETBALL PLANNER",
@@ -418,14 +449,14 @@ export const UI: Record<AppLocale, UiStrings> = {
     subtitle: "תכנון חכם, ניצחון במשחק",
     languageLabel: "שפה",
     mainPrompt: "על מה עובדים היום?",
-    inputPlaceholder: "תרגילי הגנה, זריקות, מערכי התקפה…",
-    chipsLabel: "נושא מהיר",
-    presetsLabel: "תבניות",
+    inputPlaceholder: "לדוגמה: תרגילי הגנה אישית, תנועה בלי כדור, מערך התקפה…",
+    chipsLabel: "נושאים מהירים",
+    presetsLabel: "תבניות אימון",
     moreLabel: "עוד",
     presetGroups: {
-      team: "אימון קבוצה",
+      team: "אימון קבוצתי",
       youth: "נוער",
-      advanced: "מתקדם",
+      advanced: "מתקדמים",
     },
     chips: {
       defense: "הגנה",
@@ -458,12 +489,30 @@ export const UI: Record<AppLocale, UiStrings> = {
       paceControl: "שליטה בקצב",
     },
     buildButton: "בנה",
-    buildButtonLong: "בנה אימון מותאם אישית",
+    buildButtonLong: "בנה אימון",
     building: "בונה…",
     errorFailed: "לא יצא. נסו שוב.",
+    nav: {
+      practice: "אימון",
+      plays: "מערכי משחק",
+      players: "שחקנים",
+      stats: "סטטיסטיקות",
+      season: "תוכנית עונה",
+      settings: "הגדרות",
+    },
+    coachName: "מאמן ראשי",
+    coachRole: "קבוצת בוגרים",
+    tipTitle: "טיפ היום",
+    tipQuote: "פרטים קטנים משנים משחקים צמודים — סגירות, דיבור, מרווחים.",
+    recentTitle: "פעילות אחרונה",
+    recentItems: ["אימון הגנה · לפני שעתיים", "אימון זריקות · אתמול", "הכנה למשחק · ב׳"],
+    templatesTitle: "תבניות שמורות",
+    viewAll: "צפה בהכל",
+    darkModeLabel: "מצב כהה",
+    comingSoon: "בקרוב",
   },
-  es: UI_ES as UiStrings,
-  de: UI_DE as UiStrings,
+  es: { ...UI_ES, ...UI_INSIGHTS.es } as UiStrings,
+  de: { ...UI_DE, ...UI_INSIGHTS.de } as UiStrings,
 };
 
 const PRESET_LABELS: Record<PresetId, Partial<Record<AppLocale, string>> & { en: string }> = {

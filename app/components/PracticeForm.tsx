@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { ChevronDown, Sparkles } from "lucide-react";
 import type { AppLocale } from "../lib/locale/appLocale";
 import {
   ADVANCED_TAG_ORDER,
@@ -12,7 +14,7 @@ import {
   type ChipId,
   type PresetId,
 } from "../lib/locale/uiCatalog";
-import { ChipIcon, PresetIcon, WandIcon } from "./ui/TopicIcons";
+import { CHIP_LUCIDE, PRESET_LUCIDE } from "./ui/chipLucideIcons";
 
 type Props = {
   locale: AppLocale;
@@ -28,25 +30,14 @@ type Props = {
   onBuild: () => void;
 };
 
-function chipClass(selected: boolean) {
-  return [
-    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm leading-tight transition-colors",
-    "min-h-[36px] touch-manipulation",
-    selected
-      ? "border-accent bg-accent/15 text-accent"
-      : "border-border-subtle bg-surface text-zinc-300 hover:border-zinc-600 active:border-zinc-500",
-  ].join(" ");
-}
-
-function presetClass(selected: boolean) {
-  return [
-    "flex w-full items-start gap-3 rounded-xl border p-3.5 text-start transition-colors",
-    "min-h-[72px] touch-manipulation",
-    selected
-      ? "border-accent bg-surface-elevated ring-2 ring-accent/60"
-      : "border-border-subtle bg-surface hover:border-zinc-600",
-  ].join(" ");
-}
+const stagger = {
+  hidden: { opacity: 0, y: 10 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.03, duration: 0.28 },
+  }),
+};
 
 export function PracticeForm({
   locale,
@@ -69,86 +60,127 @@ export function PracticeForm({
     selectedAdvanced.size > 0;
 
   return (
-    <div className="space-y-6">
-      <label className="block">
-        <span className="text-sm font-medium text-zinc-300">{ui.mainPrompt}</span>
-        <div className="relative mt-2">
-          <WandIcon className="pointer-events-none absolute start-3 top-3.5 h-5 w-5 text-zinc-500" />
-          <textarea
-            name="workingOn"
-            rows={3}
-            value={workingOn}
-            onChange={(e) => onWorkingOnChange(e.target.value)}
-            placeholder={ui.inputPlaceholder}
-            className="w-full resize-y rounded-xl border border-border-subtle bg-surface py-3 ps-11 pe-4 text-[15px] leading-snug text-zinc-100 placeholder:text-zinc-600 focus:border-accent/50 focus:outline-none focus:ring-1 focus:ring-accent/40"
-          />
+    <div className="space-y-8">
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.32 }}
+      >
+        <label className="mb-3 block text-sm font-medium text-text-secondary">{ui.mainPrompt}</label>
+        <div className="input-glow flex flex-col gap-3 rounded-[22px] border border-border-subtle bg-card/90 p-3 backdrop-blur-sm transition-shadow sm:flex-row sm:items-stretch sm:p-4">
+          <div className="relative min-h-[88px] flex-1">
+            <Sparkles
+              className="pointer-events-none absolute start-4 top-4 h-5 w-5 text-accent"
+              aria-hidden
+            />
+            <textarea
+              name="workingOn"
+              rows={3}
+              value={workingOn}
+              onChange={(e) => onWorkingOnChange(e.target.value)}
+              placeholder={ui.inputPlaceholder}
+              className="h-full min-h-[88px] w-full resize-none bg-transparent py-3 ps-12 pe-3 text-[15px] leading-relaxed text-white placeholder:text-text-muted focus:outline-none"
+            />
+          </div>
+          <motion.button
+            type="button"
+            onClick={onBuild}
+            disabled={loading || !canBuild}
+            whileHover={{ scale: canBuild && !loading ? 1.02 : 1, y: canBuild && !loading ? -2 : 0 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex shrink-0 items-center justify-center gap-2 rounded-[18px] bg-gradient-to-b from-accent to-orange-600 px-8 py-4 text-base font-semibold text-black shadow-[0_8px_32px_rgba(255,122,0,0.35)] transition disabled:opacity-45 sm:min-w-[160px]"
+          >
+            <Sparkles className="h-5 w-5" />
+            {loading ? ui.building : ui.buildButtonLong}
+          </motion.button>
         </div>
-      </label>
+      </motion.section>
 
       <section aria-label={ui.chipsLabel}>
-        <p className="mb-2.5 text-xs font-semibold uppercase tracking-wide text-zinc-500">{ui.chipsLabel}</p>
-        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:pb-0">
-          {CHIP_ORDER.map((id) => {
+        <h2 className="mb-3 text-sm font-semibold text-white">{ui.chipsLabel}</h2>
+        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-2 sm:flex-wrap sm:overflow-visible">
+          {CHIP_ORDER.map((id, i) => {
             const selected = selectedChips.has(id);
+            const Icon = CHIP_LUCIDE[id];
             return (
-              <button
+              <motion.button
                 key={id}
                 type="button"
+                custom={i}
+                variants={stagger}
+                initial="hidden"
+                animate="show"
                 aria-pressed={selected}
                 onClick={() => onToggleChip(id)}
-                className={`${chipClass(selected)} shrink-0`}
+                className={[
+                  "inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-medium backdrop-blur-md transition",
+                  selected
+                    ? "chip-glow border-accent bg-accent/10 text-accent"
+                    : "border-border-subtle bg-card/60 text-text-secondary hover:border-white/12 hover:bg-card-hover hover:text-white",
+                ].join(" ")}
               >
-                <ChipIcon id={id} className={selected ? "text-accent" : "text-zinc-500"} />
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent/15">
+                  <Icon className="h-3.5 w-3.5 text-accent" strokeWidth={2} />
+                </span>
                 {ui.chips[id]}
-              </button>
+              </motion.button>
             );
           })}
         </div>
       </section>
 
-      <section aria-label={ui.presetsLabel}>
-        <p className="mb-4 text-xs font-semibold uppercase tracking-wide text-zinc-500">{ui.presetsLabel}</p>
-        <div className="space-y-6">
-          {PRESET_GROUPS.map((group) => (
-            <div key={group.id}>
-              <h3 className="mb-3 text-sm font-semibold text-zinc-200">{ui.presetGroups[group.id]}</h3>
-              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
-                {group.presetIds.map((id) => {
-                  const selected = selectedPresets.has(id);
-                  return (
-                    <button
-                      key={id}
-                      type="button"
-                      aria-pressed={selected}
-                      onClick={() => onTogglePreset(id)}
-                      className={presetClass(selected)}
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium leading-snug text-white">{presetLabel(id, locale)}</p>
-                        <p className="mt-1 line-clamp-2 text-xs leading-snug text-zinc-500">
-                          {presetFillText(id, locale)}
-                        </p>
-                      </div>
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/15 text-accent">
-                        <PresetIcon id={id} className="h-5 w-5" />
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+      <section aria-label={ui.presetsLabel} className="space-y-8">
+        {PRESET_GROUPS.map((group, gi) => (
+          <motion.div
+            key={group.id}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.08 + gi * 0.06, duration: 0.32 }}
+          >
+            <h2 className="mb-4 text-lg font-semibold text-white">{ui.presetGroups[group.id]}</h2>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+              {group.presetIds.map((id) => {
+                const selected = selectedPresets.has(id);
+                const Icon = PRESET_LUCIDE[id];
+                return (
+                  <motion.button
+                    key={id}
+                    type="button"
+                    whileHover={{ y: -3 }}
+                    aria-pressed={selected}
+                    onClick={() => onTogglePreset(id)}
+                    className={[
+                      "card-glow group flex w-full items-start gap-4 rounded-[20px] border p-4 text-start transition",
+                      selected
+                        ? "border-accent/50 bg-gradient-to-br from-accent/10 to-card ring-1 ring-accent/40"
+                        : "border-border-subtle bg-gradient-to-br from-card to-[#0e0e11] hover:border-accent/25",
+                    ].join(" ")}
+                  >
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-orange-600 shadow-lg shadow-accent/25">
+                      <Icon className="h-5 w-5 text-black" strokeWidth={2.25} />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold leading-snug text-white group-hover:text-accent">
+                        {presetLabel(id, locale)}
+                      </p>
+                      <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-text-muted">
+                        {presetFillText(id, locale)}
+                      </p>
+                    </div>
+                  </motion.button>
+                );
+              })}
             </div>
-          ))}
-        </div>
+          </motion.div>
+        ))}
       </section>
 
-      <details className="group rounded-xl border border-border-subtle bg-surface px-4 py-3 open:pb-4">
-        <summary className="cursor-pointer list-none text-sm font-medium text-zinc-300 marker:content-none [&::-webkit-details-marker]:hidden">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="text-zinc-500 transition group-open:rotate-90">›</span>
-            {ui.moreLabel}
-          </span>
+      <details className="group rounded-[20px] border border-border-subtle bg-card/50 backdrop-blur-sm">
+        <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 marker:content-none [&::-webkit-details-marker]:hidden">
+          <span className="text-sm font-medium text-text-secondary">{ui.moreLabel}</span>
+          <ChevronDown className="h-4 w-4 text-text-muted transition group-open:rotate-180" />
         </summary>
-        <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label={ui.moreLabel}>
+        <div className="flex flex-wrap gap-2 border-t border-border-subtle px-5 pb-5 pt-2">
           {ADVANCED_TAG_ORDER.map((id) => {
             const selected = selectedAdvanced.has(id);
             return (
@@ -157,7 +189,12 @@ export function PracticeForm({
                 type="button"
                 aria-pressed={selected}
                 onClick={() => onToggleAdvanced(id)}
-                className={chipClass(selected)}
+                className={[
+                  "rounded-full border px-3 py-1.5 text-sm transition",
+                  selected
+                    ? "chip-glow border-accent bg-accent/10 text-accent"
+                    : "border-border-subtle bg-surface text-text-secondary hover:text-white",
+                ].join(" ")}
               >
                 {ui.advancedTags[id]}
               </button>
@@ -165,16 +202,6 @@ export function PracticeForm({
           })}
         </div>
       </details>
-
-      <button
-        type="button"
-        onClick={onBuild}
-        disabled={loading || !canBuild}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent py-3.5 text-sm font-semibold text-black transition hover:bg-accent-hover disabled:opacity-50"
-      >
-        <WandIcon className="h-5 w-5" />
-        {loading ? ui.building : ui.buildButtonLong}
-      </button>
     </div>
   );
 }

@@ -20,7 +20,7 @@ function DrillCard({
 
   return (
     <article
-      className="break-inside-avoid rounded-xl border border-border-subtle bg-surface px-4 py-4 sm:px-5 sm:py-5"
+      className="break-inside-avoid rounded-[20px] border border-border-subtle bg-card px-4 py-4 sm:px-5 sm:py-5"
       aria-labelledby={`drill-title-${index}`}
     >
       <div className="flex items-start justify-between gap-3">
