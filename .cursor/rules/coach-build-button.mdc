@@ -1,0 +1,23 @@
+---
+description: Coach-agent pipeline runs on every Build practice click
+globs:
+  - app/api/generate/**
+  - app/lib/practicePlanGenerator.ts
+  - app/lib/coach/**
+  - app/lib/coachTextAnalysis.ts
+  - app/lib/input/**
+  - app/lib/locale/bundles/**
+  - app/components/PracticeForm.tsx
+alwaysApply: false
+---
+
+# Build button → coach pipeline
+
+When the user clicks **בנה אימון** (`#coach-build-practice`, `data-coach-build`):
+
+1. Read `.cursor/skills/basketball-coach-agent/SKILL.md` and apply coaching intelligence.
+2. Server path: `POST /api/generate` → `buildPracticePlanWithCoach()` in `app/lib/coach/coachPracticePipeline.ts` → `buildPracticePlan()`.
+3. Do not bypass theme routing or rotate unrelated emphases (BAL/SPC into a motion session).
+4. Drill copy changes → `app/lib/locale/bundles/` + `emphasisFromInput.ts`; flow → `practicePlanGenerator.ts`.
+
+Quality gate: `basketball-coaching-intelligence` before ship.

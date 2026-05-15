@@ -1,4 +1,5 @@
-import { buildPracticePlan, type CoachingFields } from "../../lib/practicePlanGenerator";
+import { buildPracticePlanWithCoach } from "../../lib/coach/coachPracticePipeline";
+import type { CoachingFields } from "../../lib/coachingFields";
 import { DEFAULT_APP_LOCALE, isAppLocale } from "../../lib/locale/appLocale";
 import { toAppLocale } from "../../lib/locale/toAppLocale";
 import type { AdvancedTagId, ChipId, PresetId } from "../../lib/locale/uiCatalog";
@@ -36,7 +37,7 @@ export async function POST(req: Request) {
       advancedTags: asStringArray(advancedTags) as AdvancedTagId[],
     };
 
-    const plan = buildPracticePlan(fields);
+    const plan = buildPracticePlanWithCoach(fields);
 
     return Response.json({ plan });
   } catch (err) {

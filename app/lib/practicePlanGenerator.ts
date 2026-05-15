@@ -106,10 +106,33 @@ function sessionEmphasesForBlocks(
 
 const BLOCK_ORDER: readonly BlockKind[] = ["warmup", "drill1", "drill2", "drill3", "game"];
 
-function blockEmphasis(emphases: readonly EmphasisKey[], blockIndex: number, h: number): EmphasisKey {
+const YOUTH_PRESET_IDS: readonly PresetId[] = [
+  "beginnerPractice",
+  "funCompetitive",
+  "coordinationFootwork",
+  "noDribblePractice",
+];
+
+/** Max themes per session — avoids unrelated rotation (practice-planning skill). */
+function capSessionEmphases(emphases: readonly EmphasisKey[]): EmphasisKey[] {
+  if (emphases.length <= 2) return [...emphases];
+  return [emphases[0]!, emphases[1]!];
+}
+
+/**
+ * Practice-planning progression: teach early, pressure late, 5v5 reinforces primary theme.
+ * Replaces random hash rotation so coach input maps to a coherent session.
+ */
+function coachBlockEmphasis(emphases: readonly EmphasisKey[], blockIndex: number): EmphasisKey {
+  if (emphases.length === 0) return "generic";
   if (emphases.length === 1) return emphases[0]!;
-  const stride = blockIndex * 5 + (h % 7);
-  return emphases[stride % emphases.length]!;
+
+  const primary = emphases[0]!;
+  const secondary = emphases[1] ?? primary;
+
+  if (blockIndex <= 1) return primary;
+  if (blockIndex === 2) return secondary;
+  return primary;
 }
 
 function headerLine(f: CoachingFields, bundle: SimplePracticeBundle): string {
@@ -126,15 +149,22 @@ function buildCoachingPoints(emphasis: EmphasisKey, bundle: SimplePracticeBundle
   return points.slice(0, 4);
 }
 
-function blockMinutes(p: ParsedCoachThemes, blockIndex: number): number {
+function blockMinutes(
+  p: ParsedCoachThemes,
+  blockIndex: number,
+  fields: CoachingFields,
+): number {
   const base: readonly number[] = [6, 10, 10, 10, 14];
   let m = base[blockIndex] ?? 10;
   const fastSession = p.offense === "fast" || p.transitionOffense;
-  if (blockIndex === 0 && fastSession) m = 5;
+  const youthSession = (fields.presets ?? []).some((id) => YOUTH_PRESET_IDS.includes(id));
+
+  if (blockIndex === 0 && (fastSession || youthSession)) m = 5;
   if (blockIndex === 1 && p.rebounding) m = 12;
   if (blockIndex === 2 && (p.defense === "zone" || p.offense === "pick")) m = 11;
-  if (blockIndex === 3 && (p.shootingConfidence || p.decisionMaking)) m = 11;
+  if (blockIndex === 3 && (p.shootingConfidence || p.decisionMaking)) m = 12;
   if (blockIndex === 4 && fastSession) m = 16;
+  if (blockIndex === 4 && youthSession && !fastSession) m = 12;
   return m;
 }
 
@@ -166,11 +196,11 @@ export function buildPracticePlan(fields: CoachingFields): PracticePlan {
   const h = coachSeed(fields);
   const selectionEmphases = emphasesFromSelections(fields.chips, fields.presets);
   const merged = mergeEmphases(collectEmphasesFromText(parsed), selectionEmphases, parsed);
-  const emphases = sessionEmphasesForBlocks(merged, fields, parsed);
-  const minutes = BLOCK_ORDER.map((_, i) => blockMinutes(parsed, i));
+  const emphases = capSessionEmphases(sessionEmphasesForBlocks(merged, fields, parsed));
+  const minutes = BLOCK_ORDER.map((_, i) => blockMinutes(parsed, i, fields));
 
   const sections = BLOCK_ORDER.map((kind, blockIndex) => {
-    const emphasis = blockEmphasis(emphases, blockIndex, h);
+    const emphasis = coachBlockEmphasis(emphases, blockIndex);
     const name = pickFrom(bundle.drillNames[emphasis][kind], h, blockIndex * 11);
     return section(bundle, minutes[blockIndex]!, name, emphasis);
   });

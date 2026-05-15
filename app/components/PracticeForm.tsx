@@ -83,7 +83,10 @@ export function PracticeForm({
             />
           </div>
           <motion.button
+            id="coach-build-practice"
             type="button"
+            data-coach-build="true"
+            aria-label={ui.buildButtonLong}
             onClick={onBuild}
             disabled={loading || !canBuild}
             whileHover={{ scale: canBuild && !loading ? 1.02 : 1, y: canBuild && !loading ? -2 : 0 }}
