@@ -20,13 +20,13 @@ function DrillCard({
 
   return (
     <article
-      className="break-inside-avoid rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-4 sm:px-5 sm:py-5"
+      className="break-inside-avoid rounded-xl border border-border-subtle bg-surface px-4 py-4 sm:px-5 sm:py-5"
       aria-labelledby={`drill-title-${index}`}
     >
       <div className="flex items-start justify-between gap-3">
         <p className="text-[11px] font-semibold uppercase tracking-widest text-zinc-500">{sectionLabel}</p>
         <div className="text-end leading-none">
-          <p className="text-3xl font-bold tabular-nums tracking-tight text-white sm:text-4xl">{minutes}</p>
+          <p className="text-3xl font-bold tabular-nums tracking-tight text-accent sm:text-4xl">{minutes}</p>
           <p className="mt-0.5 text-[11px] font-medium uppercase tracking-wide text-zinc-500">{time}</p>
         </div>
       </div>
@@ -43,7 +43,7 @@ function DrillCard({
           <ul className="mt-3 space-y-2.5" role="list">
             {coachingPoints.map((pt, i) => (
               <li key={i} className="flex gap-2.5 text-[15px] leading-snug text-zinc-200 sm:text-base">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-500" aria-hidden />
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent/70" aria-hidden />
                 <span>{pt}</span>
               </li>
             ))}
@@ -65,7 +65,7 @@ export function PracticePlanSheet({ plan }: Props) {
 
   return (
     <div className="font-sans text-zinc-100" dir={plan.dir} lang={plan.locale}>
-      <header className="mb-5 border-b border-zinc-800 pb-4">
+      <header className="mb-5 border-b border-border-subtle pb-4">
         <h1 className="text-lg font-semibold leading-snug text-white sm:text-xl">{plan.headerLine}</h1>
         <p className="mt-1.5 text-sm font-medium tabular-nums text-zinc-500">{plan.totalTime}</p>
       </header>

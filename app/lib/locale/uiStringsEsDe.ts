@@ -1,7 +1,10 @@
 export const UI_ES = {
+  brandName: "AI Basketball Planner",
   title: "Entreno",
+  subtitle: "Planificación inteligente para el partido",
   languageLabel: "Idioma",
   mainPrompt: "¿En qué trabajan hoy?",
+  inputPlaceholder: "Defensa, tiro, sistemas ofensivos…",
   chipsLabel: "Enfoque rápido",
   presetsLabel: "Plantillas",
   moreLabel: "Más",
@@ -41,14 +44,18 @@ export const UI_ES = {
     paceControl: "Control de ritmo",
   },
   buildButton: "Generar",
+  buildButtonLong: "Crear entrenamiento personalizado",
   building: "Generando…",
   errorFailed: "No se pudo crear el plan. Intenta de nuevo.",
 };
 
 export const UI_DE = {
+  brandName: "AI Basketball Planner",
   title: "Training",
+  subtitle: "Kluge Planung für den Spieltag",
   languageLabel: "Sprache",
   mainPrompt: "Worauf trainiert ihr heute?",
+  inputPlaceholder: "Verteidigung, Wurf, Offensivsysteme…",
   chipsLabel: "Schnellfokus",
   presetsLabel: "Vorlagen",
   moreLabel: "Mehr",
@@ -88,6 +95,7 @@ export const UI_DE = {
     paceControl: "Tempokontrolle",
   },
   buildButton: "Erstellen",
+  buildButtonLong: "Personalisiertes Training erstellen",
   building: "Wird erstellt…",
   errorFailed: "Plan konnte nicht erstellt werden. Bitte erneut versuchen.",
 };

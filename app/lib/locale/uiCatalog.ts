@@ -91,10 +91,13 @@ type PresetDef = {
 };
 
 export type UiStrings = {
+  brandName: string;
   title: string;
+  subtitle: string;
   languageLabel: string;
   /** Single primary question — the only prompt on the page */
   mainPrompt: string;
+  inputPlaceholder: string;
   chipsLabel: string;
   presetsLabel: string;
   moreLabel: string;
@@ -102,6 +105,7 @@ export type UiStrings = {
   chips: Record<ChipId, string>;
   advancedTags: Record<AdvancedTagId, string>;
   buildButton: string;
+  buildButtonLong: string;
   building: string;
   errorFailed: string;
 };
@@ -359,9 +363,12 @@ export const ADVANCED_TAG_SEARCH_TERMS: Record<AppLocale, Record<AdvancedTagId, 
 
 export const UI: Record<AppLocale, UiStrings> = {
   en: {
+    brandName: "AI Basketball Planner",
     title: "Practice",
+    subtitle: "Smart planning for game day",
     languageLabel: "Language",
     mainPrompt: "What are you working on today?",
+    inputPlaceholder: "Defense drills, shooting, offensive sets…",
     chipsLabel: "Quick focus",
     presetsLabel: "Presets",
     moreLabel: "More",
@@ -401,13 +408,17 @@ export const UI: Record<AppLocale, UiStrings> = {
       paceControl: "Pace control",
     },
     buildButton: "Build",
+    buildButtonLong: "Build a personalized practice",
     building: "Building…",
     errorFailed: "Couldn't build the plan. Try again.",
   },
   he: {
+    brandName: "AI BASKETBALL PLANNER",
     title: "אימון",
+    subtitle: "תכנון חכם, ניצחון במשחק",
     languageLabel: "שפה",
     mainPrompt: "על מה עובדים היום?",
+    inputPlaceholder: "תרגילי הגנה, זריקות, מערכי התקפה…",
     chipsLabel: "נושא מהיר",
     presetsLabel: "תבניות",
     moreLabel: "עוד",
@@ -447,6 +458,7 @@ export const UI: Record<AppLocale, UiStrings> = {
       paceControl: "שליטה בקצב",
     },
     buildButton: "בנה",
+    buildButtonLong: "בנה אימון מותאם אישית",
     building: "בונה…",
     errorFailed: "לא יצא. נסו שוב.",
   },
