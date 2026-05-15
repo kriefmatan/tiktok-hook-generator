@@ -1,0 +1,322 @@
+{
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\eslint.config.mjs": {
+    "mtime": 1778592692.2127335,
+    "ast_hash": "dfa1f5f6a7037bf39dc510f30b180002",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\next-env.d.ts": {
+    "mtime": 1778856433.625287,
+    "ast_hash": "2a74d3909800ca5467fa83b0ab4a4890",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\next.config.ts": {
+    "mtime": 1778592692.3813074,
+    "ast_hash": "9b77af189a21a7a64e4bd7a426f64176",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\package.json": {
+    "mtime": 1778856818.728127,
+    "ast_hash": "12456b833dcfd69b7de734c1095c89f0",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\postcss.config.mjs": {
+    "mtime": 1778592692.2965107,
+    "ast_hash": "239f3ebf717465dc636818a1a619398d",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\tsconfig.json": {
+    "mtime": 1778592744.696502,
+    "ast_hash": "02fc19ad21338c2ab820a70136310db4",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\.cursor\\hooks.json": {
+    "mtime": 1778855452.8841052,
+    "ast_hash": "4f8a0bd6d955cb00e3d73c9ff5f4acc2",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\.cursor\\hooks\\auto-deploy.ps1": {
+    "mtime": 1778855451.874251,
+    "ast_hash": "7c011e1dffaf19a98faab2c6f3782681",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\layout.tsx": {
+    "mtime": 1778856867.171932,
+    "ast_hash": "0443ef69cea4716bac87d92e665d7318",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\page.tsx": {
+    "mtime": 1778857483.2324958,
+    "ast_hash": "0dde175dbebabaab727dd2867b6f0e83",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\api\\generate\\route.ts": {
+    "mtime": 1778857482.6529734,
+    "ast_hash": "f4035ec3080c9283e14e374dc4b9bb37",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\components\\AppShell.tsx": {
+    "mtime": 1778857041.042382,
+    "ast_hash": "533990fe0d8c9d7d7a32a264b3716236",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\components\\AppSidebar.tsx": {
+    "mtime": 1778857098.4514973,
+    "ast_hash": "f3c7a2c8d2deddcef22b5c8029743623",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\components\\DrillKindMark.tsx": {
+    "mtime": 1778846378.1227276,
+    "ast_hash": "5199b371dfaa73fd6f252ba49886fd09",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\components\\LanguageSelector.tsx": {
+    "mtime": 1778857026.75,
+    "ast_hash": "08f62f5b76597a6882986012b6b41655",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\components\\PracticeForm.tsx": {
+    "mtime": 1778857088.1701133,
+    "ast_hash": "5fbe246733c70faf8d78c741b0e2341f",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\components\\PracticePlan.tsx": {
+    "mtime": 1778857102.5906224,
+    "ast_hash": "c6566e5d601cc71b99c4de8198626fb4",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\components\\RightInsightsPanel.tsx": {
+    "mtime": 1778856994.1691418,
+    "ast_hash": "95c7ac83be30bb6a5ac8827005ed61f1",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\components\\TopHeader.tsx": {
+    "mtime": 1778857032.2184348,
+    "ast_hash": "410e76431fa84e26b2110fb2752ed410",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\components\\ui\\chipLucideIcons.tsx": {
+    "mtime": 1778857038.1609046,
+    "ast_hash": "4bb745d88193a18e1a415c909a805647",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\components\\ui\\TopicIcons.tsx": {
+    "mtime": 1778856418.9308033,
+    "ast_hash": "d81e795a883a82523a813f722b249707",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\coachingFields.ts": {
+    "mtime": 1778857477.2861722,
+    "ast_hash": "207c64bf75c37c648545c8e9d35fd08a",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\coachTextAnalysis.ts": {
+    "mtime": 1778857476.0420582,
+    "ast_hash": "e70997578437337870b31509f6758d7f",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\practicePlanGenerator.ts": {
+    "mtime": 1778857480.2331066,
+    "ast_hash": "d85c8049a6a1a17fc60fe35a4a4d5a9b",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\input\\buildWorkingOnText.ts": {
+    "mtime": 1778852073.427474,
+    "ast_hash": "b4ac2e90a67f1c99698bfd50c1f10a7f",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\input\\emphasisFromInput.ts": {
+    "mtime": 1778857476.5189986,
+    "ast_hash": "e7cb42400da238c7d38a42e9bfa3e039",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\appLocale.ts": {
+    "mtime": 1778853089.9663222,
+    "ast_hash": "ebaa2d1aad4771668f81999721eeca99",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\coachBundle.types.ts": {
+    "mtime": 1778845887.4596837,
+    "ast_hash": "aacfd2632dee2e11d46a3c00839dedf4",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\coachLocale.ts": {
+    "mtime": 1778853088.4245074,
+    "ast_hash": "28a836feb3367f462f766567c8f8f1e0",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\detectCoachLocale.ts": {
+    "mtime": 1778849956.1241617,
+    "ast_hash": "366ba1dc5519673351187db4e48e6971",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\localeText.ts": {
+    "mtime": 1778853085.8440182,
+    "ast_hash": "5e226a9537d33eaef2e1dabcb783e111",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\toAppLocale.ts": {
+    "mtime": 1778853090.8493466,
+    "ast_hash": "8ecb17a0b4da4fa7f990c517e552ad44",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\uiCatalog.ts": {
+    "mtime": 1778857101.5323603,
+    "ast_hash": "9e8780ee40c8dfdc0029cc4343e495bd",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\uiInsightsShared.ts": {
+    "mtime": 1778856857.7750125,
+    "ast_hash": "385bfe5293d6755dba926cd63d9ff290",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\uiLocaleStorage.ts": {
+    "mtime": 1778853086.780772,
+    "ast_hash": "cfee99d9125fadce63359c993a74c2bd",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\uiStringsEsDe.ts": {
+    "mtime": 1778856221.1658769,
+    "ast_hash": "e52ed697f67e05d629da842048ff73b4",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\bundles\\de.ts": {
+    "mtime": 1778853114.6271007,
+    "ast_hash": "abf0a27549a38323d828ee71d6222090",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\bundles\\en.ts": {
+    "mtime": 1778847698.034799,
+    "ast_hash": "91cf8c778657bf72aba2c142e11c84a9",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\bundles\\es.ts": {
+    "mtime": 1778846055.7834408,
+    "ast_hash": "97a94d9577142424627ac3f43f1623ea",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\bundles\\he.ts": {
+    "mtime": 1778846951.8991098,
+    "ast_hash": "7a420662a85bc4a7f3ffa23d93a8e329",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\lib\\locale\\bundles\\index.ts": {
+    "mtime": 1778853116.3012414,
+    "ast_hash": "5d9b45c7bf78f2c70c65cb9c6e3c5de1",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\app\\types\\plan.ts": {
+    "mtime": 1778846355.8936918,
+    "ast_hash": "702d4f4a2dd5f4345cd2607cf1b82384",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\components\\HalfCourtDiagram.tsx": {
+    "mtime": 1778756073.0067084,
+    "ast_hash": "14698250f17c0daba4831a4e160d1128",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\scripts\\deploy.ps1": {
+    "mtime": 1778855473.5567496,
+    "ast_hash": "3220568640ee3bbcceef1f4807e4ef91",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\scripts\\fix-diagram-names.mjs": {
+    "mtime": 1778760216.836625,
+    "ast_hash": "2e245eb98f8f682430da828f5c8a0d20",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\scripts\\patch-diagram-calls.mjs": {
+    "mtime": 1778760268.5512736,
+    "ast_hash": "2ab39130135824b6b38475aec8017360",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\scripts\\patch-diagram-captions.mjs": {
+    "mtime": 1778760158.9742308,
+    "ast_hash": "1981839ab18562ac2e03a53b44994173",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\AGENTS.md": {
+    "mtime": 1778858030.4784148,
+    "ast_hash": "6c3e33660d682b10ed41fccb1cb94493",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\AUTOMATION.md": {
+    "mtime": 1778855462.7282958,
+    "ast_hash": "26ad43421fdf0516fba6e13d74417856",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\CLAUDE.md": {
+    "mtime": 1778592804.2203302,
+    "ast_hash": "5c27369b226fcf2be8a6cfe52224e767",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\README.md": {
+    "mtime": 1778592692.1918137,
+    "ast_hash": "f15aaa42d5d299d091b1171097ea56ad",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\SYSTEM_PROMPT.md": {
+    "mtime": 1778853252.0531392,
+    "ast_hash": "4bc345aa8a4a8d950ac6f4e2eabe0517",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\SYSTEM_STRUCTURE.md": {
+    "mtime": 1778751878.945616,
+    "ast_hash": "5b877050def9e9d71c9dfe72bb351354",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\.cursor\\skills\\basketball-coach-agent\\SKILL.md": {
+    "mtime": 1778858000.1614165,
+    "ast_hash": "0ba3568cd42957e8f0aef0d57d5b96d9",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\.cursor\\skills\\basketball-coaching-intelligence\\intelligence.md": {
+    "mtime": 1778857987.5567143,
+    "ast_hash": "fae753db51065b6f27b3a32e01760e04",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\.cursor\\skills\\basketball-coaching-intelligence\\SKILL.md": {
+    "mtime": 1778857992.0125911,
+    "ast_hash": "0b2adc3b1269ae0c71aff9fdc0e5851a",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\.cursor\\skills\\basketball-drill-design\\SKILL.md": {
+    "mtime": 1778858009.1533868,
+    "ast_hash": "be2ed1c8a72fbe36fb3ec57d1a4a7feb",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\.cursor\\skills\\basketball-practice-planning\\SKILL.md": {
+    "mtime": 1778858004.2356405,
+    "ast_hash": "e1f92eefaea63e0558ae94ee6a03028d",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\public\\file.svg": {
+    "mtime": 1778592692.3045137,
+    "ast_hash": "d09f95206c3fa0bb9bd9fefabfd0ea71",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\public\\globe.svg": {
+    "mtime": 1778592692.3164816,
+    "ast_hash": "2aaafa6a49b6563925fe440891e32717",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\public\\hero-court.jpg": {
+    "mtime": 1778856036.5988772,
+    "ast_hash": "538c32939d8679461c508d0c8f595fce",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\public\\next.svg": {
+    "mtime": 1778592692.3264503,
+    "ast_hash": "8e061864f388b47f33a1c3780831193e",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\public\\vercel.svg": {
+    "mtime": 1778592692.3384237,
+    "ast_hash": "c0af2f507b369b085b35ef4bbe3bcf1e",
+    "semantic_hash": ""
+  },
+  "C:\\Users\\krief\\OneDrive\\Escritorio\\\u05d1\u05d9\u05e0\u05d4 \u05de\u05dc\u05d0\u05db\u05d5\u05ea\u05d9\u05ea\\Choaching Basketball Season\\public\\window.svg": {
+    "mtime": 1778592692.3473737,
+    "ast_hash": "a2760511c65806022ad20adf74370ff3",
+    "semantic_hash": ""
+  }
+}
