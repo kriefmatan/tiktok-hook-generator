@@ -3,14 +3,19 @@ import type { DrillVisualization } from "@/app/types/drillVisualization";
 
 type TaggedTemplate = Readonly<{ viz: DrillVisualization; tags: readonly EmphasisKey[] }>;
 
+/** Man-to-man shell / ball pressure + recover — matches sideline כמו לחץ על הכדור */
+const IDX_DEF_ON_BALL = 8;
+/** Trap / מעבר — run-and-jump style rotation */
+const IDX_RUN_JUMP = 9;
+
 /**
- * Canonical half-court visual presets. Selection is driven by drill emphasis (+ optional secondary)
- * and a stable seed so the same coach input replays consistently.
+ * Canonical half-court visual presets.
+ * תבניות התקפה לא מתויגות ב־pressure כדי למנוע בחירה אוטומטית בהגנה-בלבד.
  */
 const TAGGED_PRESETS: readonly TaggedTemplate[] = [
-  /* 0 wing drive → pass → closeout shot */
+  /* 0 wing read vs closeout → pass → shot (התקפה) */
   {
-    tags: ["shoot", "decision", "pressure", "switch", "oneOnOne", "generic"],
+    tags: ["shoot", "decision", "generic"],
     viz: {
       players: [
         { id: 1, team: "offense", x: 48, y: 76 },
@@ -104,9 +109,7 @@ const TAGGED_PRESETS: readonly TaggedTemplate[] = [
         { id: 1, team: "offense", x: 28, y: 28 },
         { id: 2, team: "offense", x: 74, y: 70 },
       ],
-      defense: [
-        { id: "X1", team: "defense", x: 72, y: 60 },
-      ],
+      defense: [{ id: "X1", team: "defense", x: 72, y: 60 }],
       ball: { player: 1 },
       actions: [
         { type: "pass", from: 1, to: 2 },
@@ -147,9 +150,7 @@ const TAGGED_PRESETS: readonly TaggedTemplate[] = [
         { id: 1, team: "offense", x: 48, y: 88 },
         { id: 2, team: "offense", x: 18, y: 64 },
       ],
-      defense: [
-        { id: "X1", team: "defense", x: 54, y: 80 },
-      ],
+      defense: [{ id: "X1", team: "defense", x: 54, y: 80 }],
       ball: { player: 1 },
       actions: [
         { type: "pass", from: 1, to: 2 },
@@ -165,15 +166,57 @@ const TAGGED_PRESETS: readonly TaggedTemplate[] = [
         { id: 1, team: "offense", x: 32, y: 24 },
         { id: 2, team: "offense", x: 74, y: 32 },
       ],
-      defense: [
-        { id: "X1", team: "defense", x: 36, y: 32 },
-      ],
+      defense: [{ id: "X1", team: "defense", x: 36, y: 32 }],
       ball: { player: 1 },
       actions: [
         { type: "move", player: 1, to: { x: 54, y: 38 } },
         { type: "pass", from: 1, to: 2 },
         { type: "closeout", player: "X1", to: { x: 50, y: 40 } },
         { type: "shot", player: 2 },
+      ],
+    },
+  },
+  /* 8 defense: on-ball pressure + recover — no wing scoring story */
+  {
+    tags: ["pressure", "switch"],
+    viz: {
+      players: [
+        { id: 1, team: "offense", x: 50, y: 72 },
+        { id: 2, team: "offense", x: 22, y: 58 },
+      ],
+      defense: [
+        { id: "X1", team: "defense", x: 50, y: 60 },
+        { id: "X2", team: "defense", x: 38, y: 48 },
+      ],
+      ball: { player: 1 },
+      actions: [
+        { type: "move", player: 1, to: { x: 40, y: 64 } },
+        { type: "closeout", player: "X1", to: { x: 44, y: 62 } },
+        { type: "move", player: 1, to: { x: 54, y: 70 } },
+        { type: "closeout", player: "X1", to: { x: 52, y: 64 } },
+        { type: "pass", from: 1, to: 2 },
+        { type: "closeout", player: "X2", to: { x: 26, y: 56 } },
+      ],
+    },
+  },
+  /* 9 defense: pass + jump/trap rotation (run-and-jump flavor) */
+  {
+    tags: ["pressure"],
+    viz: {
+      players: [
+        { id: 1, team: "offense", x: 62, y: 70 },
+        { id: 2, team: "offense", x: 28, y: 58 },
+      ],
+      defense: [
+        { id: "X1", team: "defense", x: 58, y: 60 },
+        { id: "X2", team: "defense", x: 55, y: 44 },
+      ],
+      ball: { player: 1 },
+      actions: [
+        { type: "pass", from: 1, to: 2 },
+        { type: "closeout", player: "X1", to: { x: 36, y: 54 } },
+        { type: "closeout", player: "X2", to: { x: 32, y: 56 } },
+        { type: "move", player: 2, to: { x: 38, y: 64 } },
       ],
     },
   },
@@ -184,9 +227,64 @@ export type DrillVizBuildInput = {
   secondaryKind?: EmphasisKey;
   blockKind: BlockKind;
   blockIndex: number;
+  /** Drill title from bundle — used for keyword routing (run/jump וכו׳). */
+  name: string;
+  /** Sideline bullets — same language as coach UI. */
+  coachingPoints: readonly string[];
   /** Session seed (coach input hash) — keeps diagrams stable across blocks. */
   seed: number;
 };
+
+function normalizeCoachText(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/['׳״`]/g, "");
+}
+
+/** שם התרגיל או הנקודות מכילים run-and-jump / ראן-גאמפ */
+export function matchesRunJumpContext(blob: string): boolean {
+  const n = normalizeCoachText(blob);
+  if ((n.includes("run") && n.includes("jump")) || n.includes("runandjump") || n.includes("run-jump")) {
+    return true;
+  }
+  if ((n.includes("ראן") || n.includes("רן")) && n.includes("גאמפ")) {
+    return true;
+  }
+  // Latinization / partial
+  if (n.includes("run jump")) return true;
+  return false;
+}
+
+function coachingBlob(input: DrillVizBuildInput): string {
+  return [input.name, ...input.coachingPoints].join(" ");
+}
+
+function themeKeys(input: DrillVizBuildInput): ReadonlySet<EmphasisKey> {
+  return new Set<EmphasisKey>([input.emphasis, input.secondaryKind].filter(Boolean) as EmphasisKey[]);
+}
+
+/** הגנה עם דגש ללא ציר התקפה מרכזי (shoot/motion/fast וכו׳). */
+export function prefersDefenseOnlyDiagram(keys: ReadonlySet<EmphasisKey>): boolean {
+  const hasDef = keys.has("pressure") || keys.has("switch") || keys.has("zone");
+  const hasOffAttack =
+    keys.has("shoot") ||
+    keys.has("motion") ||
+    keys.has("pnr") ||
+    keys.has("fiveOut") ||
+    keys.has("spacing") ||
+    keys.has("fast") ||
+    keys.has("transition") ||
+    keys.has("pressBreak");
+  return hasDef && !hasOffAttack;
+}
+
+function defensePresetPool(keys: ReadonlySet<EmphasisKey>): number[] {
+  const pool: number[] = [IDX_DEF_ON_BALL, IDX_RUN_JUMP];
+  if (keys.has("zone")) pool.push(5);
+  return pool;
+}
 
 function tieBreak(seed: number, blockKind: BlockKind, blockIndex: number, cand: number[]): number {
   const mix = (((seed >>> 0) + blockIndex * 1315423911 + blockKind.length * 19349663) >>> 0) % cand.length;
@@ -197,9 +295,14 @@ function affinityScore(tags: readonly EmphasisKey[], focus: ReadonlySet<Emphasis
   return tags.reduce((acc, t) => acc + (focus.has(t) ? 1 : 0), 0);
 }
 
-/** Pick preset index from coaching themes + deterministic seeding. */
+/** Pick preset index from themes, drill name, sideline text, and seed. */
 function pickPresetIndex(input: DrillVizBuildInput): number {
-  const keys = new Set<EmphasisKey>([input.emphasis, input.secondaryKind].filter(Boolean) as EmphasisKey[]);
+  const keys = themeKeys(input);
+  const blob = coachingBlob(input);
+
+  if (prefersDefenseOnlyDiagram(keys) && matchesRunJumpContext(blob)) {
+    return IDX_RUN_JUMP;
+  }
 
   const scored = TAGGED_PRESETS.map((t, i) => ({
     idx: i,
@@ -212,14 +315,18 @@ function pickPresetIndex(input: DrillVizBuildInput): number {
   }
 
   let candidates =
-    best > 0
-      ? scored.filter((s) => s.score === best).map((s) => s.idx)
-      : scored.map((s) => s.idx);
+    best > 0 ? scored.filter((s) => s.score === best).map((s) => s.idx) : scored.map((s) => s.idx);
 
-  /** Favor fuller diagrams as sessions progress (game block). */
   if (input.blockKind === "game") {
     const big = candidates.filter((i) => TAGGED_PRESETS[i]!.viz.players.length >= 4);
     if (big.length > 0) candidates = big;
+  }
+
+  if (prefersDefenseOnlyDiagram(keys)) {
+    const pool = defensePresetPool(keys);
+    const inter = candidates.filter((i) => pool.includes(i));
+    if (inter.length > 0) candidates = inter;
+    else candidates = pool;
   }
 
   return tieBreak(input.seed, input.blockKind, input.blockIndex, candidates);

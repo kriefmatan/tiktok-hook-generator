@@ -321,6 +321,8 @@ function section(
       secondaryKind,
       blockKind,
       blockIndex,
+      name,
+      coachingPoints: points,
       seed: generationSeed,
     }),
   };
