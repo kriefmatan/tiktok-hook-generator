@@ -2,6 +2,7 @@ import type { PracticePlan, PracticeSheetSection } from "../types/plan";
 import type { CoachingFields } from "./coachingFields";
 import type { BlockKind, EmphasisKey, SimplePracticeBundle } from "./locale/coachBundle.types";
 import { SIMPLE_BUNDLES } from "./locale/bundles";
+import { emphasesFromSelections } from "./input/emphasisFromInput";
 import { parseCoachFields, type ParsedCoachThemes } from "./coachTextAnalysis";
 
 export type { CoachingFields } from "./coachingFields";
@@ -45,6 +46,28 @@ function collectEmphasesFromText(p: ParsedCoachThemes): EmphasisKey[] {
   if (p.transitionOffense && !out.includes("fast")) out.push("fast");
   if (out.length === 0) out.push("generic");
   return out;
+}
+
+function mergeEmphases(
+  fromText: readonly EmphasisKey[],
+  fromSelection: readonly EmphasisKey[],
+): EmphasisKey[] {
+  if (fromSelection.length === 0) return [...fromText];
+
+  const merged: EmphasisKey[] = [];
+  const seen = new Set<EmphasisKey>();
+  for (const key of [...fromSelection, ...fromText]) {
+    if (seen.has(key)) continue;
+    seen.add(key);
+    merged.push(key);
+  }
+
+  const motionFocus = merged.includes("motion");
+  const spacingChosen = fromSelection.includes("spacing");
+  if (motionFocus && !spacingChosen) {
+    return merged.filter((k) => k !== "spacing");
+  }
+  return merged;
 }
 
 const BLOCK_ORDER: readonly BlockKind[] = ["warmup", "drill1", "drill2", "drill3", "game"];
@@ -107,7 +130,8 @@ export function buildPracticePlan(fields: CoachingFields): PracticePlan {
   const bundle = SIMPLE_BUNDLES[fields.locale];
   const parsed = parseCoachFields(fields);
   const h = coachSeed(fields);
-  const emphases = collectEmphasesFromText(parsed);
+  const selectionEmphases = emphasesFromSelections(fields.chips, fields.presets);
+  const emphases = mergeEmphases(collectEmphasesFromText(parsed), selectionEmphases);
   const minutes = BLOCK_ORDER.map((_, i) => blockMinutes(parsed, i));
 
   const sections = BLOCK_ORDER.map((kind, blockIndex) => {

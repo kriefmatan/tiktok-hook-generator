@@ -66,7 +66,13 @@ export default function Home() {
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ locale: uiLocale, workingOn: combined }),
+        body: JSON.stringify({
+          locale: uiLocale,
+          workingOn: combined,
+          chips: [...selectedChips],
+          presets: [...selectedPresets],
+          advancedTags: [...selectedAdvanced],
+        }),
       });
 
       const data = (await response.json()) as { plan?: PracticePlan; error?: string };

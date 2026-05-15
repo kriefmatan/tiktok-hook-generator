@@ -34,3 +34,18 @@ export const PRESET_EMPHASIS: Record<PresetId, readonly EmphasisKey[]> = {
   readAndReact: ["decision", "motion"],
   transitionDefense: ["transition"],
 };
+
+/** Emphasis keys implied by UI chip / preset selections (authoritative over text mis-parse). */
+export function emphasesFromSelections(
+  chips: readonly ChipId[] = [],
+  presets: readonly PresetId[] = [],
+): EmphasisKey[] {
+  const out: EmphasisKey[] = [];
+  for (const id of chips) {
+    for (const key of CHIP_EMPHASIS[id]) out.push(key);
+  }
+  for (const id of presets) {
+    for (const key of PRESET_EMPHASIS[id]) out.push(key);
+  }
+  return [...new Set(out)];
+}

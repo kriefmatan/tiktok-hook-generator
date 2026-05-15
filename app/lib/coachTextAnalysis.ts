@@ -45,13 +45,28 @@ function hasTransitionOffense(all: string, low: string): boolean {
   return false;
 }
 
+/** Off-ball movement, cuts, screens — not the same as floor spacing. */
+function hasBallMovement(all: string, low: string): boolean {
+  if (all.includes("תנועה בלי כדור")) return true;
+  if (all.includes("תנועה ללא כדור")) return true;
+  if (all.includes("תנועה בלי")) return true;
+  if (all.includes("בלי כדור") && /תנועה|מסירות|חיתוכ/.test(all)) return true;
+  if (all.includes("מסירות") && all.includes("תנועה")) return true;
+  if (all.includes("מסירות וחיתוכ")) return true;
+  if (all.includes("מסירות ותנועה")) return true;
+  if (/\b(ball\s+movement|off[-\s]*ball|move\s+without(\s+the)?\s+ball|passing\s+and\s+movement|pass\s+and\s+cut)\b/i.test(low))
+    return true;
+  return false;
+}
+
 function hasSpacing(all: string, low: string): boolean {
+  if (hasBallMovement(all, low)) return false;
   if (all.includes("מרווחים")) return true;
   if (all.includes("צפיפות")) return true;
   if (all.includes("עומס בצבע")) return true;
   if (all.includes("צפוף בצבע")) return true;
-  if (all.includes("תנועה ללא כדור")) return true;
-  if (/\b(spacing|floor\s+spac|crowd\w*\s+the\s+paint|paint\s+crowd|stand\s+still|static\s+offense|no\s+movement)\b/i.test(low))
+  if (/\b(spacing|floor\s+spac|crowd\w*\s+the\s+paint|paint\s+crowd)\b/i.test(low)) return true;
+  if (/\b(stand\s+still|static\s+offense)\b/i.test(low) && !/\b(move|motion|cut|screen)\b/i.test(low))
     return true;
   return false;
 }
@@ -119,6 +134,8 @@ function hasCommunication(all: string, low: string): boolean {
 }
 
 function inferOffenseStyle(all: string, low: string): ParsedOffense {
+  if (hasBallMovement(all, low)) return "motion";
+
   const motionHeb =
     all.includes("התקפת תנועה") ||
     all.includes("עבודת מסכים רציפה") ||
