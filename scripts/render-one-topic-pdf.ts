@@ -14,19 +14,26 @@ function isTopicId(value: string): value is TopicId {
   return (ALL_IDS as string[]).includes(value);
 }
 
-const [, , localeArg, topicArg] = process.argv;
+async function main(): Promise<void> {
+  const [, , localeArg, topicArg] = process.argv;
 
-if (!localeArg || !topicArg || !isAppLocale(localeArg) || !isTopicId(topicArg)) {
-  console.error("Usage: tsx scripts/render-one-topic-pdf.ts <locale> <topicId>");
-  process.exit(1);
+  if (!localeArg || !topicArg || !isAppLocale(localeArg) || !isTopicId(topicArg)) {
+    console.error("Usage: tsx scripts/render-one-topic-pdf.ts <locale> <topicId>");
+    process.exit(1);
+  }
+
+  const locale = localeArg;
+  const topicId = topicArg;
+  const outDir = path.join(process.cwd(), "public", "coach-pdfs", locale);
+  const outPath = path.join(outDir, topicPdfFilename(topicId));
+
+  const buffer = await renderTopicPdfBuffer(topicId, locale);
+  await mkdir(outDir, { recursive: true });
+  await writeFile(outPath, buffer);
+  console.log(outPath);
 }
 
-const locale = localeArg;
-const topicId = topicArg;
-const outDir = path.join(process.cwd(), "public", "coach-pdfs", locale);
-const outPath = path.join(outDir, topicPdfFilename(topicId));
-
-const buffer = await renderTopicPdfBuffer(topicId, locale);
-await mkdir(outDir, { recursive: true });
-await writeFile(outPath, buffer);
-console.log(outPath);
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

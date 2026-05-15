@@ -60,3 +60,8 @@ export function topicPdfFilename(id: TopicId): string {
 export function topicPdfPublicPath(locale: AppLocale, id: TopicId): string {
   return `/coach-pdfs/${locale}/${topicPdfFilename(id)}`;
 }
+
+/** API route serves static file when present, else generates on the fly. */
+export function topicPdfHref(locale: AppLocale, id: TopicId): string {
+  return `/api/pdf/topic?topic=${id}&locale=${locale}`;
+}

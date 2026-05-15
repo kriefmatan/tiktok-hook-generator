@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { DrillKindMark } from "./DrillKindMark";
 import type { PracticePlan, PracticeSheetSection } from "../types/plan";
 
@@ -67,8 +68,18 @@ export function PracticePlanSheet({ plan, locale }: Props) {
     plan.gameFiveOnFive,
   ];
 
+  const uiLocale = locale ?? plan.locale;
+
   return (
-    <div className="font-sans text-zinc-100" dir={plan.dir} lang={plan.locale}>
+    <motion.div
+      className="font-sans text-zinc-100"
+      dir={plan.dir}
+      lang={plan.locale}
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <PracticePlanDownload plan={plan} locale={uiLocale} />
       <header className="mb-5 border-b border-border-subtle pb-4">
         <h1 className="text-lg font-semibold leading-snug text-white sm:text-xl">{plan.headerLine}</h1>
         <p className="mt-1.5 text-sm font-medium tabular-nums text-zinc-500">{plan.totalTime}</p>
@@ -79,7 +90,7 @@ export function PracticePlanSheet({ plan, locale }: Props) {
           <DrillCard key={`${label}-${i}`} sectionLabel={label} section={sections[i]!} index={i} />
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }
 

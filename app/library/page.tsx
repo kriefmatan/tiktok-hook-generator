@@ -10,7 +10,7 @@ import { readStoredUiLocale, writeStoredUiLocale } from "../lib/locale/uiLocaleS
 import {
   ALL_TOPIC_METAS,
   topicLabel,
-  topicPdfPublicPath,
+  topicPdfHref,
   type TopicId,
 } from "../lib/pdf/topicCatalog";
 
@@ -57,7 +57,7 @@ export default function LibraryPage() {
             openLabel={ui.pdfOpenTopic}
           />
         ))}
-      </motion.div>
+      </div>
     </AppShell>
   );
 }
@@ -80,7 +80,7 @@ function TopicSection({
         {topics.map((t) => (
           <li key={t.id}>
             <a
-              href={topicPdfPublicPath(locale, t.id)}
+              href={topicPdfHref(locale, t.id)}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 rounded-2xl border border-border-subtle bg-card px-4 py-3 text-sm font-medium text-zinc-200 transition hover:border-accent/40 hover:text-white"
