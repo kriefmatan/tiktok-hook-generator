@@ -20,6 +20,9 @@
 # production
 /build
 
+# generated coach PDF library (npm run build:pdfs)
+/public/coach-pdfs/
+
 # misc
 .DS_Store
 *.pem

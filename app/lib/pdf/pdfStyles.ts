@@ -1,0 +1,103 @@
+import { StyleSheet } from "@react-pdf/renderer";
+
+export const pdfStyles = StyleSheet.create({
+  page: {
+    paddingTop: 40,
+    paddingBottom: 48,
+    paddingHorizontal: 44,
+    backgroundColor: "#ffffff",
+    color: "#18181b",
+    fontSize: 10,
+    lineHeight: 1.45,
+  },
+  coverTitle: {
+    fontSize: 22,
+    fontWeight: 700,
+    marginBottom: 6,
+    color: "#09090b",
+  },
+  coverSubtitle: {
+    fontSize: 11,
+    color: "#52525b",
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: 700,
+    marginTop: 18,
+    marginBottom: 10,
+    color: "#09090b",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e4e4e7",
+    paddingBottom: 4,
+  },
+  partTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    marginTop: 8,
+    marginBottom: 12,
+    color: "#ea580c",
+  },
+  card: {
+    marginBottom: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#e4e4e7",
+    borderRadius: 6,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 6,
+  },
+  cardLabel: {
+    fontSize: 8,
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    color: "#71717a",
+  },
+  cardMinutes: {
+    fontSize: 18,
+    fontWeight: 700,
+    color: "#ea580c",
+  },
+  drillName: {
+    fontSize: 12,
+    fontWeight: 700,
+    marginBottom: 4,
+    color: "#09090b",
+  },
+  bullet: {
+    fontSize: 9.5,
+    color: "#3f3f46",
+    marginBottom: 3,
+    paddingLeft: 8,
+  },
+  emphasisHeading: {
+    fontSize: 11,
+    fontWeight: 700,
+    marginTop: 8,
+    marginBottom: 4,
+    color: "#27272a",
+  },
+  blockLabel: {
+    fontSize: 9,
+    fontWeight: 700,
+    color: "#71717a",
+    marginTop: 4,
+    marginBottom: 2,
+  },
+  listItem: {
+    fontSize: 9,
+    color: "#3f3f46",
+    marginBottom: 2,
+    paddingLeft: 6,
+  },
+  hook: {
+    fontSize: 10,
+    fontStyle: "italic",
+    color: "#52525b",
+    marginBottom: 8,
+  },
+});

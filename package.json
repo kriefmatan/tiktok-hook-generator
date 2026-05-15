@@ -4,12 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && npm run build:pdfs",
+    "build:pdfs": "tsx scripts/build-topic-pdfs.ts",
     "start": "next start",
     "lint": "eslint",
     "deploy": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/deploy.ps1"
   },
   "dependencies": {
+    "@fontsource/noto-sans": "^5.2.10",
+    "@fontsource/noto-sans-hebrew": "^5.2.8",
+    "@react-pdf/renderer": "^4.5.1",
     "framer-motion": "^12.38.0",
     "franc": "^6.2.0",
     "lucide-react": "^1.16.0",
@@ -26,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
+    "tsx": "^4.22.0",
     "typescript": "^5"
   }
 }
