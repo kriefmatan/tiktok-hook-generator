@@ -47,4 +47,6 @@ export type SimplePracticeBundle = {
   };
   drillNames: Record<EmphasisKey, BlockDrillNames>;
   bullets: Record<EmphasisKey, BulletPair>;
+  /** Sideline reminders per block role — warmup vs teach vs compete vs 5v5 */
+  blockFrames: Record<BlockKind, BulletPair>;
 };

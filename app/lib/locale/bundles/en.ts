@@ -1,4 +1,4 @@
-import type { BlockDrillNames, EmphasisKey, SimplePracticeBundle } from "../coachBundle.types";
+import type { BlockDrillNames, BlockKind, BulletPair, EmphasisKey, SimplePracticeBundle } from "../coachBundle.types";
 
 const block = (
   warmup: readonly string[],
@@ -124,6 +124,14 @@ const EN_DRILL_NAMES: Record<EmphasisKey, BlockDrillNames> = {
   ),
 };
 
+const EN_BLOCK_FRAMES: Record<BlockKind, BulletPair> = {
+  warmup: ["Joint prep and light ball touches", "Dynamic stretch — no standing in lines"],
+  drill1: ["One demo, then pairs", "Slow reps — fix footwork first"],
+  drill2: ["Game speed — score or task", "Small competition every set"],
+  drill3: ["Live defense — short stoppages", "Mistake = light consequence"],
+  game: ["5-on-5 — same rule as today", "Call what we drilled"],
+};
+
 const EN_SETUP_HOOKS: Record<EmphasisKey, string> = {
   rebound: "Boards first",
   shoot: "Open? Shoot it",
@@ -150,6 +158,7 @@ export const EN_SIMPLE = {
   sectionLabels: ["Warmup", "Drill 1", "Drill 2", "Drill 3", "5-on-5 — today's rule"] as const,
   headerFallback: "Practice",
   setupHooks: EN_SETUP_HOOKS,
+  blockFrames: EN_BLOCK_FRAMES,
   drillNames: EN_DRILL_NAMES,
   captions: {
     lines: "Two lines: pass across, sprint the lane.",

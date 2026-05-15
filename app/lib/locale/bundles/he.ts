@@ -1,4 +1,4 @@
-import type { BlockDrillNames, EmphasisKey, SimplePracticeBundle } from "../coachBundle.types";
+import type { BlockDrillNames, BlockKind, BulletPair, EmphasisKey, SimplePracticeBundle } from "../coachBundle.types";
 
 const block = (
   warmup: readonly string[],
@@ -124,6 +124,14 @@ const HE_DRILL_NAMES: Record<EmphasisKey, BlockDrillNames> = {
   ),
 };
 
+const HE_BLOCK_FRAMES: Record<BlockKind, BulletPair> = {
+  warmup: ["חימום מפרקים ונגיעות בכדור", "מתיחות דינמיות — בלי תורים"],
+  drill1: ["הדגמה אחת, ואז זוגות", "חזרות איטיות — תקנו רגליים"],
+  drill2: ["קצב משחקי — ציון או משימה", "תחרות קטנה בכל סט"],
+  drill3: ["הגנה חיה — עצירות קצרות", "טעות = עונש קל"],
+  game: ["5 על 5 — אותו דגש מהיום", "תקראו את מה שתרגלנו"],
+};
+
 const HE_SETUP_HOOKS: Record<EmphasisKey, string> = {
   rebound: "קודם ריבאונד",
   shoot: "פתוח? תזרקו",
@@ -150,6 +158,7 @@ export const HE_SIMPLE = {
   sectionLabels: ["חימום", "בלוק 1", "בלוק 2", "בלוק 3", "חמש על חמש"] as const,
   headerFallback: "אימון",
   setupHooks: HE_SETUP_HOOKS,
+  blockFrames: HE_BLOCK_FRAMES,
   drillNames: HE_DRILL_NAMES,
   captions: {
     lines: "שתי שורות — מסירה וריצה.",

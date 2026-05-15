@@ -130,8 +130,10 @@ function coachBlockEmphasis(emphases: readonly EmphasisKey[], blockIndex: number
   const primary = emphases[0]!;
   const secondary = emphases[1] ?? primary;
 
-  if (blockIndex <= 1) return primary;
+  if (blockIndex === 0) return primary;
+  if (blockIndex === 1) return primary;
   if (blockIndex === 2) return secondary;
+  if (blockIndex === 3) return primary;
   return primary;
 }
 
@@ -139,14 +141,42 @@ function headerLine(f: CoachingFields, bundle: SimplePracticeBundle): string {
   return clip(f.workingOn.trim(), 110) || bundle.headerFallback;
 }
 
-function buildCoachingPoints(emphasis: EmphasisKey, bundle: SimplePracticeBundle): readonly string[] {
-  const [a, b] = bundle.bullets[emphasis];
+function uniquePoints(items: readonly (string | undefined)[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const item of items) {
+    const t = item?.trim();
+    if (!t || seen.has(t)) continue;
+    seen.add(t);
+    out.push(t);
+  }
+  return out;
+}
+
+/** Block role + theme — so warmup, drills, and 5v5 never share the same bullet list. */
+function buildCoachingPoints(
+  emphasis: EmphasisKey,
+  blockKind: BlockKind,
+  bundle: SimplePracticeBundle,
+): readonly string[] {
+  const [frameA, frameB] = bundle.blockFrames[blockKind];
+  const [themeA, themeB] = bundle.bullets[emphasis];
   const hook = bundle.setupHooks[emphasis];
-  const points: string[] = [];
-  if (hook && hook.length <= 48) points.push(hook);
-  if (a) points.push(a);
-  if (b && b !== a) points.push(b);
-  return points.slice(0, 4);
+
+  switch (blockKind) {
+    case "warmup":
+      return uniquePoints([frameA, frameB, hook]).slice(0, 4);
+    case "drill1":
+      return uniquePoints([hook, themeA, frameA, frameB]).slice(0, 4);
+    case "drill2":
+      return uniquePoints([themeA, themeB, frameA]).slice(0, 4);
+    case "drill3":
+      return uniquePoints([themeB, frameA, frameB, hook]).slice(0, 4);
+    case "game":
+      return uniquePoints([hook, frameA, frameB, themeA]).slice(0, 4);
+    default:
+      return uniquePoints([hook, themeA, themeB]).slice(0, 4);
+  }
 }
 
 function blockMinutes(
@@ -179,14 +209,15 @@ function section(
   bundle: SimplePracticeBundle,
   minutes: number,
   name: string,
-  emphasis: EmphasisKey
+  emphasis: EmphasisKey,
+  blockKind: BlockKind,
 ): PracticeSheetSection {
   return {
     name,
     time: bundle.formatMinutes(minutes),
     minutes,
     kind: emphasis,
-    coachingPoints: buildCoachingPoints(emphasis, bundle),
+    coachingPoints: buildCoachingPoints(emphasis, blockKind, bundle),
   };
 }
 
@@ -202,7 +233,7 @@ export function buildPracticePlan(fields: CoachingFields): PracticePlan {
   const sections = BLOCK_ORDER.map((kind, blockIndex) => {
     const emphasis = coachBlockEmphasis(emphases, blockIndex);
     const name = pickFrom(bundle.drillNames[emphasis][kind], h, blockIndex * 11);
-    return section(bundle, minutes[blockIndex]!, name, emphasis);
+    return section(bundle, minutes[blockIndex]!, name, emphasis, kind);
   });
 
   return {
