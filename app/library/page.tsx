@@ -1,7 +1,7 @@
 "use client";
 
 import { FileText } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { AppShell } from "../components/AppShell";
 import type { AppLocale } from "../lib/locale/appLocale";
 import { DEFAULT_APP_LOCALE } from "../lib/locale/appLocale";
@@ -14,24 +14,18 @@ import {
   type TopicId,
 } from "../lib/pdf/topicCatalog";
 
-export default function LibraryPage() {
-  const [uiLocale, setUiLocale] = useState<AppLocale>(DEFAULT_APP_LOCALE);
-  const [localeReady, setLocaleReady] = useState(false);
+function readInitialUiLocale(): AppLocale {
+  if (typeof window === "undefined") return DEFAULT_APP_LOCALE;
+  return readStoredUiLocale() ?? DEFAULT_APP_LOCALE;
+}
 
-  useEffect(() => {
-    const stored = readStoredUiLocale();
-    if (stored) setUiLocale(stored);
-    setLocaleReady(true);
-  }, []);
+export default function LibraryPage() {
+  const [uiLocale, setUiLocale] = useState<AppLocale>(readInitialUiLocale);
 
   const onUiLocaleChange = useCallback((locale: AppLocale) => {
     setUiLocale(locale);
     writeStoredUiLocale(locale);
   }, []);
-
-  if (!localeReady) {
-    return <main className="min-h-screen bg-background" />;
-  }
 
   const ui = UI[uiLocale];
   const chips = ALL_TOPIC_METAS.filter((t) => t.kind === "chip");
