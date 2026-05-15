@@ -9,13 +9,16 @@ export type PracticeSheetSection = {
   time: string;
   /** Numeric minutes — drives large duration UI */
   minutes: number;
-  /** Theme tag for a simple drill-type mark (no court diagram) */
+  /** Theme tag for a simple drill-type mark */
   kind: EmphasisKey;
   /** Second theme when drill combines goals (e.g. defense + shooting) */
   secondaryKind?: EmphasisKey;
+  /** Sideline bullets — PDF printout + accessibility */
   coachingPoints: readonly string[];
-  /** Optional drill diagram data for the interactive court viewer */
-  visualization?: DrillVisualization;
+  /** Short teaser under the drill title on the web sheet */
+  shortDescription: string;
+  /** Structured half-court diagram for the drill viewer */
+  visualization: DrillVisualization;
 };
 
 export type PracticePlan = {

@@ -23,6 +23,9 @@ function PlanDrillCard({
         <Text style={[pdfStyles.cardMinutes, { fontFamily }]}>{section.minutes}</Text>
       </View>
       <Text style={[pdfStyles.drillName, { fontFamily }]}>{section.name}</Text>
+      {section.shortDescription ? (
+        <Text style={[pdfStyles.bullet, { fontFamily }]}>{section.shortDescription}</Text>
+      ) : null}
       {section.coachingPoints.map((pt, i) => (
         <Text key={i} style={[pdfStyles.bullet, { fontFamily }]}>
           • {pt}

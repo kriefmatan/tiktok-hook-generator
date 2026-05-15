@@ -27,7 +27,7 @@ export type DrillVizAction =
   | { type: "shot"; player: number; to?: DrillVizXY }
   | { type: "closeout"; player: string; to: DrillVizXY };
 
-/** Wire this from real drill metadata when available; demos use bundled samples. */
+/** Drill diagram payload consumed by `DrillCourtVisualizer`. */
 export type DrillVisualization = {
   readonly players: readonly DrillVizPlayer[];
   readonly defense: readonly DrillVizDefender[];

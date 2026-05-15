@@ -14,7 +14,7 @@ import {
   type CoachGoal,
 } from "./coach/coachGoals";
 import { pickCombinedDrillTitle, pickCombinedSideline } from "./locale/combinedSituations";
-import { demoVisualizationForBlock } from "./visualization/demoDrillVisualizations";
+import { buildDrillVisualization, buildShortDescription } from "./visualization/buildDrillVisualization";
 
 const MOTION_PRESET_IDS: readonly PresetId[] = [
   "noDribblePractice",
@@ -303,17 +303,26 @@ function section(
   emphasis: EmphasisKey,
   blockKind: BlockKind,
   blockIndex: number,
+  generationSeed: number,
   secondaryKind?: EmphasisKey,
   coachingPoints?: readonly string[],
 ): PracticeSheetSection {
+  const points = coachingPoints ?? buildCoachingPoints(emphasis, blockKind, bundle);
   return {
     name,
     time: bundle.formatMinutes(minutes),
     minutes,
     kind: emphasis,
     secondaryKind,
-    coachingPoints: coachingPoints ?? buildCoachingPoints(emphasis, blockKind, bundle),
-    visualization: demoVisualizationForBlock(blockIndex),
+    coachingPoints: points,
+    shortDescription: buildShortDescription(points),
+    visualization: buildDrillVisualization({
+      emphasis,
+      secondaryKind,
+      blockKind,
+      blockIndex,
+      seed: generationSeed,
+    }),
   };
 }
 
@@ -335,6 +344,7 @@ function buildMultiGoalPlan(
       kind,
       blockKind,
       blockIndex,
+      h,
       secondaryKind,
       buildCombinedCoachingPoints(goals, blockKind, bundle),
     ),
@@ -381,7 +391,7 @@ export function buildPracticePlan(fields: CoachingFields): PracticePlan {
   const sections = BLOCK_ORDER.map((kind, blockIndex) => {
     const emphasis = coachBlockEmphasis(emphases, blockIndex);
     const name = pickFrom(bundle.drillNames[emphasis][kind], h, blockIndex * 11);
-    return section(bundle, minutes[blockIndex]!, name, emphasis, kind, blockIndex);
+    return section(bundle, minutes[blockIndex]!, name, emphasis, kind, blockIndex, h);
   });
 
   return {

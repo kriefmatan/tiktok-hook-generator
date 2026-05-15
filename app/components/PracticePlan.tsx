@@ -39,7 +39,7 @@ function DrillCard({
   index: number;
   locale: CoachLocale;
 }) {
-  const { name, minutes, time, kind, secondaryKind, coachingPoints, visualization } = section;
+  const { name, minutes, time, kind, secondaryKind, coachingPoints, shortDescription, visualization } = section;
   const [showCourt, setShowCourt] = useState(false);
   const vz = drillVisualizerLabels(locale);
 
@@ -62,31 +62,34 @@ function DrillCard({
           <h2
             id={`drill-title-${index}`}
             className="text-lg font-semibold leading-snug text-white sm:text-xl"
+            aria-describedby={`drill-notes-${index}`}
           >
             {name}
           </h2>
-          <ul className="mt-3 space-y-2.5" role="list">
-            {coachingPoints.map((pt, i) => (
-              <li key={i} className="flex gap-2.5 text-[15px] leading-snug text-zinc-200 sm:text-base">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent/70" aria-hidden />
-                <span>{pt}</span>
-              </li>
-            ))}
-          </ul>
-          {visualization && (
-            <div className="mt-4">
-              <button
-                type="button"
-                onClick={() => setShowCourt((v) => !v)}
-                className="rounded-lg border border-zinc-600 bg-zinc-900/70 px-3 py-2 text-[13px] font-semibold tracking-wide text-zinc-100 transition-colors hover:bg-zinc-800/90 hover:border-zinc-500 sm:text-sm"
-                aria-expanded={showCourt}
-              >
-                {showCourt ? vz.hide : vz.show}
-              </button>
-            </div>
-          )}
-          {visualization && showCourt && (
-            <div className="mt-3 rounded-xl border border-zinc-800/80 bg-black/25 p-1">
+          {shortDescription ? (
+            <p className="mt-2 text-[15px] leading-relaxed text-zinc-400 sm:text-base">{shortDescription}</p>
+          ) : null}
+          <p id={`drill-notes-${index}`} className="sr-only">
+            {coachingPoints.join(" ")}
+          </p>
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={() => setShowCourt((v) => !v)}
+              className="rounded-lg border border-zinc-600 bg-zinc-900/70 px-3 py-2 text-[13px] font-semibold tracking-wide text-zinc-100 transition-colors hover:bg-zinc-800/90 hover:border-zinc-500 sm:text-sm"
+              aria-expanded={showCourt}
+              aria-controls={`drill-court-${index}`}
+            >
+              {showCourt ? vz.hide : vz.show}
+            </button>
+          </div>
+          {showCourt && (
+            <div
+              id={`drill-court-${index}`}
+              className="mt-3 rounded-xl border border-zinc-800/80 bg-black/25 p-1"
+              role="region"
+              aria-label="Drill court diagram"
+            >
               <DrillCourtVisualizer data={visualization} locale={locale} />
             </div>
           )}
