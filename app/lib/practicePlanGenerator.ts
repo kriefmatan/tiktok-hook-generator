@@ -163,19 +163,23 @@ function buildCoachingPoints(
   const [themeA, themeB] = bundle.bullets[emphasis];
   const hook = bundle.setupHooks[emphasis];
 
+  const cap = bundle.locale === "he" ? 3 : 4;
+
   switch (blockKind) {
     case "warmup":
-      return uniquePoints([frameA, frameB, hook]).slice(0, 4);
+      return uniquePoints([frameA, frameB, hook]).slice(0, cap);
     case "drill1":
-      return uniquePoints([hook, themeA, frameA, frameB]).slice(0, 4);
+      return uniquePoints(
+        bundle.locale === "he" ? [themeA, themeB, frameA] : [hook, themeA, frameA, frameB],
+      ).slice(0, cap);
     case "drill2":
-      return uniquePoints([themeA, themeB, frameA]).slice(0, 4);
+      return uniquePoints([themeA, themeB, frameA]).slice(0, cap);
     case "drill3":
-      return uniquePoints([themeB, frameA, frameB, hook]).slice(0, 4);
+      return uniquePoints([themeB, frameA, frameB]).slice(0, cap);
     case "game":
-      return uniquePoints([hook, frameA, frameB, themeA]).slice(0, 4);
+      return uniquePoints([hook, themeA, frameB]).slice(0, cap);
     default:
-      return uniquePoints([hook, themeA, themeB]).slice(0, 4);
+      return uniquePoints([hook, themeA, themeB]).slice(0, cap);
   }
 }
 
