@@ -1,6 +1,7 @@
 import type { AppLocale } from "./appLocale";
-import type { CoachLocale } from "./coachLocale";
+import { DEFAULT_APP_LOCALE, isAppLocale } from "./appLocale";
 
-export function toAppLocale(locale: CoachLocale): AppLocale {
-  return locale === "he" ? "he" : "en";
+/** Normalize unknown locale values to a supported app locale (default English). */
+export function toAppLocale(value: unknown): AppLocale {
+  return isAppLocale(value) ? value : DEFAULT_APP_LOCALE;
 }

@@ -1,0 +1,25 @@
+---
+description: Always push to GitHub after code changes so Vercel deploys automatically
+alwaysApply: true
+---
+
+# Auto-deploy (חובה)
+
+After **every** task that changes project files, finish with deploy — even if the user did not say "deploy" or "push":
+
+```powershell
+npm run deploy
+```
+
+Same steps: `git add .` → commit `changed practice data format` → `git push` → Vercel deploys `main`.
+
+## Rules
+
+- Run deploy **once** at the end of the task, after edits are done.
+- Do **not** skip deploy because the user only asked for a feature or fix.
+- Skip only if the user explicitly says: no deploy / no push / don't commit.
+- Never commit `.env`, `.env.local`, or secrets (script unstages them).
+- If `git status` is clean after `git add`, report "nothing to commit" and stop.
+- Do not `git push --force` to `main`.
+
+Manual: `npm run deploy` or `~/.cursor/scripts/dev-and-deploy.ps1 -ProjectPath "<this repo>" -SkipDev`

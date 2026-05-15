@@ -1,4 +1,6 @@
 import type { AppLocale } from "./appLocale";
+import { localeText } from "./localeText";
+import { UI_DE, UI_ES } from "./uiStringsEsDe";
 
 export type ChipId =
   | "defense"
@@ -84,13 +86,13 @@ export type PresetGroupId = "team" | "youth" | "advanced";
 
 type PresetDef = {
   id: PresetId;
-  fillText: Record<AppLocale, string>;
-  searchTerms: Record<AppLocale, string>;
+  fillText: Partial<Record<AppLocale, string>> & { en: string };
+  searchTerms: Partial<Record<AppLocale, string>> & { en: string };
 };
 
-type UiStrings = {
+export type UiStrings = {
+  title: string;
   languageLabel: string;
-  languageNames: Record<AppLocale, string>;
   /** Single primary question — the only prompt on the page */
   mainPrompt: string;
   chipsLabel: string;
@@ -221,11 +223,11 @@ export const PRESET_GROUPS: readonly {
 const PRESET_BY_ID = Object.fromEntries(PRESET_DEFS.map((p) => [p.id, p])) as Record<PresetId, PresetDef>;
 
 export function presetFillText(id: PresetId, locale: AppLocale): string {
-  return PRESET_BY_ID[id].fillText[locale];
+  return localeText(PRESET_BY_ID[id].fillText)[locale];
 }
 
 export function presetSearchTerms(id: PresetId, locale: AppLocale): string {
-  return PRESET_BY_ID[id].searchTerms[locale];
+  return localeText(PRESET_BY_ID[id].searchTerms)[locale];
 }
 
 /** Extra terms appended for text analysis (per chip, per locale). */
@@ -257,6 +259,34 @@ export const CHIP_SEARCH_TERMS: Record<AppLocale, Record<ChipId, string>> = {
     fastBreak: "מעבר התקפה מהיר",
     conditioning: "כושר ריצה",
     decisionMaking: "החלטות קריאה",
+  },
+  es: {
+    defense: "defensa cierre ayuda",
+    shooting: "tiro triples",
+    transition: "transición contraataque",
+    ballMovement: "movimiento pases cortes",
+    finishing: "finalizaciones bandeja",
+    oneOnOne: "1 contra 1",
+    rebounding: "rebote box out",
+    spacing: "espaciado piso",
+    pressBreak: "romper presión trampa",
+    fastBreak: "contraataque",
+    conditioning: "condición sprint",
+    decisionMaking: "decisiones lectura",
+  },
+  de: {
+    defense: "verteidigung closeout hilfe",
+    shooting: "wurf dreier spots",
+    transition: "transition schnellangriff",
+    ballMovement: "ballbewegung passen cuts",
+    finishing: "abschluss korb layup",
+    oneOnOne: "1 gegen 1",
+    rebounding: "rebound box out",
+    spacing: "spacing abstand",
+    pressBreak: "press break druck",
+    fastBreak: "fast break",
+    conditioning: "kondition sprint",
+    decisionMaking: "entscheidungen lesen",
   },
 };
 
@@ -293,12 +323,44 @@ export const ADVANCED_TAG_SEARCH_TERMS: Record<AppLocale, Record<AdvancedTagId, 
     communication: "תקשורת דיבור",
     paceControl: "שליטה בקצב",
   },
+  es: {
+    zoneOffense: "ataque vs zona",
+    zoneDefense: "defensa zona 2-3",
+    closeouts: "cierres defensa",
+    weakHandFinishing: "finalización mano débil",
+    fullCourtPressure: "presión toda la cancha",
+    halfCourtOffense: "ataque media cancha",
+    shellDrillConcepts: "shell drill ayuda",
+    skipPasses: "pases skip",
+    helpSide: "lado ayuda",
+    boxingOut: "box out rebote",
+    lateGameSituations: "situaciones finales",
+    outOfBoundsPlays: "jugadas banda",
+    communication: "comunicación hablar",
+    paceControl: "control ritmo",
+  },
+  de: {
+    zoneOffense: "zone offense lücken",
+    zoneDefense: "zone defense 2-3",
+    closeouts: "closeouts recover",
+    weakHandFinishing: "schwache hand finish",
+    fullCourtPressure: "fullcourt press trap",
+    halfCourtOffense: "halbfeld offense",
+    shellDrillConcepts: "shell drill help",
+    skipPasses: "skip pass",
+    helpSide: "help side recover",
+    boxingOut: "box out rebound",
+    lateGameSituations: "endspiel situation",
+    outOfBoundsPlays: "out of bounds",
+    communication: "kommunikation sprechen",
+    paceControl: "tempo kontrolle",
+  },
 };
 
 export const UI: Record<AppLocale, UiStrings> = {
   en: {
+    title: "Practice",
     languageLabel: "Language",
-    languageNames: { en: "English", he: "עברית" },
     mainPrompt: "What are you working on today?",
     chipsLabel: "Quick focus",
     presetsLabel: "Presets",
@@ -343,8 +405,8 @@ export const UI: Record<AppLocale, UiStrings> = {
     errorFailed: "Couldn't build the plan. Try again.",
   },
   he: {
+    title: "אימון",
     languageLabel: "שפה",
-    languageNames: { en: "English", he: "עברית" },
     mainPrompt: "על מה עובדים היום?",
     chipsLabel: "נושא מהיר",
     presetsLabel: "תבניות",
@@ -388,26 +450,34 @@ export const UI: Record<AppLocale, UiStrings> = {
     building: "בונה…",
     errorFailed: "לא יצא. נסו שוב.",
   },
+  es: UI_ES as UiStrings,
+  de: UI_DE as UiStrings,
+};
+
+const PRESET_LABELS: Record<PresetId, Partial<Record<AppLocale, string>> & { en: string }> = {
+  defensivePractice: { en: "Defensive practice", he: "אימון הגנה", es: "Defensa", de: "Verteidigung" },
+  shootingPractice: { en: "Shooting practice", he: "אימון זריקות", es: "Tiro", de: "Wurftraining" },
+  gamePrep: { en: "Game prep", he: "הכנה למשחק", es: "Preparación partido", de: "Spielvorbereitung" },
+  fundamentals: { en: "Fundamentals", he: "יסודות", es: "Fundamentos", de: "Grundlagen" },
+  fastPacePractice: { en: "Fast pace practice", he: "אימון בקצב", es: "Ritmo alto", de: "Hohes Tempo" },
+  toughnessPractice: { en: "Toughness practice", he: "אימון חוסן", es: "Dureza", de: "Mentalität" },
+  beginnerPractice: { en: "Beginner practice", he: "מתחילים", es: "Principiantes", de: "Anfänger" },
+  funCompetitive: { en: "Fun competitive", he: "כיף ותחרות", es: "Diversión y competencia", de: "Spaß & Wettbewerb" },
+  noDribblePractice: { en: "No-dribble practice", he: "בלי כדרור", es: "Sin bote", de: "Ohne Dribbling" },
+  passingMovement: { en: "Passing & movement", he: "מסירות ותנועה", es: "Pase y movimiento", de: "Passen & Bewegung" },
+  coordinationFootwork: {
+    en: "Coordination & footwork",
+    he: "רגליים וקואורדינציה",
+    es: "Coordinación y pies",
+    de: "Koordination & Fußarbeit",
+  },
+  pickAndRoll: { en: "Pick & roll", he: "פיק אנד רול", es: "Bloqueo directo", de: "Pick & Roll" },
+  helpDefense: { en: "Help defense", he: "עזרה בהגנה", es: "Ayuda defensiva", de: "Help defense" },
+  rotations: { en: "Rotations", he: "רוטציות", es: "Rotaciones", de: "Rotationen" },
+  readAndReact: { en: "Read & react", he: "קריאה ותגובה", es: "Leer y reaccionar", de: "Lesen & reagieren" },
+  transitionDefense: { en: "Transition defense", he: "הגנת מעבר", es: "Defensa transición", de: "Transition-Defense" },
 };
 
 export function presetLabel(id: PresetId, locale: AppLocale): string {
-  const labels: Record<PresetId, Record<AppLocale, string>> = {
-    defensivePractice: { en: "Defensive practice", he: "אימון הגנה" },
-    shootingPractice: { en: "Shooting practice", he: "אימון זריקות" },
-    gamePrep: { en: "Game prep", he: "הכנה למשחק" },
-    fundamentals: { en: "Fundamentals", he: "יסודות" },
-    fastPacePractice: { en: "Fast pace practice", he: "אימון בקצב" },
-    toughnessPractice: { en: "Toughness practice", he: "אימון חוסן" },
-    beginnerPractice: { en: "Beginner practice", he: "מתחילים" },
-    funCompetitive: { en: "Fun competitive", he: "כיף ותחרות" },
-    noDribblePractice: { en: "No-dribble practice", he: "בלי כדרור" },
-    passingMovement: { en: "Passing & movement", he: "מסירות ותנועה" },
-    coordinationFootwork: { en: "Coordination & footwork", he: "רגליים וקואורדינציה" },
-    pickAndRoll: { en: "Pick & roll", he: "פיק אנד רול" },
-    helpDefense: { en: "Help defense", he: "עזרה בהגנה" },
-    rotations: { en: "Rotations", he: "רוטציות" },
-    readAndReact: { en: "Read & react", he: "קריאה ותגובה" },
-    transitionDefense: { en: "Transition defense", he: "הגנת מעבר" },
-  };
-  return labels[id][locale];
+  return localeText(PRESET_LABELS[id])[locale];
 }

@@ -1,0 +1,23 @@
+---
+description: Permanent product context — read SYSTEM_PROMPT.md before any feature or UI work
+alwaysApply: true
+---
+
+# System context
+
+This repo is a **coach-first basketball practice planner** (V1).
+
+Before coding, read and follow:
+
+- [SYSTEM_PROMPT.md](../../SYSTEM_PROMPT.md) — UI contract, architecture, deploy workflow, constraints
+- [AGENTS.md](../../AGENTS.md) — agent entry point and file map
+- [SYSTEM_STRUCTURE.md](../../SYSTEM_STRUCTURE.md) — domain scope
+
+**Non-negotiables:**
+
+- Single home input: "What are you working on today?" (no second question field).
+- Chips + grouped presets + collapsed "More" advanced tags — all multi-select; data in `app/lib/locale/uiCatalog.ts`.
+- Minimal dark UI — no gradients/animations unless requested.
+- **Auto-deploy:** after every code change, run `npm run deploy` (push to `main` → Vercel). Skip only if user says no push/commit.
+
+Do not redesign the whole app or expand to V2 team/roster features unless the user asks.

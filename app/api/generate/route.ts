@@ -1,10 +1,6 @@
 import { buildPracticePlan, type CoachingFields } from "../../lib/practicePlanGenerator";
-import { isAppLocale } from "../../lib/locale/appLocale";
-import type { CoachLocale } from "../../lib/locale/coachLocale";
-
-function toAppLocale(locale: CoachLocale): CoachingFields["locale"] {
-  return locale === "he" ? "he" : "en";
-}
+import { DEFAULT_APP_LOCALE, isAppLocale } from "../../lib/locale/appLocale";
+import { toAppLocale } from "../../lib/locale/toAppLocale";
 
 export async function POST(req: Request) {
   try {
@@ -21,10 +17,7 @@ export async function POST(req: Request) {
       (typeof sessionFocus === "string" ? sessionFocus : "") ||
       (typeof wantToImprove === "string" ? wantToImprove : "");
 
-    const resolvedLocale =
-      typeof locale === "string" && isAppLocale(locale)
-        ? locale
-        : toAppLocale(typeof locale === "string" ? (locale as CoachLocale) : "en");
+    const resolvedLocale = isAppLocale(locale) ? locale : toAppLocale(locale ?? DEFAULT_APP_LOCALE);
 
     const fields: CoachingFields = {
       locale: resolvedLocale,

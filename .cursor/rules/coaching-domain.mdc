@@ -1,0 +1,17 @@
+---
+description: Basketball coaching app domain — practice plans, team development, drills. Read before changing generators or product logic.
+globs: app/lib/**,app/types/**,SYSTEM_STRUCTURE.md
+alwaysApply: false
+---
+
+# Coaching domain (this repo)
+
+Before changing practice plans, drills, or coaching logic:
+
+1. Read [SYSTEM_STRUCTURE.md](../../SYSTEM_STRUCTURE.md) for V1 scope and the core product loop.
+2. Apply the global **domain-logic** skill (`~/.cursor/skills/domain-logic/SKILL.md`) for pure logic changes.
+3. Keep [app/types/plan.ts](../../app/types/plan.ts) contracts stable unless intentionally versioning.
+
+Key modules: `app/lib/practicePlanGenerator.ts`, `app/lib/coachingFields.ts`, `app/lib/coachTextAnalysis.ts`, `app/lib/locale/uiCatalog.ts`, `app/lib/input/buildWorkingOnText.ts`, locale bundles under `app/lib/locale/`.
+
+UI contract: [SYSTEM_PROMPT.md](../../SYSTEM_PROMPT.md). Coach home: `app/components/PracticeForm.tsx`.

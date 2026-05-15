@@ -1,31 +1,48 @@
-# DEVELOPMENT WORKFLOW
+# Development workflow
 
-## ALWAYS RUN DEV SERVER
+Canonical automation for agents and humans. Also mirrored globally in `~/.cursor/rules/dev-deploy-workflow.mdc`.
 
-If dev server is not running:
+---
 
+## Dev server
+
+If not already running on port 3000 for this project:
+
+```bash
 npm run dev
+```
+
+- URL: http://localhost:3000
+- If port 3000 is busy **for this repo**, use the existing server — do not start duplicates.
 
 ---
 
-## AFTER CHANGES
+## After implementation (auto-deploy)
 
-Always run:
+**Always** run at the end of agent work (unless the user says not to push):
 
-git add .
+```bash
+npm run deploy
+```
 
-git commit -m "update"
+Equivalent to `git add .` → `git commit -m "changed practice data format"` → `git push`. Vercel deploys from `main`.
 
-git push
+**Cursor hook:** `.cursor/hooks.json` runs the same deploy on agent `stop` (each completed run).
+
+**Agent rule:** `.cursor/rules/auto-deploy.mdc` (`alwaysApply: true`).
 
 ---
 
-## IMPORTANT
+## Checks before push
 
-Never stop the dev server unless necessary.
+- No secrets in staged files (`.env`, `.env.local`).
+- `npm run build` passes if the change is non-trivial.
+- Test `POST /api/generate` with sample `workingOn` if generator or API changed.
 
-Always check terminal errors before pushing.
+---
 
-If port 3000 is busy:
+## One-shot script (Windows)
 
-Use existing server instead of starting another one.
+```powershell
+& "$env:USERPROFILE\.cursor\scripts\dev-and-deploy.ps1" -ProjectPath "C:\path\to\tiktok-hook-generator"
+```
