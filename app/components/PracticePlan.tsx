@@ -3,8 +3,12 @@
 import { DrillKindMark } from "./DrillKindMark";
 import type { PracticePlan, PracticeSheetSection } from "../types/plan";
 
+import type { AppLocale } from "../lib/locale/appLocale";
+import { PracticePlanDownload } from "./PracticePlanDownload";
+
 type Props = {
   plan: PracticePlan;
+  locale?: AppLocale;
 };
 
 function DrillCard({
@@ -54,7 +58,7 @@ function DrillCard({
   );
 }
 
-export function PracticePlanSheet({ plan }: Props) {
+export function PracticePlanSheet({ plan, locale }: Props) {
   const sections: PracticeSheetSection[] = [
     plan.warmup,
     plan.drill1,

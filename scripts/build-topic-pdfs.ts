@@ -1,31 +1,28 @@
 /**
  * Generates static topic PDFs: public/coach-pdfs/{locale}/{topicId}.pdf
- * Run: npm run build:pdfs
+ * One Node process per file — avoids react-pdf bidi state issues on batch Hebrew.
  */
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
+import { execSync } from "child_process";
 import { APP_LOCALES } from "../app/lib/locale/appLocale";
-import { renderTopicPdfBuffer } from "../app/lib/pdf/renderPdf";
-import { ALL_TOPIC_IDS, topicPdfFilename } from "../app/lib/pdf/topicCatalog";
-
-const OUT_ROOT = path.join(process.cwd(), "public", "coach-pdfs");
+import { ALL_TOPIC_IDS } from "../app/lib/pdf/topicCatalog";
 
 async function main(): Promise<void> {
   let written = 0;
+  const total = APP_LOCALES.length * ALL_TOPIC_IDS.length;
+
   for (const locale of APP_LOCALES) {
-    const localeDir = path.join(OUT_ROOT, locale);
-    await mkdir(localeDir, { recursive: true });
     for (const topicId of ALL_TOPIC_IDS) {
-      const buffer = await renderTopicPdfBuffer(topicId, locale);
-      const filePath = path.join(localeDir, topicPdfFilename(topicId));
-      await writeFile(filePath, buffer);
+      execSync(`npx tsx scripts/render-one-topic-pdf.ts ${locale} ${topicId}`, {
+        stdio: "inherit",
+        cwd: process.cwd(),
+      });
       written += 1;
-      if (written % 14 === 0) {
-        console.log(`build:pdfs — ${written} files…`);
+      if (written % 14 === 0 || written === total) {
+        console.log(`build:pdfs — ${written}/${total}`);
       }
     }
   }
-  console.log(`build:pdfs — done (${written} PDFs in ${OUT_ROOT})`);
+  console.log(`build:pdfs — done (${written} PDFs)`);
 }
 
 main().catch((err) => {

@@ -98,7 +98,7 @@ export default function Home() {
     <AppShell
       locale={uiLocale}
       onLocaleChange={onUiLocaleChange}
-      planSection={plan ? <PracticePlanSheet plan={plan} /> : undefined}
+      planSection={plan ? <PracticePlanSheet plan={plan} locale={uiLocale} /> : undefined}
     >
       <PracticeForm
         locale={uiLocale}

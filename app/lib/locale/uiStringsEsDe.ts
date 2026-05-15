@@ -47,6 +47,12 @@ export const UI_ES = {
   buildButtonLong: "Crear entrenamiento personalizado",
   building: "Generando…",
   errorFailed: "No se pudo crear el plan. Intenta de nuevo.",
+  downloadPdf: "Descargar PDF",
+  downloadingPdf: "Preparando PDF…",
+  pdfDownloadFailed: "No se pudo descargar el PDF.",
+  pdfLibrary: "Biblioteca PDF",
+  pdfLibrarySubtitle: "Ejercicios, entrenos y sistemas — un PDF por tema.",
+  pdfOpenTopic: "Abrir PDF",
 };
 
 export const UI_DE = {
@@ -98,4 +104,10 @@ export const UI_DE = {
   buildButtonLong: "Personalisiertes Training erstellen",
   building: "Wird erstellt…",
   errorFailed: "Plan konnte nicht erstellt werden. Bitte erneut versuchen.",
+  downloadPdf: "PDF herunterladen",
+  downloadingPdf: "PDF wird erstellt…",
+  pdfDownloadFailed: "PDF-Download fehlgeschlagen.",
+  pdfLibrary: "PDF-Bibliothek",
+  pdfLibrarySubtitle: "Übungen, Trainings und Systeme — ein PDF pro Thema.",
+  pdfOpenTopic: "PDF öffnen",
 };

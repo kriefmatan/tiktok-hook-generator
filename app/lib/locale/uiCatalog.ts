@@ -91,7 +91,14 @@ type PresetDef = {
   searchTerms: Partial<Record<AppLocale, string>> & { en: string };
 };
 
-export type NavItemId = "practice" | "plays" | "players" | "stats" | "season" | "settings";
+export type NavItemId =
+  | "practice"
+  | "library"
+  | "plays"
+  | "players"
+  | "stats"
+  | "season"
+  | "settings";
 
 export type UiStrings = {
   brandName: string;
@@ -121,6 +128,12 @@ export type UiStrings = {
   viewAll: string;
   darkModeLabel: string;
   comingSoon: string;
+  downloadPdf: string;
+  downloadingPdf: string;
+  pdfDownloadFailed: string;
+  pdfLibrary: string;
+  pdfLibrarySubtitle: string;
+  pdfOpenTopic: string;
 };
 
 const PRESET_DEFS: readonly PresetDef[] = [
@@ -426,6 +439,7 @@ export const UI: Record<AppLocale, UiStrings> = {
     errorFailed: "Couldn't build the plan. Try again.",
     nav: {
       practice: "Practice",
+      library: "PDF library",
       plays: "Plays",
       players: "Players",
       stats: "Stats",
@@ -442,6 +456,12 @@ export const UI: Record<AppLocale, UiStrings> = {
     viewAll: "View all",
     darkModeLabel: "Dark mode",
     comingSoon: "Soon",
+    downloadPdf: "Download PDF",
+    downloadingPdf: "Preparing PDF…",
+    pdfDownloadFailed: "Could not download PDF.",
+    pdfLibrary: "Coach PDF library",
+    pdfLibrarySubtitle: "Drills, practice plans, and session systems — one PDF per topic.",
+    pdfOpenTopic: "Open PDF",
   },
   he: {
     brandName: "AI BASKETBALL PLANNER",
@@ -494,6 +514,7 @@ export const UI: Record<AppLocale, UiStrings> = {
     errorFailed: "לא יצא. נסו שוב.",
     nav: {
       practice: "אימון",
+      library: "ספריית PDF",
       plays: "מערכי משחק",
       players: "שחקנים",
       stats: "סטטיסטיקות",
@@ -510,6 +531,12 @@ export const UI: Record<AppLocale, UiStrings> = {
     viewAll: "צפה בהכל",
     darkModeLabel: "מצב כהה",
     comingSoon: "בקרוב",
+    downloadPdf: "הורדת PDF",
+    downloadingPdf: "מכין PDF…",
+    pdfDownloadFailed: "לא הצליח להוריד PDF.",
+    pdfLibrary: "ספריית PDF למאמן",
+    pdfLibrarySubtitle: "תרגילים, אימונים ומערכי אימון — קובץ PDF לכל נושא.",
+    pdfOpenTopic: "פתח PDF",
   },
   es: { ...UI_ES, ...UI_INSIGHTS.es } as UiStrings,
   de: { ...UI_DE, ...UI_INSIGHTS.de } as UiStrings,

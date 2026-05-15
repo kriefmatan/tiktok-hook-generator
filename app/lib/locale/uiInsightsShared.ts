@@ -7,6 +7,7 @@ const INSIGHTS_EN: Pick<
 > = {
   nav: {
     practice: "Practice",
+    library: "PDF library",
     plays: "Plays",
     players: "Players",
     stats: "Stats",
@@ -28,6 +29,7 @@ const INSIGHTS_EN: Pick<
 const INSIGHTS_ES: typeof INSIGHTS_EN = {
   nav: {
     practice: "Entreno",
+    library: "Biblioteca PDF",
     plays: "Jugadas",
     players: "Jugadores",
     stats: "Estadísticas",
@@ -49,6 +51,7 @@ const INSIGHTS_ES: typeof INSIGHTS_EN = {
 const INSIGHTS_DE: typeof INSIGHTS_EN = {
   nav: {
     practice: "Training",
+    library: "PDF-Bibliothek",
     plays: "Spielzüge",
     players: "Spieler",
     stats: "Statistik",
@@ -72,6 +75,7 @@ export const UI_INSIGHTS: Record<AppLocale, typeof INSIGHTS_EN> = {
   he: {
     nav: {
       practice: "אימון",
+      library: "ספריית PDF",
       plays: "מערכי משחק",
       players: "שחקנים",
       stats: "סטטיסטיקות",

@@ -35,10 +35,10 @@ export function TopicPdfDocument({
         <Text style={[pdfStyles.coverSubtitle, { fontFamily }]}>{plan.totalTime}</Text>
 
         <Text style={[pdfStyles.partTitle, { fontFamily }]}>{labels.drillsSection}</Text>
-        {catalog.emphasisDrills.map((group) => (
+        {catalog.emphasisDrills.map((group, themeIndex) => (
           <View key={group.emphasis} style={{ marginBottom: 10 }}>
             <Text style={[pdfStyles.emphasisHeading, { fontFamily }]}>
-              {labels.themeFocus}: {group.emphasis}
+              {labels.themeFocus} {themeIndex + 1}
             </Text>
             <Text style={[pdfStyles.hook, { fontFamily }]}>{group.setupHook}</Text>
             <Text style={[pdfStyles.listItem, { fontFamily }]}>
