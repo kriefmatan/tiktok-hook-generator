@@ -1,4 +1,5 @@
 import type { PracticePlan, PracticeSheetSection } from "../types/plan";
+import type { DrillVisualization } from "../types/drillVisualization";
 import type { CoachingFields } from "./coachingFields";
 import type { BlockKind, EmphasisKey, SimplePracticeBundle } from "./locale/coachBundle.types";
 import type { PresetId } from "./locale/uiCatalog";
@@ -6,15 +7,13 @@ import { SIMPLE_BUNDLES } from "./locale/bundles";
 import { CHIP_EMPHASIS, CHIP_SESSION_PRIMARY, emphasesFromSelections } from "./input/emphasisFromInput";
 import type { ChipId } from "./locale/uiCatalog";
 import { parseCoachFields, type ParsedCoachThemes } from "./coachTextAnalysis";
+import { goalsFromFields, isMultiGoalSession, primaryAndSecondaryKinds, type CoachGoal } from "./coach/coachGoals";
+import { pickCombinedDrillTitle } from "./locale/combinedSituations";
+import { buildShortDescription } from "./visualization/describeDrillVisualization";
 import {
-  emphasisForGoal,
-  goalsFromFields,
-  isMultiGoalSession,
-  primaryAndSecondaryKinds,
-  type CoachGoal,
-} from "./coach/coachGoals";
-import { pickCombinedDrillTitle, pickCombinedSideline } from "./locale/combinedSituations";
-import { buildDrillVisualization, buildShortDescription } from "./visualization/buildDrillVisualization";
+  integratedBlockForMultiGoal,
+  integratedBlockForSingleGoal,
+} from "./visualization/integratedPracticeDrill";
 
 const MOTION_PRESET_IDS: readonly PresetId[] = [
   "noDribblePractice",
@@ -212,49 +211,6 @@ function headerLine(f: CoachingFields, bundle: SimplePracticeBundle): string {
   return clip(f.workingOn.trim(), 110) || bundle.headerFallback;
 }
 
-function uniquePoints(items: readonly (string | undefined)[]): string[] {
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const item of items) {
-    const t = item?.trim();
-    if (!t || seen.has(t)) continue;
-    seen.add(t);
-    out.push(t);
-  }
-  return out;
-}
-
-/** Block role + theme — sideline voice, no repeated hooks on warmup. */
-function buildCoachingPoints(
-  emphasis: EmphasisKey,
-  blockKind: BlockKind,
-  bundle: SimplePracticeBundle,
-): readonly string[] {
-  const byBlock = bundle.sidelineByBlock?.[emphasis]?.[blockKind];
-  if (byBlock) {
-    return uniquePoints([byBlock[0], byBlock[1]]).slice(0, 4);
-  }
-
-  const [frameA, frameB] = bundle.blockFrames[blockKind];
-  const [themeA, themeB] = bundle.bullets[emphasis];
-  const hook = bundle.setupHooks[emphasis];
-
-  switch (blockKind) {
-    case "warmup":
-      return uniquePoints([frameA, frameB]).slice(0, 4);
-    case "drill1":
-      return uniquePoints([hook, themeA, frameB]).slice(0, 4);
-    case "drill2":
-      return uniquePoints([themeA, themeB, frameA]).slice(0, 4);
-    case "drill3":
-      return uniquePoints([themeB, frameA, frameB]).slice(0, 4);
-    case "game":
-      return uniquePoints([hook, frameA, themeA]).slice(0, 4);
-    default:
-      return uniquePoints([themeA, themeB]).slice(0, 4);
-  }
-}
-
 function blockMinutes(
   p: ParsedCoachThemes,
   blockIndex: number,
@@ -281,50 +237,25 @@ function totalTimeLabel(minutes: readonly number[], bundle: SimplePracticeBundle
   return `~${rounded} min`;
 }
 
-function buildCombinedCoachingPoints(
-  goals: readonly CoachGoal[],
-  blockKind: BlockKind,
-  bundle: SimplePracticeBundle,
-): readonly string[] {
-  const sideline = pickCombinedSideline(goals, blockKind, bundle.locale);
-  if (sideline) return uniquePoints([sideline[0], sideline[1]]).slice(0, 4);
-
-  const e0 = emphasisForGoal(goals[0]!);
-  const e1 = emphasisForGoal(goals[1] ?? goals[0]!);
-  const [a0, a1] = bundle.bullets[e0];
-  const [b0, b1] = bundle.bullets[e1];
-  return uniquePoints([a0, b0, b1 ?? a1]).slice(0, 4);
-}
-
-function section(
+function practiceSection(
   bundle: SimplePracticeBundle,
   minutes: number,
-  name: string,
+  headlineTitle: string,
   emphasis: EmphasisKey,
   blockKind: BlockKind,
-  blockIndex: number,
-  generationSeed: number,
-  secondaryKind?: EmphasisKey,
-  coachingPoints?: readonly string[],
+  secondaryKind: EmphasisKey | undefined,
+  integrated: { visualization: DrillVisualization; coachingPoints: readonly string[] },
 ): PracticeSheetSection {
-  const points = coachingPoints ?? buildCoachingPoints(emphasis, blockKind, bundle);
+  const points = integrated.coachingPoints;
   return {
-    name,
+    name: headlineTitle,
     time: bundle.formatMinutes(minutes),
     minutes,
     kind: emphasis,
     secondaryKind,
     coachingPoints: points,
     shortDescription: buildShortDescription(points),
-    visualization: buildDrillVisualization({
-      emphasis,
-      secondaryKind,
-      blockKind,
-      blockIndex,
-      name,
-      coachingPoints: points,
-      seed: generationSeed,
-    }),
+    visualization: integrated.visualization,
   };
 }
 
@@ -338,19 +269,24 @@ function buildMultiGoalPlan(
   const { kind, secondaryKind } = primaryAndSecondaryKinds(goals);
   const minutes = BLOCK_ORDER.map((_, i) => blockMinutes(parsed, i, fields));
 
-  const sections = BLOCK_ORDER.map((blockKind, blockIndex) =>
-    section(
+  const sections = BLOCK_ORDER.map((blockKind, blockIndex) => {
+    const headlineTitle = pickCombinedDrillTitle(goals, blockKind, bundle.locale, h, blockIndex * 11);
+    const integrated = integratedBlockForMultiGoal({
+      goals,
+      blockKind,
+      headlineTitle,
+      locale: bundle.locale,
+    });
+    return practiceSection(
       bundle,
       minutes[blockIndex]!,
-      pickCombinedDrillTitle(goals, blockKind, bundle.locale, h, blockIndex * 11),
+      headlineTitle,
       kind,
       blockKind,
-      blockIndex,
-      h,
       secondaryKind,
-      buildCombinedCoachingPoints(goals, blockKind, bundle),
-    ),
-  );
+      integrated,
+    );
+  });
 
   return {
     headerLine: headerLine(fields, bundle),
@@ -390,10 +326,24 @@ export function buildPracticePlan(fields: CoachingFields): PracticePlan {
   );
   const minutes = BLOCK_ORDER.map((_, i) => blockMinutes(parsed, i, fields));
 
-  const sections = BLOCK_ORDER.map((kind, blockIndex) => {
+  const sections = BLOCK_ORDER.map((blockKind, blockIndex) => {
     const emphasis = coachBlockEmphasis(emphases, blockIndex);
-    const name = pickFrom(bundle.drillNames[emphasis][kind], h, blockIndex * 11);
-    return section(bundle, minutes[blockIndex]!, name, emphasis, kind, blockIndex, h);
+    const headlineTitle = pickFrom(bundle.drillNames[emphasis][blockKind], h, blockIndex * 11);
+    const integrated = integratedBlockForSingleGoal({
+      emphasis,
+      blockKind,
+      headlineTitle,
+      locale: bundle.locale,
+    });
+    return practiceSection(
+      bundle,
+      minutes[blockIndex]!,
+      headlineTitle,
+      emphasis,
+      blockKind,
+      undefined,
+      integrated,
+    );
   });
 
   return {
