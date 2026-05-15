@@ -49,4 +49,6 @@ export type SimplePracticeBundle = {
   bullets: Record<EmphasisKey, BulletPair>;
   /** Sideline reminders per block role — warmup vs teach vs compete vs 5v5 */
   blockFrames: Record<BlockKind, BulletPair>;
+  /** Optional: theme-specific sideline lines per block (avoids repeating hooks) */
+  sidelineByBlock?: Partial<Record<EmphasisKey, Partial<Record<BlockKind, BulletPair>>>>;
 };

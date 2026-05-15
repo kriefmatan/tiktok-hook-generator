@@ -153,29 +153,34 @@ function uniquePoints(items: readonly (string | undefined)[]): string[] {
   return out;
 }
 
-/** Block role + theme — so warmup, drills, and 5v5 never share the same bullet list. */
+/** Block role + theme — sideline voice, no repeated hooks on warmup. */
 function buildCoachingPoints(
   emphasis: EmphasisKey,
   blockKind: BlockKind,
   bundle: SimplePracticeBundle,
 ): readonly string[] {
+  const byBlock = bundle.sidelineByBlock?.[emphasis]?.[blockKind];
+  if (byBlock) {
+    return uniquePoints([byBlock[0], byBlock[1]]).slice(0, 4);
+  }
+
   const [frameA, frameB] = bundle.blockFrames[blockKind];
   const [themeA, themeB] = bundle.bullets[emphasis];
   const hook = bundle.setupHooks[emphasis];
 
   switch (blockKind) {
     case "warmup":
-      return uniquePoints([frameA, frameB, hook]).slice(0, 4);
+      return uniquePoints([frameA, frameB]).slice(0, 4);
     case "drill1":
-      return uniquePoints([hook, themeA, frameA, frameB]).slice(0, 4);
+      return uniquePoints([hook, themeA, frameB]).slice(0, 4);
     case "drill2":
       return uniquePoints([themeA, themeB, frameA]).slice(0, 4);
     case "drill3":
-      return uniquePoints([themeB, frameA, frameB, hook]).slice(0, 4);
+      return uniquePoints([themeB, frameA, frameB]).slice(0, 4);
     case "game":
-      return uniquePoints([hook, frameA, frameB, themeA]).slice(0, 4);
+      return uniquePoints([hook, frameA, themeA]).slice(0, 4);
     default:
-      return uniquePoints([hook, themeA, themeB]).slice(0, 4);
+      return uniquePoints([themeA, themeB]).slice(0, 4);
   }
 }
 
