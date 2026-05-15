@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { DrillKindMark } from "./DrillKindMark";
+import { DrillCourtVisualizer } from "./DrillCourtVisualizer";
 import type { PracticePlan, PracticeSheetSection } from "../types/plan";
 
+import type { CoachLocale } from "@/app/lib/locale/coachLocale";
 import type { AppLocale } from "../lib/locale/appLocale";
 import { PracticePlanDownload } from "./PracticePlanDownload";
 
@@ -12,16 +15,33 @@ type Props = {
   locale?: AppLocale;
 };
 
+function drillVisualizerLabels(lc: CoachLocale): { show: string; hide: string } {
+  switch (lc) {
+    case "he":
+      return { show: "הצג תרגיל", hide: "הסתר" };
+    case "es":
+      return { show: "Ver ejercicio", hide: "Ocultar" };
+    case "de":
+      return { show: "Übung zeigen", hide: "Ausblenden" };
+    default:
+      return { show: "Show Drill", hide: "Hide" };
+  }
+}
+
 function DrillCard({
   sectionLabel,
   section,
   index,
+  locale,
 }: {
   sectionLabel: string;
   section: PracticeSheetSection;
   index: number;
+  locale: CoachLocale;
 }) {
-  const { name, minutes, time, kind, secondaryKind, coachingPoints } = section;
+  const { name, minutes, time, kind, secondaryKind, coachingPoints, visualization } = section;
+  const [showCourt, setShowCourt] = useState(false);
+  const vz = drillVisualizerLabels(locale);
 
   return (
     <article
@@ -53,6 +73,23 @@ function DrillCard({
               </li>
             ))}
           </ul>
+          {visualization && (
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={() => setShowCourt((v) => !v)}
+                className="rounded-lg border border-zinc-600 bg-zinc-900/70 px-3 py-2 text-[13px] font-semibold tracking-wide text-zinc-100 transition-colors hover:bg-zinc-800/90 hover:border-zinc-500 sm:text-sm"
+                aria-expanded={showCourt}
+              >
+                {showCourt ? vz.hide : vz.show}
+              </button>
+            </div>
+          )}
+          {visualization && showCourt && (
+            <div className="mt-3 rounded-xl border border-zinc-800/80 bg-black/25 p-1">
+              <DrillCourtVisualizer data={visualization} locale={locale} />
+            </div>
+          )}
         </div>
       </div>
     </article>
@@ -87,7 +124,13 @@ export function PracticePlanSheet({ plan, locale }: Props) {
 
       <div className="space-y-3 sm:space-y-4">
         {plan.sectionLabels.map((label, i) => (
-          <DrillCard key={`${label}-${i}`} sectionLabel={label} section={sections[i]!} index={i} />
+          <DrillCard
+            key={`${label}-${i}`}
+            sectionLabel={label}
+            section={sections[i]!}
+            index={i}
+            locale={plan.locale}
+          />
         ))}
       </div>
     </motion.div>

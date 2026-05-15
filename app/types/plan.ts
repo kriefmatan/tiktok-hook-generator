@@ -1,5 +1,6 @@
 import type { EmphasisKey } from "@/app/lib/locale/coachBundle.types";
 import type { CoachLocale } from "@/app/lib/locale/coachLocale";
+import type { DrillVisualization } from "@/app/types/drillVisualization";
 
 /** One block on the practice sheet — readable at a glance on the sideline */
 export type PracticeSheetSection = {
@@ -13,6 +14,8 @@ export type PracticeSheetSection = {
   /** Second theme when drill combines goals (e.g. defense + shooting) */
   secondaryKind?: EmphasisKey;
   coachingPoints: readonly string[];
+  /** Optional drill diagram data for the interactive court viewer */
+  visualization?: DrillVisualization;
 };
 
 export type PracticePlan = {
