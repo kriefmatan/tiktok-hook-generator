@@ -110,6 +110,7 @@ Global (all projects): `~/.cursor/rules/dev-deploy-workflow.mdc`, skill `~/.curs
 | Full coaching intelligence (verbatim) | `.cursor/skills/basketball-coaching-intelligence/intelligence.md` |
 | Practice flow / generator sequencing | `.cursor/skills/basketball-practice-planning/SKILL.md` |
 | Drill copy + drill design | `.cursor/skills/basketball-drill-design/SKILL.md` |
+| **Basketball Coach Engine** — multi-goal drill + JSON for visualization | `.cursor/skills/basketball-coach-engine/SKILL.md` |
 
 Say **"תת-סוכן כדורסל"** or **"basketball sub-agent"** to force this path. Rule: `.cursor/rules/basketball-coach-agent.mdc` (auto when editing coaching files).
 
@@ -122,6 +123,7 @@ For parallel review, parent agent may use Task `generalPurpose` with the prompt 
 | Task | Skill |
 |------|--------|
 | **Any drill / plan / chip / preset / coaching copy** | `.cursor/skills/basketball-coach-agent/SKILL.md` (then intelligence + planning or drill-design) |
+| **Basketball Coach Engine** — game-situation drill + visualization JSON | `.cursor/skills/basketball-coach-engine/SKILL.md` |
 | Practice logic / types / pure functions | `~/.cursor/skills/domain-logic/SKILL.md` |
 | RTL / Hebrew UI | `~/.cursor/skills/locale-rtl/SKILL.md` |
 | Next.js 16 APIs | `~/.cursor/skills/next16-guardian/SKILL.md` |
