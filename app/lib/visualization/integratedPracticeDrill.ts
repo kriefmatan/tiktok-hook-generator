@@ -20,6 +20,11 @@ import {
   ALL_LIBRARY_VISUALIZATIONS,
 } from "@/app/lib/visualization/drillVisualLibrary";
 import { coachingPointsFromVisualization } from "@/app/lib/visualization/describeDrillVisualization";
+import {
+  blockVisualizationSalt,
+  diversifyDrillVisualization,
+  widenVisualizationSalt,
+} from "@/app/lib/visualization/drillVisualizationVariety";
 import { nearestVisualizationForHeadline } from "@/app/lib/visualization/headlineVizMatch";
 import { validateDrillVisualization } from "@/app/lib/visualization/validateDrillVisualization";
 import type { DrillVisualization } from "@/app/types/drillVisualization";
@@ -204,25 +209,37 @@ function preferredMulti(goals: readonly CoachGoal[], blockKind: BlockKind): Dril
 }
 
 /**
- * Validates JSON → matches headline squad counts → explains only from JSON.
+ * Validates JSON → matches headline squad counts → diagram-only sidelines.
  */
 export function resolveDrillFromHeadlineAndPreferred(args: {
   headlineTitle: string;
   preferred: DrillVisualization;
   locale: CoachLocale;
+  blockIndex: number;
+  sessionFingerprint: number;
 }): { visualization: DrillVisualization; coachingPoints: readonly string[] } {
   let base = clone(args.preferred);
   if (!validateDrillVisualization(base)) {
     base = clone(FALLBACK_HALF_MINIMAL);
   }
 
-  let matched = nearestVisualizationForHeadline(args.headlineTitle, base, ALL_LIBRARY_VISUALIZATIONS);
+  const blockSalt = blockVisualizationSalt(args.sessionFingerprint, args.blockIndex, args.headlineTitle);
+
+  let matched = clone(
+    nearestVisualizationForHeadline(args.headlineTitle, base, ALL_LIBRARY_VISUALIZATIONS, blockSalt),
+  );
   if (!validateDrillVisualization(matched)) {
     matched = clone(FALLBACK_HALF_MINIMAL);
   }
 
-  const coachingPoints = coachingPointsFromVisualization(matched, args.locale);
-  return { visualization: matched, coachingPoints };
+  const divSalt = widenVisualizationSalt(blockSalt, args.blockIndex);
+  let viz = diversifyDrillVisualization(matched, divSalt);
+  if (!validateDrillVisualization(viz)) {
+    viz = matched;
+  }
+
+  const coachingPoints = coachingPointsFromVisualization(viz, args.locale);
+  return { visualization: viz, coachingPoints };
 }
 
 export function integratedBlockForMultiGoal(args: {
@@ -230,12 +247,16 @@ export function integratedBlockForMultiGoal(args: {
   blockKind: BlockKind;
   headlineTitle: string;
   locale: CoachLocale;
+  blockIndex: number;
+  sessionFingerprint: number;
 }): { visualization: DrillVisualization; coachingPoints: readonly string[] } {
   const preferred = preferredMulti(args.goals, args.blockKind);
   return resolveDrillFromHeadlineAndPreferred({
     headlineTitle: args.headlineTitle,
     preferred,
     locale: args.locale,
+    blockIndex: args.blockIndex,
+    sessionFingerprint: args.sessionFingerprint,
   });
 }
 
@@ -244,11 +265,15 @@ export function integratedBlockForSingleGoal(args: {
   blockKind: BlockKind;
   headlineTitle: string;
   locale: CoachLocale;
+  blockIndex: number;
+  sessionFingerprint: number;
 }): { visualization: DrillVisualization; coachingPoints: readonly string[] } {
   const preferred = preferredSingle(args.emphasis, args.blockKind);
   return resolveDrillFromHeadlineAndPreferred({
     headlineTitle: args.headlineTitle,
     preferred,
     locale: args.locale,
+    blockIndex: args.blockIndex,
+    sessionFingerprint: args.sessionFingerprint,
   });
 }

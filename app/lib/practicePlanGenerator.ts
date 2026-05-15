@@ -14,6 +14,7 @@ import {
   integratedBlockForMultiGoal,
   integratedBlockForSingleGoal,
 } from "./visualization/integratedPracticeDrill";
+import { ensureUniqueVisualizationsInPlan } from "./visualization/drillVisualizationVariety";
 
 const MOTION_PRESET_IDS: readonly PresetId[] = [
   "noDribblePractice",
@@ -276,6 +277,8 @@ function buildMultiGoalPlan(
       blockKind,
       headlineTitle,
       locale: bundle.locale,
+      blockIndex,
+      sessionFingerprint: h,
     });
     return practiceSection(
       bundle,
@@ -288,18 +291,21 @@ function buildMultiGoalPlan(
     );
   });
 
-  return {
-    headerLine: headerLine(fields, bundle),
-    totalTime: totalTimeLabel(minutes, bundle),
-    locale: bundle.locale,
-    dir: bundle.dir,
-    sectionLabels: bundle.sectionLabels,
-    warmup: sections[0]!,
-    drill1: sections[1]!,
-    drill2: sections[2]!,
-    drill3: sections[3]!,
-    gameFiveOnFive: sections[4]!,
-  };
+  return ensureUniqueVisualizationsInPlan(
+    {
+      headerLine: headerLine(fields, bundle),
+      totalTime: totalTimeLabel(minutes, bundle),
+      locale: bundle.locale,
+      dir: bundle.dir,
+      sectionLabels: bundle.sectionLabels,
+      warmup: sections[0]!,
+      drill1: sections[1]!,
+      drill2: sections[2]!,
+      drill3: sections[3]!,
+      gameFiveOnFive: sections[4]!,
+    },
+    h,
+  );
 }
 
 export function buildPracticePlan(fields: CoachingFields): PracticePlan {
@@ -334,6 +340,8 @@ export function buildPracticePlan(fields: CoachingFields): PracticePlan {
       blockKind,
       headlineTitle,
       locale: bundle.locale,
+      blockIndex,
+      sessionFingerprint: h,
     });
     return practiceSection(
       bundle,
@@ -346,16 +354,19 @@ export function buildPracticePlan(fields: CoachingFields): PracticePlan {
     );
   });
 
-  return {
-    headerLine: headerLine(fields, bundle),
-    totalTime: totalTimeLabel(minutes, bundle),
-    locale: bundle.locale,
-    dir: bundle.dir,
-    sectionLabels: bundle.sectionLabels,
-    warmup: sections[0]!,
-    drill1: sections[1]!,
-    drill2: sections[2]!,
-    drill3: sections[3]!,
-    gameFiveOnFive: sections[4]!,
-  };
+  return ensureUniqueVisualizationsInPlan(
+    {
+      headerLine: headerLine(fields, bundle),
+      totalTime: totalTimeLabel(minutes, bundle),
+      locale: bundle.locale,
+      dir: bundle.dir,
+      sectionLabels: bundle.sectionLabels,
+      warmup: sections[0]!,
+      drill1: sections[1]!,
+      drill2: sections[2]!,
+      drill3: sections[3]!,
+      gameFiveOnFive: sections[4]!,
+    },
+    h,
+  );
 }

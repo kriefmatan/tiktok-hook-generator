@@ -17,6 +17,8 @@ const runJump = integratedBlockForSingleGoal({
   blockKind: "drill3",
   headlineTitle: "ראן אנד גאמפ · לחץ על הכדור",
   locale: "he",
+  blockIndex: 3,
+  sessionFingerprint: 42,
 });
 
 const trapLike =
@@ -36,6 +38,8 @@ const shell = integratedBlockForSingleGoal({
   blockKind: "warmup",
   headlineTitle: "חימום הגנה",
   locale: "he",
+  blockIndex: 0,
+  sessionFingerprint: 42,
 });
 
 const shellLike =

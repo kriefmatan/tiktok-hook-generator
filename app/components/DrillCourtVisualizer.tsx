@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo } from "react";
+import { useEffect, useId, useMemo } from "react";
 import type { CoachLocale } from "../lib/locale/coachLocale";
 import type { DrillVisualization, DrillVizXY } from "../types/drillVisualization";
 
@@ -9,8 +9,8 @@ type Segment =
 
 const VIEW_W = 100;
 const VIEW_H = 62;
-/** Hoop center at baseline (percentage space). */
-const HOOP: DrillVizXY = { x: 50, y: 95 };
+/** Hoop rim anchor in percent space (court geometry; shot target when JSON omits `to`). */
+const HOOP_PCT: DrillVizXY = { x: 50, y: 95 };
 
 function clamp(n: number, lo: number, hi: number) {
   return Math.min(hi, Math.max(lo, n));
@@ -47,7 +47,7 @@ function buildSegments(data: DrillVisualization): Segment[] {
       if (!p) continue;
       const tgt = a.to
         ? { x: clamp(a.to.x, 0, 100), y: clamp(a.to.y, 0, 100) }
-        : HOOP;
+        : HOOP_PCT;
       segs.push({ kind: "shot", x1: p.x, y1: p.y, x2: tgt.x, y2: tgt.y });
     } else if (a.type === "closeout") {
       const key = String(a.player);
@@ -84,6 +84,15 @@ export function DrillCourtVisualizer({ data, locale = "en", className = "" }: Pr
 
   const segments = useMemo(() => buildSegments(data), [data]);
 
+  useEffect(() => {
+    const enabled =
+      typeof process !== "undefined" &&
+      process.env.NODE_ENV === "development" &&
+      process.env.NEXT_PUBLIC_DEBUG_DRILL_VIZ === "true";
+    if (!enabled) return;
+    console.log("[DrillCourtVisualizer] drill JSON", JSON.stringify(data));
+  }, [data]);
+
   const footerHint =
     locale === "he"
       ? "יחסי מגרש בספרות · חישוק בקו הסוף · חצים לפי סדר הפעולות"
@@ -102,11 +111,19 @@ export function DrillCourtVisualizer({ data, locale = "en", className = "" }: Pr
     return { ...d, sx, sy };
   });
 
-  const ballCarrier = offenseDots.find((o) => o.id === data.ball.player) ?? offenseDots[0];
-  const { sx: hx, sy: hy } = pctToSvg(HOOP.x, HOOP.y);
+  const ballCarrier = offenseDots.find((o) => o.id === data.ball.player);
+  const { sx: hx, sy: hy } = pctToSvg(HOOP_PCT.x, HOOP_PCT.y);
 
-  const bx = clamp((ballCarrier?.sx ?? VIEW_W / 2) + 5.2, 2.5, VIEW_W - 2.5);
-  const by = clamp((ballCarrier?.sy ?? VIEW_H / 2) - 4, 2.5, VIEW_H - 2.5);
+  const bx =
+    ballCarrier != null
+      ? clamp(ballCarrier.sx + 5.2, 2.5, VIEW_W - 2.5)
+      : clamp(VIEW_W / 2, 2.5, VIEW_W - 2.5);
+  const by =
+    ballCarrier != null
+      ? clamp(ballCarrier.sy - 4, 2.5, VIEW_H - 2.5)
+      : clamp(VIEW_H / 2, 2.5, VIEW_H - 2.5);
+
+  const drawBall = ballCarrier != null;
 
   return (
     <div dir="ltr" className={`rounded-xl border border-zinc-700/80 bg-zinc-950/80 p-2 sm:p-3 ${className}`}>
@@ -212,8 +229,10 @@ export function DrillCourtVisualizer({ data, locale = "en", className = "" }: Pr
           </g>
         ))}
 
-        {/* Ball */}
-        <circle cx={bx} cy={by} r="3.2" fill="#f97316" stroke="#fde68a" strokeWidth="0.5" aria-label="Ball" />
+        {/* Ball — position offset from ball holder in JSON */}
+        {drawBall ? (
+          <circle cx={bx} cy={by} r="3.2" fill="#f97316" stroke="#fde68a" strokeWidth="0.5" aria-label="Ball" />
+        ) : null}
       </svg>
 
       <p className="mt-1 text-center text-[10px] text-zinc-500 sm:text-[11px]">{footerHint}</p>

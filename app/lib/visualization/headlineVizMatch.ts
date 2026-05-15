@@ -35,23 +35,31 @@ export function nearestVisualizationForHeadline(
   title: string,
   preferred: DrillVisualization,
   catalog: readonly DrillVisualization[],
+  tieSalt: number = 0,
 ): DrillVisualization {
   const { offense: wantO, defense: wantD } = parseHeadlineCounts(title);
   if (wantO == null && wantD == null) {
     return preferred;
   }
 
-  let best = preferred;
   let bestScore = Number.POSITIVE_INFINITY;
+  const candidates: DrillVisualization[] = [];
 
   for (const cand of catalog) {
     const score =
       countDistance(wantO, cand.players.length) * 2 + countDistance(wantD, cand.defense.length);
     if (score < bestScore) {
       bestScore = score;
-      best = cand;
+      candidates.length = 0;
+      candidates.push(cand);
+    } else if (score === bestScore) {
+      candidates.push(cand);
     }
   }
 
-  return best;
+  if (candidates.length === 0) return preferred;
+
+  const preferIdx = candidates.findIndex((c) => c === preferred);
+  const pick = (tieSalt + (preferIdx >= 0 ? preferIdx : 0)) % candidates.length;
+  return candidates[pick]!;
 }
