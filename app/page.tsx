@@ -1,33 +1,64 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { PracticeForm } from "./components/PracticeForm";
 import { PracticePlanSheet } from "./components/PracticePlan";
-import type { PracticePlan } from "./types/plan";
+import { buildWorkingOnText } from "./lib/input/buildWorkingOnText";
 import { detectCoachLocale } from "./lib/locale/detectCoachLocale";
 import { HOME_UI } from "./lib/locale/homeUi";
 import { LOCALE_DIR } from "./lib/locale/coachLocale";
+import { toAppLocale } from "./lib/locale/toAppLocale";
+import type { AdvancedTagId, ChipId, PresetId } from "./lib/locale/uiCatalog";
+import type { PracticePlan } from "./types/plan";
+
+function toggleInSet<T>(set: ReadonlySet<T>, id: T): Set<T> {
+  const next = new Set(set);
+  if (next.has(id)) next.delete(id);
+  else next.add(id);
+  return next;
+}
 
 export default function Home() {
-  const [sessionFocus, setSessionFocus] = useState("");
-  const [wantToImprove, setWantToImprove] = useState("");
+  const [workingOn, setWorkingOn] = useState("");
+  const [selectedChips, setSelectedChips] = useState<ReadonlySet<ChipId>>(() => new Set());
+  const [selectedPresets, setSelectedPresets] = useState<ReadonlySet<PresetId>>(() => new Set());
+  const [selectedAdvanced, setSelectedAdvanced] = useState<ReadonlySet<AdvancedTagId>>(() => new Set());
   const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState<PracticePlan | null>(null);
 
-  const inputLocale = useMemo(
-    () => detectCoachLocale({ sessionFocus, wantToImprove }),
-    [sessionFocus, wantToImprove]
-  );
+  const coachLocale = useMemo(() => detectCoachLocale(workingOn), [workingOn]);
+  const appLocale = toAppLocale(coachLocale);
+  const ui = HOME_UI[coachLocale];
+  const formDir = LOCALE_DIR[coachLocale];
 
-  const ui = HOME_UI[inputLocale];
-  const formDir = LOCALE_DIR[inputLocale];
+  const onToggleChip = useCallback((id: ChipId) => {
+    setSelectedChips((prev) => toggleInSet(prev, id));
+  }, []);
+
+  const onTogglePreset = useCallback((id: PresetId) => {
+    setSelectedPresets((prev) => toggleInSet(prev, id));
+  }, []);
+
+  const onToggleAdvanced = useCallback((id: AdvancedTagId) => {
+    setSelectedAdvanced((prev) => toggleInSet(prev, id));
+  }, []);
 
   const generatePlan = async () => {
+    const combined = buildWorkingOnText(
+      appLocale,
+      workingOn,
+      [...selectedChips],
+      [...selectedPresets],
+      [...selectedAdvanced],
+    );
+    if (!combined) return;
+
     setLoading(true);
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionFocus, wantToImprove }),
+        body: JSON.stringify({ locale: appLocale, workingOn: combined }),
       });
 
       const data = (await response.json()) as { plan?: PracticePlan; error?: string };
@@ -47,40 +78,23 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#09090b] text-white">
-      <div className="mx-auto max-w-lg px-4 py-8 sm:px-5 sm:py-10" dir={formDir} lang={inputLocale}>
+      <div className="mx-auto max-w-lg px-4 py-8 sm:px-5 sm:py-10" dir={formDir} lang={coachLocale}>
         <h1 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">{ui.title}</h1>
 
-        <div className="mt-6 space-y-4">
-          <label className="block">
-            <span className="text-sm text-zinc-400">{ui.labelFocus}</span>
-            <textarea
-              name="sessionFocus"
-              rows={2}
-              value={sessionFocus}
-              onChange={(e) => setSessionFocus(e.target.value)}
-              className="mt-1.5 w-full resize-y rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-[15px] leading-snug text-zinc-100 placeholder:text-zinc-700 focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-600"
-            />
-          </label>
-
-          <label className="block">
-            <span className="text-sm text-zinc-400">{ui.labelImprove}</span>
-            <textarea
-              name="wantToImprove"
-              rows={2}
-              value={wantToImprove}
-              onChange={(e) => setWantToImprove(e.target.value)}
-              className="mt-1.5 w-full resize-y rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-[15px] leading-snug text-zinc-100 placeholder:text-zinc-700 focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-600"
-            />
-          </label>
-
-          <button
-            type="button"
-            onClick={generatePlan}
-            disabled={loading}
-            className="w-full rounded-lg bg-white py-2.5 text-sm font-semibold text-zinc-950 transition hover:bg-zinc-100 disabled:opacity-50"
-          >
-            {loading ? ui.building : ui.buildButton}
-          </button>
+        <div className="mt-6">
+          <PracticeForm
+            locale={appLocale}
+            workingOn={workingOn}
+            onWorkingOnChange={setWorkingOn}
+            selectedChips={selectedChips}
+            onToggleChip={onToggleChip}
+            selectedPresets={selectedPresets}
+            onTogglePreset={onTogglePreset}
+            selectedAdvanced={selectedAdvanced}
+            onToggleAdvanced={onToggleAdvanced}
+            loading={loading}
+            onBuild={generatePlan}
+          />
         </div>
       </div>
 

@@ -2,8 +2,7 @@ import type { CoachLocale } from "./coachLocale";
 
 export type HomeUiStrings = {
   title: string;
-  labelFocus: string;
-  labelImprove: string;
+  labelWorkingOn: string;
   buildButton: string;
   building: string;
 };
@@ -11,22 +10,19 @@ export type HomeUiStrings = {
 export const HOME_UI: Record<CoachLocale, HomeUiStrings> = {
   en: {
     title: "Practice",
-    labelFocus: "What should this practice focus on?",
-    labelImprove: "What do you want to improve?",
+    labelWorkingOn: "What are you working on today?",
     buildButton: "Build",
     building: "…",
   },
   he: {
     title: "אימון",
-    labelFocus: "על מה האימון הזה צריך להתמקד?",
-    labelImprove: "מה אתם רוצים לשפר?",
+    labelWorkingOn: "על מה עובדים היום?",
     buildButton: "בנה",
     building: "…",
   },
   es: {
     title: "Entreno",
-    labelFocus: "¿En qué debe centrarse este entreno?",
-    labelImprove: "¿Qué queréis mejorar?",
+    labelWorkingOn: "¿En qué trabajan hoy?",
     buildButton: "Generar",
     building: "…",
   },

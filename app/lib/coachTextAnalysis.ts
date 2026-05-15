@@ -15,12 +15,14 @@ export type ParsedCoachThemes = {
   turnovers: boolean;
   communication: boolean;
   transition: boolean;
+  transitionOffense: boolean;
   decisionMaking: boolean;
   shootingConfidence: boolean;
+  spacing: boolean;
 };
 
 function joinFields(f: CoachingFields): string {
-  return [f.sessionFocus, f.wantToImprove].join("\n").replace(/\s+/g, " ").trim();
+  return f.workingOn.replace(/\s+/g, " ").trim();
 }
 
 function problemHay(f: CoachingFields): string {
@@ -29,6 +31,29 @@ function problemHay(f: CoachingFields): string {
 
 function latinLower(s: string): string {
   return s.toLowerCase();
+}
+
+function hasTransitionOffense(all: string, low: string): boolean {
+  if (hasTransitionDefense(all, low)) return false;
+  if (all.includes("התקפה במעבר")) return true;
+  if (all.includes("מעבר התקפה")) return true;
+  if (all.includes("מהירות במעבר")) return true;
+  if (all.includes("קצב במעבר")) return true;
+  if (/\b(transition\s+off|primary\s+break|secondary\s+break|push\s+in\s+transition|fill\s+lanes|fast\s+break\s+off)\b/i.test(low))
+    return true;
+  if (all.includes("מעבר") && all.includes("התקפה") && !all.includes("הגנה")) return true;
+  return false;
+}
+
+function hasSpacing(all: string, low: string): boolean {
+  if (all.includes("מרווחים")) return true;
+  if (all.includes("צפיפות")) return true;
+  if (all.includes("עומס בצבע")) return true;
+  if (all.includes("צפוף בצבע")) return true;
+  if (all.includes("תנועה ללא כדור")) return true;
+  if (/\b(spacing|floor\s+spac|crowd\w*\s+the\s+paint|paint\s+crowd|stand\s+still|static\s+offense|no\s+movement)\b/i.test(low))
+    return true;
+  return false;
 }
 
 function hasTransitionDefense(all: string, low: string): boolean {
@@ -150,10 +175,15 @@ export function parseCoachFields(f: CoachingFields): ParsedCoachThemes {
 
   const rebounding = hasRebounding(all, low) || hasRebounding(prob, probLow);
   const turnovers = hasTurnoversBallSecurity(all, low) || hasTurnoversBallSecurity(prob, probLow);
-  const transition = hasTransitionDefense(all, low) || hasTransitionDefense(prob, probLow);
+  const transitionDefense =
+    hasTransitionDefense(all, low) || hasTransitionDefense(prob, probLow);
+  const transitionOffense =
+    hasTransitionOffense(all, low) || hasTransitionOffense(prob, probLow);
+  const transition = transitionDefense || transitionOffense;
   const decisionMaking = hasDecisionMaking(all, low) || hasDecisionMaking(prob, probLow);
   const shootingConfidence = hasShootingConfidence(all, low) || hasShootingConfidence(prob, probLow);
   const communication = hasCommunication(all, low) || hasCommunication(prob, probLow);
+  const spacing = hasSpacing(all, low) || hasSpacing(prob, probLow);
 
   return {
     offense: inferOffenseStyle(all, low),
@@ -162,7 +192,9 @@ export function parseCoachFields(f: CoachingFields): ParsedCoachThemes {
     turnovers,
     communication,
     transition,
+    transitionOffense,
     decisionMaking,
     shootingConfidence,
+    spacing,
   };
 }

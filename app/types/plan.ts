@@ -1,21 +1,16 @@
-import type { HalfCourtMovement, HalfCourtPass, HalfCourtPlayer } from "@/components/HalfCourtDiagram";
+import type { EmphasisKey } from "@/app/lib/locale/coachBundle.types";
 import type { CoachLocale } from "@/app/lib/locale/coachLocale";
 
-export type PracticeBlockDiagram = {
-  players: HalfCourtPlayer[];
-  movements: HalfCourtMovement[];
-  passes: HalfCourtPass[];
-  caption?: string;
-};
-
-/** One block on the sheet — short, readable on the sideline */
+/** One block on the practice sheet — readable at a glance on the sideline */
 export type PracticeSheetSection = {
   name: string;
+  /** Formatted for display, e.g. "10 min" */
   time: string;
-  /** One-line goal — mostly the coach’s own words */
-  goal: string;
-  coachingPoints: readonly [string, string];
-  diagram: PracticeBlockDiagram;
+  /** Numeric minutes — drives large duration UI */
+  minutes: number;
+  /** Theme tag for a simple drill-type mark (no court diagram) */
+  kind: EmphasisKey;
+  coachingPoints: readonly string[];
 };
 
 export type PracticePlan = {

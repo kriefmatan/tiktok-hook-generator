@@ -1,8 +1,27 @@
 import type { CoachLocale } from "./coachLocale";
 
-export type EmphasisKey = "rebound" | "shoot" | "pnr" | "zone" | "turnover" | "transition" | "generic";
+export type EmphasisKey =
+  | "rebound"
+  | "shoot"
+  | "pnr"
+  | "zone"
+  | "turnover"
+  | "transition"
+  | "communication"
+  | "decision"
+  | "motion"
+  | "pressure"
+  | "spacing"
+  | "fiveOut"
+  | "fast"
+  | "switch"
+  | "generic";
 
-/** Two short reminders — practical, not clinic-speak */
+export type BlockKind = "warmup" | "drill1" | "drill2" | "drill3" | "game";
+
+export type BlockDrillNames = Record<BlockKind, readonly string[]>;
+
+/** Two short reminders — practical sideline language */
 export type BulletPair = readonly [string, string];
 
 export type SimplePracticeBundle = {
@@ -12,6 +31,8 @@ export type SimplePracticeBundle = {
   totalTime: string;
   sectionLabels: readonly [string, string, string, string, string];
   headerFallback: string;
+  /** One-line setup hook per theme — woven with coach text in goals */
+  setupHooks: Record<EmphasisKey, string>;
   captions: {
     lines: string;
     pnr: string;
@@ -24,10 +45,6 @@ export type SimplePracticeBundle = {
     transition: string;
     five: string;
   };
-  titlesWarmup: readonly string[];
-  titlesDrill1: readonly string[];
-  titlesDrill2: readonly string[];
-  titlesDrill3: readonly string[];
-  titlesGame: readonly string[];
+  drillNames: Record<EmphasisKey, BlockDrillNames>;
   bullets: Record<EmphasisKey, BulletPair>;
 };

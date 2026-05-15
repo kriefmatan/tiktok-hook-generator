@@ -1,7 +1,7 @@
-/** Coach input — two free-text fields only */
+import type { AppLocale } from "./locale/appLocale";
+
+/** Coach input — single free-text field */
 export type CoachingFields = {
-  /** "What should this practice focus on?" */
-  sessionFocus: string;
-  /** "What do you want to improve?" */
-  wantToImprove: string;
+  locale: AppLocale;
+  workingOn: string;
 };
